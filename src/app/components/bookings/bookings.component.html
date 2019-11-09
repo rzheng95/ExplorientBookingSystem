@@ -1,1 +1,7 @@
-<p>bookings works!</p>
+<div>
+  <ul *ngFor='let booking of bookings' class='collection'>
+    <li class='collection-item'>{{ booking.id }}</li>
+    <li class='collection-item'>{{ booking.package }}</li>
+    <li class='collection-item'>{{ booking.notes }}</li>
+  </ul>
+</div>

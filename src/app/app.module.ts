@@ -7,10 +7,13 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { environment } from '../environments/environment';
+import { BookingsComponent } from './components/bookings/bookings.component';
+import { BookingsService } from './services/bookings.service';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    BookingsComponent
   ],
   imports: [
     BrowserModule,
@@ -19,7 +22,9 @@ import { environment } from '../environments/environment';
     AngularFireModule.initializeApp(environment.firebase, 'ExplorientBookingSystem'),
     AngularFirestoreModule
   ],
-  providers: [],
+  providers: [
+    BookingsService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

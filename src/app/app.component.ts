@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { AuthService } from './services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,9 +8,7 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
 
-  constructor(public auth: AuthService, private router: Router) {}
-
-  onShowBooking() {
-    this.router.navigate(['/booking']);
-  }
+  constructor() {}
 }
+
+

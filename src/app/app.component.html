@@ -1,18 +1,3 @@
-<!-- <app-bookings></app-bookings> -->
-
-<div *ngIf='auth.user$ | async as user; else login'>
-  <pre>
-    {{ user | json }}
-  </pre>
-  <hr>
-  <button mat-button (click)='auth.signOut()'>Sign Out</button>
-</div>
-
-<button mat-button color='primary' (click)='onShowBooking()'>Show</button>
-
-<ng-template #login>
-  <button mat-button color='primary' (click)='auth.googleSignin()'>Login with Google</button>
-</ng-template>
 
 
 

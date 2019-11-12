@@ -4,26 +4,38 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-import { AngularFireModule } from 'angularfire2';
-import { AngularFirestoreModule } from 'angularfire2/firestore';
-import { AngularFireDatabaseModule } from 'angularfire2/database';
-import { AngularFireAuthModule } from '@angular/fire/auth';
-
 import { environment } from '../environments/environment';
-import { BookingsComponent } from './components/bookings/bookings.component';
-import { BookingsService } from './services/bookings.service';
-import { AuthService } from './services/auth.service';
+import { AngularMaterialModule } from './angular-material.module';
 
-import {
-  MatInputModule,
-  MatCardModule,
-  MatButtonModule,
-  MatToolbarModule
-} from '@angular/material';
+
+// Angular Fire
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+
+// Components
+import { BookingsComponent } from './components/bookings/bookings.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { SignInComponent } from './components/sign-in/sign-in.component';
+import { SignUpComponent } from './components/sign-up/sign-up.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
+
+// Services
+import { BookingsService } from './services/bookings/bookings.service';
+import { AuthService } from './services/auth/auth.service';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent, BookingsComponent],
+  declarations: [
+    AppComponent,
+    BookingsComponent,
+    DashboardComponent,
+    SignInComponent,
+    SignUpComponent,
+    ForgotPasswordComponent,
+    VerifyEmailComponent
+  ],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -34,12 +46,9 @@ import {
       'ExplorientBookingSystem'
     ),
     AngularFirestoreModule,
-    AngularFireDatabaseModule,
     AngularFireAuthModule,
-    MatInputModule,
-    MatCardModule,
-    MatButtonModule,
-    MatToolbarModule
+    AngularMaterialModule,
+    ReactiveFormsModule
   ],
   providers: [BookingsService, AuthService],
   bootstrap: [AppComponent]

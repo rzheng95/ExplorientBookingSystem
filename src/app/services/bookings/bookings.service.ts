@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Observable } from 'rxjs';
-import { Booking } from '../models/booking.model';
+import { Booking } from '../../models/booking.model';
 import { map } from 'rxjs/operators';
 
 

@@ -25,6 +25,8 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email.com
 import { BookingsService } from './services/bookings/bookings.service';
 import { AuthService } from './services/auth/auth.service';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MainNavComponent } from './components/main-nav/main-nav.component';
+
 
 @NgModule({
   declarations: [
@@ -34,7 +36,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     SignInComponent,
     SignUpComponent,
     ForgotPasswordComponent,
-    VerifyEmailComponent
+    VerifyEmailComponent,
+    MainNavComponent
   ],
   imports: [
     BrowserModule,

@@ -7,8 +7,12 @@ import {
   MatExpansionModule,
   MatProgressSpinnerModule,
   MatPaginatorModule,
-  MatDialogModule
+  MatDialogModule,
+  MatSidenavModule,
+  MatIconModule,
+  MatListModule
 } from '@angular/material';
+import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
  exports: [
@@ -19,7 +23,11 @@ import {
     MatExpansionModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
-    MatDialogModule
+    MatDialogModule,
+    LayoutModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatListModule
   ]
 })
 export class AngularMaterialModule {}

@@ -9,12 +9,14 @@ import {
 import { Router } from '@angular/router';
 import { User } from '../../models/user.model';
 import { map } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private userData: User; // Save logged in user data
+  private authStatusListener = new Subject<boolean>();
 
   constructor(
     public afs: AngularFirestore, // Inject Firestore service
@@ -36,12 +38,20 @@ export class AuthService {
     });
   }
 
+  getAuthStatusListener() {
+    return this.authStatusListener.asObservable();
+  }
+
   getUserData() {
-    if (!this.isLoggedIn) {
+    if (!this.isAuthenticated) {
       return;
     }
     const user = JSON.parse(localStorage.getItem('user'));
     return user;
+  }
+
+  autoAuthUser() {
+
   }
 
   // Sign in with email/password
@@ -55,8 +65,10 @@ export class AuthService {
         this.router.navigate(['dashboard']);
       });
       this.SetUserData(result.user);
+      this.authStatusListener.next(true);
     } catch (error) {
       window.alert(error.message);
+      this.authStatusListener.next(false);
     }
   }
 
@@ -103,7 +115,7 @@ export class AuthService {
   }
 
   // Returns true when user is looged in and email is verified
-  get isLoggedIn(): boolean {
+  get isAuthenticated(): boolean {
     const user = JSON.parse(localStorage.getItem('user'));
     return user !== null && user.emailVerified !== false ? true : false;
   }
@@ -148,6 +160,7 @@ export class AuthService {
   // Sign out
   async SignOut() {
     await this.afAuth.auth.signOut();
+    this.authStatusListener.next(false);
     localStorage.removeItem('user');
     this.router.navigate(['sign-in']);
   }

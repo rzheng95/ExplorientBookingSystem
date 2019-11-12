@@ -1,0 +1,22 @@
+:host {
+  display: flex;
+  justify-content: center;
+  margin: 50px 0px;
+}
+
+.mat-card {
+  width: 80%;
+  box-shadow: 2px 1px 5px rgba(0,0,0,0.5);
+  padding: 2rem;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+mat-card-title,
+mat-card-content {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}

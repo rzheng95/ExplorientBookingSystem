@@ -11,7 +11,8 @@ import {
   MatSidenavModule,
   MatIconModule,
   MatListModule,
-  MatTreeModule
+  MatTreeModule,
+  MatFormFieldModule
 } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
 
@@ -29,7 +30,8 @@ import { LayoutModule } from '@angular/cdk/layout';
     MatSidenavModule,
     MatIconModule,
     MatListModule,
-    MatTreeModule
+    MatTreeModule,
+    MatFormFieldModule
   ]
 })
 export class AngularMaterialModule {}

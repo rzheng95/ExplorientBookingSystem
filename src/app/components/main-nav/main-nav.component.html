@@ -25,7 +25,7 @@
           <a mat-list-item href="#">Search</a>
         </mat-list-item>
         <mat-list-item>
-          <a mat-list-item href="#">Create</a>
+          <a mat-list-item routerLink="/create-booking">Create</a>
         </mat-list-item>
         <mat-list-item>
           <a mat-list-item href="#">Print</a>
@@ -41,7 +41,7 @@
 
       <div *ngIf="isPassengersToggled">
           <mat-list-item>
-            <a mat-list-item href="#">Search</a>
+            <a mat-list-item >Search</a>
           </mat-list-item>
           <mat-list-item>
             <a mat-list-item href="#">Create</a>
@@ -85,11 +85,12 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
+      <!-- (click)="drawer.toggle()" -->
       <button
         type="button"
         aria-label="Toggle sidenav"
         mat-icon-button
-        (click)="drawer.toggle()"
+
         *ngIf="isHandset$ | async"
       >
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>

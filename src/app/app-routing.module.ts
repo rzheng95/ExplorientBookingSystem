@@ -8,6 +8,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 import { SecureInnerPagesGuard } from './guards/secureInnerPages/secure-inner-pages.guard';
 import { AuthGuard } from './guards/auth/auth.guard';
+import { CreateBookingComponent } from './components/bookings/create-booking/create-booking.component';
 
 
 const routes: Routes = [
@@ -17,7 +18,8 @@ const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [SecureInnerPagesGuard] },
   { path: 'verify-email-address', component: VerifyEmailComponent, canActivate: [SecureInnerPagesGuard] },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
-  { path: 'booking', component: BookingsComponent, canActivate: [AuthGuard]}
+  { path: 'booking', component: BookingsComponent, canActivate: [AuthGuard]},
+  { path: 'create-booking', component: CreateBookingComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({

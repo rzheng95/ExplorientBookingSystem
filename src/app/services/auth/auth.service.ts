@@ -75,10 +75,10 @@ export class AuthService {
   // Sign up with email/password
   async SignUp(email, password) {
     const domain = email.substring(email.lastIndexOf('@') + 1);
-    // if (domain !== 'uconn.edu') {
-    //   console.log('access denied');
-    //   return;
-    // }
+    if (domain !== 'uconn.edu' || domain !== 'explorient.com') {
+      console.log('access denied');
+      return;
+    }
     try {
       const result = await this.afAuth.auth.createUserWithEmailAndPassword(
         email,

@@ -20,13 +20,13 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
+import { CreateBookingComponent } from './components/bookings/create-booking/create-booking.component';
+import { MainNavComponent } from './components/main-nav/main-nav.component';
 
 // Services
 import { BookingsService } from './services/bookings/bookings.service';
 import { AuthService } from './services/auth/auth.service';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MainNavComponent } from './components/main-nav/main-nav.component';
-import { CreateBookingComponent } from './components/bookings/create-booking/create-booking.component';
 
 
 

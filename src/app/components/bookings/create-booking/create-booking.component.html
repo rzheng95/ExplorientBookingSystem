@@ -1,1 +1,147 @@
-<p>create-booking works!</p>
+<mat-card>
+  <mat-card-title>Create Booking</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="form" (submit)="onCreateBooking()">
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          formControlName="contactName"
+          placeholder="Contact Name*"
+        />
+        <mat-error *ngIf="form.get('contactName').invalid">Please enter a valid contact name.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          formControlName="package"
+          placeholder="Package*"
+        />
+        <mat-error *ngIf="form.get('package').invalid">Please enter a valid package.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          formControlName="addressLine1"
+          placeholder="Address Line 1"
+        />
+        <mat-error *ngIf="form.get('addressLine1').invalid">Please enter a valid address.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          formControlName="addressLine2"
+          placeholder="Address Line 2"
+        />
+        <mat-error *ngIf="form.get('addressLine2').invalid">Please enter a valid address.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          formControlName="city"
+          placeholder="City"
+        />
+        <mat-error *ngIf="form.get('city').invalid">Please enter a valid city.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          formControlName="state"
+          placeholder="State/Province"
+        />
+        <mat-error *ngIf="form.get('state').invalid">Please enter a valid state.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          formControlName="country"
+          placeholder="Country"
+        />
+        <mat-error *ngIf="form.get('country').invalid">Please enter a valid country.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          formControlName="zipcode"
+          placeholder="Zipcode"
+        />
+        <mat-error *ngIf="form.get('zipcode').invalid">Please enter a valid zipcode.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          formControlName="phone1"
+          placeholder="Phone 1"
+        />
+        <mat-error *ngIf="form.get('phone1').invalid">Please enter a valid phone number.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          formControlName="phone2"
+          placeholder="Phone 2"
+        />
+        <mat-error *ngIf="form.get('phone2').invalid">Please enter a valid phone number.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          formControlName="fax"
+          placeholder="Fax"
+        />
+        <mat-error *ngIf="form.get('fax').invalid">Please enter a valid fax number.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          formControlName="email1"
+          placeholder="Email 1"
+        />
+        <mat-error *ngIf="form.get('email1').invalid">Please enter a valid email address.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          formControlName="email2"
+          placeholder="Email 2"
+        />
+        <mat-error *ngIf="form.get('email2').invalid">Please enter a valid email address.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <textarea
+          matInput
+          type="text"
+          formControlName="notes"
+          placeholder="Notes"></textarea>
+
+        <mat-error *ngIf="form.get('notes').invalid">Please enter a valid note.</mat-error>
+      </mat-form-field>
+
+    </form>
+  </mat-card-content>
+</mat-card>

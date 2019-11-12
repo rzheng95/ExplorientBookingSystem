@@ -13,7 +13,7 @@ import { User } from '../../models/user.model';
   providedIn: 'root'
 })
 export class AuthService {
-  userData: any; // Save logged in user data
+  private userData: User; // Save logged in user data
 
   constructor(
     public afs: AngularFirestore, // Inject Firestore service
@@ -35,6 +35,10 @@ export class AuthService {
     });
   }
 
+  getUserData() {
+    return this.userData;
+  }
+
   // Sign in with email/password
   async SignIn(email, password) {
     try {
@@ -54,10 +58,10 @@ export class AuthService {
   // Sign up with email/password
   async SignUp(email, password) {
     const domain = email.substring(email.lastIndexOf('@') + 1);
-    if (domain !== 'uconn.edu') {
-      console.log('wrong');
-      return;
-    }
+    // if (domain !== 'uconn.edu') {
+    //   console.log('wrong');
+    //   return;
+    // }
     try {
       const result = await this.afAuth.auth.createUserWithEmailAndPassword(
         email,

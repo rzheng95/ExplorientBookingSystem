@@ -1,1 +1,31 @@
-<p>verify-email works!</p>
+<mat-card>
+  <mat-card-title>Thank You for Registring</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="form" (submit)="onResend()">
+      <div>
+        <p class="text-center">
+          We have sent a confirmation email to <strong>{{ email }}</strong
+          >.
+        </p>
+        <p class="text-center">
+          Please check your email and click on the link to verfiy your email
+          address.
+        </p>
+      </div>
+      <button class="resend" type="submit" mat-raised-button color="primary">
+          Resend Verification Email
+      </button>
+      <div>
+          <p>
+            Go back to<a
+              class="signup"
+              mat-button
+              color="accent"
+              [routerLink]="['/sign-in']"
+              >Login</a
+            >
+          </p>
+        </div>
+    </form>
+  </mat-card-content>
+</mat-card>

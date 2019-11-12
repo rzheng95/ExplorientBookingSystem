@@ -6,7 +6,7 @@
 
 .mat-form-field {
   width: 100%;
-  min-width: 300px;
+  min-width: 400px;
 }
 
 mat-card-title,
@@ -22,7 +22,9 @@ mat-card-content {
   background-color: red;
 }
 
-.button {
-  display: flex;
-  justify-content: flex-end;
+.login {
+  width: 100%;
 }
+
+
+

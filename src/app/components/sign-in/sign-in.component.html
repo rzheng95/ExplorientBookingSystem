@@ -1,5 +1,5 @@
 <mat-card>
-  <mat-card-title>Login</mat-card-title>
+  <mat-card-title>Log In</mat-card-title>
   <mat-card-content>
     <form [formGroup]="form" (submit)="onLogin()">
       <p>
@@ -28,8 +28,29 @@
         {{ error }}
       </p>
 
-      <div class="button">
-        <button type="submit" mat-button color="accent">Login</button>
+      <button class="login" type="submit" mat-raised-button color="primary">
+        Login
+      </button>
+
+      <div>
+        <p>
+          <a
+            class="signup"
+            mat-button
+            color="accent"
+            [routerLink]="['/forgot-password']"
+            >Forgot Password?</a
+          >
+        </p>
+        <p>
+          <a
+            class="signup"
+            mat-button
+            color="accent"
+            [routerLink]="['/register-user']"
+            >Signup</a
+          >
+        </p>
       </div>
     </form>
   </mat-card-content>

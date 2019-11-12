@@ -3,6 +3,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable, Subscription } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { AuthService } from '../../services/auth/auth.service';
+import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-main-nav',
@@ -12,6 +13,12 @@ import { AuthService } from '../../services/auth/auth.service';
 export class MainNavComponent implements OnInit, OnDestroy {
   isAuthenticated = false;
   private authListenerSubs: Subscription;
+  user: User;
+  isBookingsToggled = false;
+  isPassengersToggled = false;
+  isHotelsToggled = false;
+  isVendorsToggled = false;
+  dropdownArrow = 'keyboard_arrow_right';
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -22,6 +29,7 @@ export class MainNavComponent implements OnInit, OnDestroy {
   constructor(private breakpointObserver: BreakpointObserver, private authService: AuthService) {}
 
   ngOnInit() {
+    this.user = this.authService.getUserData();
     this.isAuthenticated = this.authService.isAuthenticated;
     console.log(this.isAuthenticated);
     this.authListenerSubs = this.authService
@@ -29,6 +37,22 @@ export class MainNavComponent implements OnInit, OnDestroy {
       .subscribe(isAuthenticated => {
         this.isAuthenticated = isAuthenticated;
       });
+  }
+
+  toggleBookings() {
+    this.isBookingsToggled = !this.isBookingsToggled;
+  }
+
+  togglePassengers() {
+    this.isPassengersToggled = !this.isPassengersToggled;
+  }
+
+  toggleHotels() {
+    this.isHotelsToggled = !this.isHotelsToggled;
+  }
+
+  toggleVendors() {
+    this.isVendorsToggled = !this.isVendorsToggled;
   }
 
   onLogout() {

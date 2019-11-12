@@ -26,6 +26,8 @@ import { BookingsService } from './services/bookings/bookings.service';
 import { AuthService } from './services/auth/auth.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MainNavComponent } from './components/main-nav/main-nav.component';
+import { CreateBookingComponent } from './components/bookings/create-booking/create-booking.component';
+
 
 
 @NgModule({
@@ -37,7 +39,8 @@ import { MainNavComponent } from './components/main-nav/main-nav.component';
     SignUpComponent,
     ForgotPasswordComponent,
     VerifyEmailComponent,
-    MainNavComponent
+    MainNavComponent,
+    CreateBookingComponent
   ],
   imports: [
     BrowserModule,

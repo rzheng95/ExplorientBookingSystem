@@ -8,6 +8,7 @@ import {
 } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { User } from '../../models/user.model';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +37,11 @@ export class AuthService {
   }
 
   getUserData() {
-    return this.userData;
+    if (!this.isLoggedIn) {
+      return;
+    }
+    const user = JSON.parse(localStorage.getItem('user'));
+    return user;
   }
 
   // Sign in with email/password
@@ -59,7 +64,7 @@ export class AuthService {
   async SignUp(email, password) {
     const domain = email.substring(email.lastIndexOf('@') + 1);
     // if (domain !== 'uconn.edu') {
-    //   console.log('wrong');
+    //   console.log('access denied');
     //   return;
     // }
     try {
@@ -70,7 +75,12 @@ export class AuthService {
       /* Call the SendVerificaitonMail() function when new user sign
       up and returns promise */
       this.SendVerificationMail();
-      this.SetUserData(result.user);
+      const user: User = {
+        uid: result.user.uid,
+        email: result.user.email,
+        emailVerified: result.user.emailVerified
+      };
+      this.SetUserData(user);
     } catch (error) {
       window.alert(error.message);
     }
@@ -121,15 +131,13 @@ export class AuthService {
   /* Setting up user data when sign in with username/password,
   sign up with username/password and sign in with social auth
   provider in Firestore database using AngularFirestore + AngularFirestoreDocument service */
-  SetUserData(user) {
+  SetUserData(user: User) {
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(
       `users/${user.uid}`
     );
     const userData: User = {
       uid: user.uid,
       email: user.email,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
       emailVerified: user.emailVerified
     };
     return userRef.set(userData, {

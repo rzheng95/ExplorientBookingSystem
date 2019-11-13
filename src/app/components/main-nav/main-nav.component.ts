@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable, Subscription } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { AuthService } from '../../services/auth/auth.service';
 import { User } from 'src/app/models/user.model';
+import { MatSidenav } from '@angular/material';
 
 @Component({
   selector: 'app-main-nav',
@@ -11,6 +12,7 @@ import { User } from 'src/app/models/user.model';
   styleUrls: ['./main-nav.component.css']
 })
 export class MainNavComponent implements OnInit, OnDestroy {
+
   isAuthenticated = false;
   private authListenerSubs: Subscription;
   user: User;
@@ -31,7 +33,6 @@ export class MainNavComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.user = this.authService.getUserData();
     this.isAuthenticated = this.authService.isAuthenticated;
-    console.log(this.isAuthenticated);
     this.authListenerSubs = this.authService
       .getAuthStatusListener()
       .subscribe(isAuthenticated => {

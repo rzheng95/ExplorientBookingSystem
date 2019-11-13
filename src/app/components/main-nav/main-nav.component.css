@@ -24,6 +24,10 @@
   line-height: 20px;
 }
 
+.hidden {
+  display: none !important;
+}
+
 
 ul {
   list-style: none;

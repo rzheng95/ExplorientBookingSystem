@@ -143,9 +143,15 @@
         <mat-error *ngIf="form.get('notes').invalid">Please enter a valid note.</mat-error>
       </mat-form-field>
 
-      <button mat-raised-button color="accent" type="submit">
-        Create Booking
-      </button>
+      <mat-spinner *ngIf="isLoading"></mat-spinner>
+      <div class="buttonsContainer">
+        <button class="clear" mat-raised-button color="primary" type="button" (click)="onClearForm()">
+          Clear
+        </button>
+        <button class="submit" mat-raised-button color="accent" type="submit">
+          Create Booking
+        </button>
+      </div>
 
     </form>
   </mat-card-content>

@@ -4,6 +4,7 @@ import { DashboardComponent } from '../dashboard/dashboard.component';
 import { BookingsComponent } from '../bookings/bookings.component';
 import { CreateBookingComponent } from '../bookings/create-booking/create-booking.component';
 import { AuthGuard } from 'src/app/guards/auth/auth.guard';
+import { SearchBookingComponent } from '../bookings/search-booking/search-booking.component';
 
 
 
@@ -11,6 +12,7 @@ const routes: Routes = [
 
   { path: '', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'bookings', component: BookingsComponent, canActivate: [AuthGuard] },
+  { path: 'search-booking', component: SearchBookingComponent, canActivate: [AuthGuard] },
   { path: 'create-booking', component: CreateBookingComponent, canActivate: [AuthGuard] }
 
 

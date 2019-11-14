@@ -10,6 +10,7 @@ import { BookingsService } from 'src/app/services/bookings/bookings.service';
 })
 export class CreateBookingComponent implements OnInit {
   form: FormGroup;
+  isLoading = false;
 
   constructor(private bookingsService: BookingsService) {}
 
@@ -38,6 +39,13 @@ export class CreateBookingComponent implements OnInit {
   }
 
   onCreateBooking() {
+    this.isLoading = true;
+    if (this.form.invalid) {
+      this.bookingsService.showDialogMessage('Invalid Form', 'All * fields are required.');
+      this.isLoading = false;
+      return;
+    }
+
     const booking: Booking = {
       contactName: this.form.value.contactName,
       package: this.form.value.package,
@@ -57,7 +65,13 @@ export class CreateBookingComponent implements OnInit {
 
     this.bookingsService.createBooking(booking);
 
+    this.bookingsService.showDialogMessage('Success!', `Booking created for ${this.form.value.contactName}`);
 
+    this.form.reset();
+    this.isLoading = false;
+  }
+
+  onClearForm() {
     this.form.reset();
   }
 }

@@ -5,6 +5,8 @@ import {
 } from 'angularfire2/firestore';
 import { Booking } from '../../models/booking.model';
 import { map } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
+import { ErrorComponent } from '../../error/error.component';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,7 @@ export class BookingsService {
 
   bookingsCollection: AngularFirestoreCollection<Booking>;
 
-  constructor(private afs: AngularFirestore) {
+  constructor(private afs: AngularFirestore, private dialog: MatDialog) {
     this.bookingsCollection = afs.collection(this.collectionPath);
   }
 
@@ -38,6 +40,22 @@ export class BookingsService {
             return { id, ...data };
           }))
         );
+  }
+
+  getBookingByContactName(contactName: string) {
+    return this.afs.collection(this.collectionPath, ref => ref.where('contactName', '==', contactName)).valueChanges();
+  }
+
+  showDialogMessage(title: string, message: string) {
+    if (!title) {
+      title = 'An error occured!';
+    }
+    this.dialog.open(ErrorComponent, {
+      data: {
+        title: title,
+        message: message
+      }
+    });
   }
 
   // private bookingsCollection: AngularFirestoreCollection<Booking>;

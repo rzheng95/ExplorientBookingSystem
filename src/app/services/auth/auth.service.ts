@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable, NgZone, Optional } from '@angular/core';
 
 import { auth } from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -10,8 +10,8 @@ import { Router } from '@angular/router';
 import { User } from '../../models/user.model';
 import { map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { MatDialog, MatDialogConfig } from '@angular/material';
-import { ErrorComponent } from 'src/app/error/error.component';
+import { MatDialog } from '@angular/material';
+import { ErrorComponent } from '../../error/error.component';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +19,7 @@ import { ErrorComponent } from 'src/app/error/error.component';
 export class AuthService {
   private userData: User; // Save logged in user data
   private authStatusListener = new Subject<boolean>();
+  private errorDialog: ErrorComponent;
 
   constructor(
     public afs: AngularFirestore, // Inject Firestore service
@@ -41,6 +42,18 @@ export class AuthService {
     });
   }
 
+  showErrorMessage(title: string, message: string) {
+    if (!title) {
+      title = 'An error occured!';
+    }
+    this.dialog.open(ErrorComponent, {
+      data: {
+        title: title,
+        message: message
+      }
+    });
+  }
+
   getAuthStatusListener() {
     return this.authStatusListener.asObservable();
   }
@@ -57,13 +70,17 @@ export class AuthService {
 
   }
 
-  showErrorMessage(message: string) {
-    this.dialog.open(ErrorComponent, {
-      data: {
-        message: message
-      }
-    });
-  }
+  // showErrorMessage(title: string, message: string) {
+  //   if (!title) {
+  //     title = 'An error occured!';
+  //   }
+  //   this.dialog.open(ErrorComponent, {
+  //     data: {
+  //       title: title,
+  //       message: message
+  //     }
+  //   });
+  // }
 
   // Sign in with email/password
   async SignIn(email, password) {
@@ -80,7 +97,7 @@ export class AuthService {
     } catch (error) {
       // window.alert(error.message);
       this.authStatusListener.next(false);
-      this.showErrorMessage(error.message);
+      this.showErrorMessage(null, error.message);
 
     }
   }
@@ -107,7 +124,7 @@ export class AuthService {
       };
       this.SetUserData(user);
     } catch (error) {
-      this.showErrorMessage(error.message);
+      this.showErrorMessage(null, error.message);
     }
   }
 
@@ -121,9 +138,9 @@ export class AuthService {
   async ForgotPassword(passwordResetEmail) {
     try {
       await this.afAuth.auth.sendPasswordResetEmail(passwordResetEmail);
-      window.alert('Password reset email sent, check your inbox.');
+      this.showErrorMessage('Email Sent', 'Password reset email sent, check your inbox.');
     } catch (error) {
-      this.showErrorMessage(error.message);
+      this.showErrorMessage(null, error.message);
     }
   }
 

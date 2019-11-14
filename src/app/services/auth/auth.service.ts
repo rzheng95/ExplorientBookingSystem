@@ -62,7 +62,7 @@ export class AuthService {
         password
       );
       this.ngZone.run(() => {
-        this.router.navigate(['dashboard']);
+        this.router.navigate(['/dashboard/']);
       });
       this.SetUserData(result.user);
       this.authStatusListener.next(true);

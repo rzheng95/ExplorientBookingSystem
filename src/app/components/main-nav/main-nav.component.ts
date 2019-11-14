@@ -4,7 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { AuthService } from '../../services/auth/auth.service';
 import { User } from 'src/app/models/user.model';
-import { MatSidenav } from '@angular/material';
+
 
 @Component({
   selector: 'app-main-nav',

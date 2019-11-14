@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Booking } from '../../../models/booking.model';
+import { BookingsService } from 'src/app/services/bookings/bookings.service';
 
 @Component({
   selector: 'app-create-booking',
@@ -9,7 +11,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class CreateBookingComponent implements OnInit {
   form: FormGroup;
 
-  constructor() { }
+  constructor(private bookingsService: BookingsService) {}
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -32,9 +34,30 @@ export class CreateBookingComponent implements OnInit {
       email2: new FormControl(null),
       notes: new FormControl(null)
     });
+
   }
 
   onCreateBooking() {
+    const booking: Booking = {
+      contactName: this.form.value.contactName,
+      package: this.form.value.package,
+      addressLine1: this.form.value.addressLine1,
+      addressLine2: this.form.value.addressLine2,
+      city: this.form.value.city,
+      state: this.form.value.state,
+      country: this.form.value.country,
+      zipcode: this.form.value.zipcode,
+      phone1: this.form.value.phone1,
+      phone2: this.form.value.phone2,
+      fax: this.form.value.fax,
+      email1: this.form.value.email1,
+      email2: this.form.value.email2,
+      notes: this.form.value.notes
+    };
 
+    this.bookingsService.createBooking(booking);
+
+
+    this.form.reset();
   }
 }

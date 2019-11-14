@@ -4,8 +4,8 @@
   width: 80%;
   box-shadow: 2px 1px 5px rgba(0,0,0,0.5);
   padding: 2rem;
-  margin: 0 auto;
-  margin-top: 2rem;
+  margin: 3rem auto 15rem auto;
+
 }
 
 .mat-form-field {

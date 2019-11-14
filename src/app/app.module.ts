@@ -1,13 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from '../environments/environment';
 import { AngularMaterialModule } from './angular-material.module';
 import { ReactiveFormsModule } from '@angular/forms';
-
 
 // Angular Fire
 import { AngularFireModule } from 'angularfire2';
@@ -20,11 +19,11 @@ import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 
+
 // Services
 import { BookingsService } from './services/bookings/bookings.service';
 import { AuthService } from './services/auth/auth.service';
-
-
+import { ErrorComponent } from './error/error.component';
 
 
 @NgModule({
@@ -33,7 +32,8 @@ import { AuthService } from './services/auth/auth.service';
     SignInComponent,
     SignUpComponent,
     ForgotPasswordComponent,
-    VerifyEmailComponent
+    VerifyEmailComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +49,11 @@ import { AuthService } from './services/auth/auth.service';
     AngularMaterialModule,
     ReactiveFormsModule
   ],
-  providers: [BookingsService, AuthService],
-  bootstrap: [AppComponent]
+  providers: [
+    BookingsService,
+    AuthService
+  ],
+  bootstrap: [AppComponent],
+  entryComponents: [ErrorComponent]
 })
 export class AppModule {}

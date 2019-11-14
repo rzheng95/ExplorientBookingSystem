@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { User } from '../../models/user.model';
 import { map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { MatDialog, MatDialogConfig } from '@angular/material';
+import { ErrorComponent } from 'src/app/error/error.component';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +24,8 @@ export class AuthService {
     public afs: AngularFirestore, // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public router: Router,
-    public ngZone: NgZone // NgZone service to remove outside scope warning
+    public ngZone: NgZone, // NgZone service to remove outside scope warning
+    public dialog: MatDialog
   ) {
     /* Saving user data in localstorage when
     logged in and setting up null when logged out */
@@ -54,6 +57,14 @@ export class AuthService {
 
   }
 
+  showErrorMessage(message: string) {
+    this.dialog.open(ErrorComponent, {
+      data: {
+        message: message
+      }
+    });
+  }
+
   // Sign in with email/password
   async SignIn(email, password) {
     try {
@@ -67,8 +78,10 @@ export class AuthService {
       this.SetUserData(result.user);
       this.authStatusListener.next(true);
     } catch (error) {
-      window.alert(error.message);
+      // window.alert(error.message);
       this.authStatusListener.next(false);
+      this.showErrorMessage(error.message);
+
     }
   }
 
@@ -94,7 +107,7 @@ export class AuthService {
       };
       this.SetUserData(user);
     } catch (error) {
-      window.alert(error.message);
+      this.showErrorMessage(error.message);
     }
   }
 
@@ -110,7 +123,7 @@ export class AuthService {
       await this.afAuth.auth.sendPasswordResetEmail(passwordResetEmail);
       window.alert('Password reset email sent, check your inbox.');
     } catch (error) {
-      window.alert(error);
+      this.showErrorMessage(error.message);
     }
   }
 

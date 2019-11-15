@@ -7,12 +7,14 @@ import { Booking } from '../../models/booking.model';
 import { map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { ErrorComponent } from '../../error/error.component';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookingsService {
   private collectionPath = '/bookings';
+  private bookings: Booking[] = [];
 
   bookingsCollection: AngularFirestoreCollection<Booking>;
 
@@ -32,8 +34,12 @@ export class BookingsService {
     return this.bookingsCollection.doc(key).delete();
   }
 
-  getBookings() {
-    return this.bookingsCollection.snapshotChanges().pipe(
+
+  getBookingsOrderBy(orderBy: string) {
+    console.log('reading in bookingsService');
+    return this.afs.collection(this.collectionPath, ref => {
+      return ref.orderBy(orderBy);
+    }).snapshotChanges().pipe(
           map(actions => actions.map(a => {
             const data = a.payload.doc.data() as Booking;
             const id = a.payload.doc.id;
@@ -42,9 +48,9 @@ export class BookingsService {
         );
   }
 
-  getBookingByContactName(contactName: string) {
-    return this.afs.collection(this.collectionPath, ref => ref.where('contactName', '==', contactName)).valueChanges();
-  }
+  // getBookingByContactName(contactName: string) {
+  //   return this.afs.collection(this.collectionPath, ref => ref.where('contactName', '==', contactName)).valueChanges();
+  // }
 
   showDialogMessage(title: string, message: string) {
     if (!title) {

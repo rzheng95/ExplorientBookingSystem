@@ -14,7 +14,7 @@ export class BookingsComponent implements OnInit {
   bookings: Booking[];
 
   ngOnInit() {
-    this.bookingsService.getBookings().subscribe(bkgs => {
+    this.bookingsService.getBookingsOrderBy('contactName').subscribe(bkgs => {
       this.bookings = bkgs;
     });
   }

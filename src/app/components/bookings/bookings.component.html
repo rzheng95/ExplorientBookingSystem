@@ -1,9 +1,10 @@
 <app-main-nav>
   <div>
     <ul *ngFor='let booking of bookings' class='collection'>
-      <li class='collection-item'>{{ booking.id }}</li>
-      <li class='collection-item'>{{ booking.package }}</li>
-      <li class='collection-item'>{{ booking.notes }}</li>
+      <li class='collection-item'><strong>ID: </strong>{{ booking.id }}</li>
+      <li class='collection-item'><strong>Contact Name: </strong>{{ booking.contactName }}</li>
+      <li class='collection-item'><strong>Package: </strong>{{ booking.package }}</li>
+      <li class='collection-item'><strong>Address Line 1: </strong>{{ booking.addressLine1 }}</li>
     </ul>
   </div>
 

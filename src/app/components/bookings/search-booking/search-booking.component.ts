@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BookingsService } from 'src/app/services/bookings/bookings.service';
+import { Booking } from 'src/app/models/booking.model';
+import { of } from 'rxjs';
+import { debounceTime, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search-booking',
@@ -10,8 +13,10 @@ import { BookingsService } from 'src/app/services/bookings/bookings.service';
 export class SearchBookingComponent implements OnInit {
   form: FormGroup;
   isLoading = false;
+  bookings: Booking[] = [];
+  storedBookings: Booking[] = [];
 
-  constructor(private bookingsService: BookingsService) { }
+  constructor(private bookingsService: BookingsService) {}
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -21,23 +26,38 @@ export class SearchBookingComponent implements OnInit {
     });
   }
 
-  onSearchBooking() {
+  filterBookings() {
     this.isLoading = true;
-    if (this.form.invalid) {
-      this.isLoading = false;
-      this.bookingsService.showDialogMessage('Invalid Form', 'All * fields are required.');
-      return;
+    if (this.storedBookings && this.storedBookings.length > 0) {
+      this.bookings = this.performFilter(this.form.value.contactName);
+    } else {
+      this.bookingsService
+      .getBookingsOrderBy('contactName')
+      .subscribe((bkgs: Booking[]) => {
+        this.storedBookings = bkgs;
+        this.bookings = this.performFilter(this.form.value.contactName);
+      });
     }
-
-    this.bookingsService.getBookingByContactName(this.form.value.contactName).subscribe(booking => {
-      console.log(booking);
-    })
-
     this.isLoading = false;
+  }
+
+  performFilter(input: string) {
+    return this.storedBookings.filter((data) => {
+      return data.contactName.toLowerCase().includes(input.trim().toLowerCase());
+    });
+  }
+
+  onRefreshBookings() {
+    this.bookingsService
+      .getBookingsOrderBy('contactName')
+      .subscribe((bkgs: Booking[]) => {
+        this.storedBookings = bkgs;
+        this.bookings = this.storedBookings;
+      });
   }
 
   onClearForm() {
     this.form.reset();
-  }
 
+  }
 }

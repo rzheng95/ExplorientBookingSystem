@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { BookingsService } from 'src/app/services/bookings/bookings.service';
-import { Booking } from 'src/app/models/booking.model';
-import { of } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
+import { BookingsService } from '../../../services/bookings/bookings.service';
+import { Booking } from '../../../models/booking.model';
+
 
 @Component({
   selector: 'app-search-booking',

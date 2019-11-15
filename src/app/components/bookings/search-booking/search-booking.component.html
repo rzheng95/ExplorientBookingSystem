@@ -34,7 +34,7 @@
               <p>{{ booking.package }}</p>
 
               <mat-action-row>
-                <a mat-button color="primary" >EDIT</a>
+                <a mat-button color="primary" [routerLink]="['/dashboard/edit-booking', booking.id]">EDIT</a>
                 <button mat-button color="warn">
                   DELETE
                 </button>

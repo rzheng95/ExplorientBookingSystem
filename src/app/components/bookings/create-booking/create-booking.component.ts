@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Booking } from '../../../models/booking.model';
-import { BookingsService } from 'src/app/services/bookings/bookings.service';
+import { BookingsService } from '../../../services/bookings/bookings.service';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-create-booking',
@@ -11,8 +12,11 @@ import { BookingsService } from 'src/app/services/bookings/bookings.service';
 export class CreateBookingComponent implements OnInit {
   form: FormGroup;
   isLoading = false;
+  booking: Booking;
+  mode = 'create';
+  private bookingId: string;
 
-  constructor(private bookingsService: BookingsService) {}
+  constructor(private bookingsService: BookingsService, public route: ActivatedRoute) {}
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -36,9 +40,43 @@ export class CreateBookingComponent implements OnInit {
       notes: new FormControl(null)
     });
 
+    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      if (paramMap.has('bookingId')) {
+        this.mode = 'edit';
+        this.bookingId = paramMap.get('bookingId');
+        // get booking
+        this.bookingsService.getBookingById(this.bookingId).subscribe(booking  => {
+          this.booking = booking as Booking;
+          // populate UI
+          this.form.setValue({
+            contactName: this.booking.contactName,
+            package: this.booking.package,
+            addressLine1: this.booking.addressLine1,
+            addressLine2: this.booking.addressLine2,
+            city: this.booking.city,
+            state: this.booking.state,
+            country: this.booking.country,
+            zipcode: this.booking.zipcode,
+            phone1: this.booking.phone1,
+            phone2: this.booking.phone2,
+            fax: this.booking.fax,
+            email1: this.booking.email1,
+            email2: this.booking.email2,
+            notes: this.booking.notes,
+          });
+        });
+
+
+
+      } else {
+        this.mode = 'create';
+        this.bookingId = null;
+      }
+    });
+
   }
 
-  onCreateBooking() {
+  onSaveBooking() {
     this.isLoading = true;
     if (this.form.invalid) {
       this.bookingsService.showDialogMessage('Invalid Form', 'All * fields are required.');
@@ -46,7 +84,7 @@ export class CreateBookingComponent implements OnInit {
       return;
     }
 
-    const booking: Booking = {
+    const newBooking: Booking = {
       contactName: this.form.value.contactName,
       package: this.form.value.package,
       addressLine1: this.form.value.addressLine1,
@@ -63,11 +101,15 @@ export class CreateBookingComponent implements OnInit {
       notes: this.form.value.notes
     };
 
-    this.bookingsService.createBooking(booking);
-
-    this.bookingsService.showDialogMessage('Success!', `Booking created for ${this.form.value.contactName}`);
-
-    this.form.reset();
+    if (this.mode === 'create') { // CREATE mode
+      this.bookingsService.createBooking(newBooking);
+      this.bookingsService.showDialogMessage('Success!', `Booking created for ${this.form.value.contactName}`);
+      this.form.reset();
+    } else { // EDIT mode
+      this.bookingsService.updateBooking(this.bookingId, newBooking)
+      .catch(error => console.log(error));
+      this.bookingsService.showDialogMessage('Success!', `Booking updated for ${this.form.value.contactName}`);
+    }
     this.isLoading = false;
   }
 

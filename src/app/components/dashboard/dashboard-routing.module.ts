@@ -13,7 +13,9 @@ const routes: Routes = [
   { path: '', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'bookings', component: BookingsComponent, canActivate: [AuthGuard] },
   { path: 'search-booking', component: SearchBookingComponent, canActivate: [AuthGuard] },
-  { path: 'create-booking', component: CreateBookingComponent, canActivate: [AuthGuard] }
+  { path: 'create-booking', component: CreateBookingComponent, canActivate: [AuthGuard] },
+  { path: 'edit-booking/:bookingId', component: CreateBookingComponent, canActivate: [AuthGuard] }
+
 
 
 ];

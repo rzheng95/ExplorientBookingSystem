@@ -7,7 +7,7 @@ import { Booking } from '../../models/booking.model';
 import { map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { ErrorComponent } from '../../error/error.component';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -26,17 +26,16 @@ export class BookingsService {
     this.bookingsCollection.add({ ...booking });
   }
 
-  updateBooking(key: string, value: any): Promise<void> {
-    return this.bookingsCollection.doc(key).update(value);
+  updateBooking(id: string, value: any): Promise<void> {
+    return this.bookingsCollection.doc(id).update(value);
   }
 
-  deleteBooking(key: string): Promise<void> {
-    return this.bookingsCollection.doc(key).delete();
+  deleteBooking(id: string): Promise<void> {
+    return this.bookingsCollection.doc(id).delete();
   }
 
 
   getBookingsOrderBy(orderBy: string) {
-    console.log('reading in bookingsService');
     return this.afs.collection(this.collectionPath, ref => {
       return ref.orderBy(orderBy);
     }).snapshotChanges().pipe(
@@ -48,9 +47,10 @@ export class BookingsService {
         );
   }
 
-  // getBookingByContactName(contactName: string) {
-  //   return this.afs.collection(this.collectionPath, ref => ref.where('contactName', '==', contactName)).valueChanges();
-  // }
+  getBookingById(id: string) {
+    // return this.afs.collection(this.collectionPath, ref => ref.where(field, '==', data)).valueChanges();
+    return this.bookingsCollection.doc(id).valueChanges();
+  }
 
   showDialogMessage(title: string, message: string) {
     if (!title) {

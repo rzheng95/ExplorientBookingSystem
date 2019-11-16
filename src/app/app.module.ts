@@ -24,7 +24,7 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email.com
 import { BookingsService } from './services/bookings/bookings.service';
 import { AuthService } from './services/auth/auth.service';
 import { ErrorComponent } from './error/error.component';
-
+import { PassengersService } from './services/passengers/passengers.service';
 
 @NgModule({
   declarations: [
@@ -51,7 +51,8 @@ import { ErrorComponent } from './error/error.component';
   ],
   providers: [
     BookingsService,
-    AuthService
+    AuthService,
+    PassengersService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ErrorComponent]

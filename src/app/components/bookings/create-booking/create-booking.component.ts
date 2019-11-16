@@ -85,8 +85,8 @@ export class CreateBookingComponent implements OnInit {
     }
 
     const newBooking: Booking = {
-      contactName: this.form.value.contactName,
-      package: this.form.value.package,
+      contactName: this.form.value.contactName.trim(),
+      package: this.form.value.package.trim(),
       addressLine1: this.form.value.addressLine1,
       addressLine2: this.form.value.addressLine2,
       city: this.form.value.city,

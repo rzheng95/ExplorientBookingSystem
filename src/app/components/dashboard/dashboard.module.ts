@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AngularMaterialModule } from '../../angular-material.module';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 
@@ -9,6 +9,8 @@ import { DashboardComponent } from '../dashboard/dashboard.component';
 import { BookingsComponent } from '../bookings/bookings.component';
 import { CreateBookingComponent } from '../bookings/create-booking/create-booking.component';
 import { SearchBookingComponent } from '../bookings/search-booking/search-booking.component';
+import { SearchPassengerComponent } from '../passengers/search-passenger/search-passenger.component';
+import { AddPassengerComponent } from '../passengers/add-passenger/add-passenger.component';
 
 
 
@@ -18,11 +20,14 @@ import { SearchBookingComponent } from '../bookings/search-booking/search-bookin
     MainNavComponent,
     DashboardComponent,
     BookingsComponent,
-    SearchBookingComponent
+    SearchBookingComponent,
+    SearchPassengerComponent,
+    AddPassengerComponent
   ],
   imports: [
     CommonModule,
     AngularMaterialModule,
+    FormsModule,
     ReactiveFormsModule,
     DashboardRoutingModule
   ]

@@ -30,6 +30,10 @@ mat-spinner {
   margin: 0 auto;
 }
 
+mat-action-row {
+  padding: 16px 8px;
+}
+
 .buttonsContainer {
   margin-top: 2rem;
 }
@@ -40,4 +44,12 @@ mat-spinner {
 
 .submit {
   float: right;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.passFormField {
+
 }

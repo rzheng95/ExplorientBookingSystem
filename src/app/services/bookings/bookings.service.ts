@@ -3,18 +3,17 @@ import {
   AngularFirestore,
   AngularFirestoreCollection
 } from 'angularfire2/firestore';
-import { Booking } from '../../models/booking.model';
-import { map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
+import { map } from 'rxjs/operators';
+import { Booking } from '../../models/booking.model';
 import { ErrorComponent } from '../../error/error.component';
-import { of, Observable } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookingsService {
   private collectionPath = '/bookings';
-  private bookings: Booking[] = [];
 
   bookingsCollection: AngularFirestoreCollection<Booking>;
 
@@ -58,8 +57,8 @@ export class BookingsService {
     }
     this.dialog.open(ErrorComponent, {
       data: {
-        title: title,
-        message: message
+        title,
+        message
       }
     });
   }

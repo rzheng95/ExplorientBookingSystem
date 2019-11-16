@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>{{ mode }} Passenger</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.passengerName" placeholder="Passenger Name"/>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions class="buttons">
+  <button mat-button (click)="onNoClick()" cdkFocusInitial>Cancel</button>
+  <!-- [mat-dialog-close]="data.passengerName" -->
+  <button mat-button color="primary" (click)="onAddClick()"*ngIf="mode === 'Add'">
+    Add
+  </button>
+  <button mat-button color="warn" (click)="onDeleteClick()"*ngIf="mode === 'Edit'">
+    Delete
+  </button>
+  <button mat-button color="primary" (click)="onSaveClick()"*ngIf="mode === 'Edit'">
+    Save
+  </button>
+
+</div>

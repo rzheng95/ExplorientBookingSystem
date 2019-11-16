@@ -5,6 +5,8 @@ import { BookingsComponent } from '../bookings/bookings.component';
 import { CreateBookingComponent } from '../bookings/create-booking/create-booking.component';
 import { AuthGuard } from 'src/app/guards/auth/auth.guard';
 import { SearchBookingComponent } from '../bookings/search-booking/search-booking.component';
+import { SearchPassengerComponent } from '../passengers/search-passenger/search-passenger.component';
+import { AddPassengerComponent } from '../passengers/add-passenger/add-passenger.component';
 
 
 
@@ -14,7 +16,9 @@ const routes: Routes = [
   { path: 'bookings', component: BookingsComponent, canActivate: [AuthGuard] },
   { path: 'search-booking', component: SearchBookingComponent, canActivate: [AuthGuard] },
   { path: 'create-booking', component: CreateBookingComponent, canActivate: [AuthGuard] },
-  { path: 'edit-booking/:bookingId', component: CreateBookingComponent, canActivate: [AuthGuard] }
+  { path: 'edit-booking/:bookingId', component: CreateBookingComponent, canActivate: [AuthGuard] },
+  { path: 'search-passenger', component: SearchPassengerComponent, canActivate: [AuthGuard] },
+  { path: 'add-passenger/:bookingId', component: AddPassengerComponent, canActivate: [AuthGuard] }
 
 
 

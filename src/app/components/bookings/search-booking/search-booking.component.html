@@ -2,7 +2,7 @@
   <mat-card>
     <mat-card-title>Search Booking</mat-card-title>
     <mat-card-content>
-      <form [formGroup]="form" (submit)="onRefreshBookings()">
+      <form [formGroup]="form">
         <mat-form-field>
           <input
             matInput
@@ -26,18 +26,24 @@
 
   <mat-card class="result-card">
     <mat-card-title>Search Results</mat-card-title>
+
     <mat-card-content>
         <p>{{ bookings.length }} results found.</p>
-        <mat-accordion multi="true" *ngIf="bookings.length > 0">
+        <mat-accordion *ngIf="bookings.length > 0">
             <mat-expansion-panel *ngFor="let booking of bookings">
-              <mat-expansion-panel-header>{{ booking.contactName }} - {{ booking.package }}</mat-expansion-panel-header>
-              <p>{{ booking.package }}</p>
+              <mat-expansion-panel-header (click)="onClickPanel(booking.id)"><strong>{{ booking.contactName }} &nbsp; </strong> -&nbsp;{{ booking.package }}</mat-expansion-panel-header>
+              <p>{{ passengers.length }} passengers added.</p>
+              <mat-list *ngFor="let passenger of passengers">
+                <mat-list-item (click)="onClickPassenger(passenger)">{{ passenger.passengerName }}</mat-list-item>
+              </mat-list>
+
 
               <mat-action-row>
+                <button mat-button color="primary" (click)="onAddPassenger(booking.id)">Add Passenger</button>
+                <a mat-button color="primary" [routerLink]="['/dashboard/edit-itinerary', booking.id]">Edit Itinerary</a>
+                <span class="spacer"></span>
                 <a mat-button color="primary" [routerLink]="['/dashboard/edit-booking', booking.id]">EDIT</a>
-                <button mat-button color="warn">
-                  DELETE
-                </button>
+
               </mat-action-row>
             </mat-expansion-panel>
           </mat-accordion>

@@ -31,10 +31,13 @@
         <p>{{ bookings.length }} results found.</p>
         <mat-accordion *ngIf="bookings.length > 0">
             <mat-expansion-panel *ngFor="let booking of bookings">
-              <mat-expansion-panel-header (click)="onClickPanel(booking.id)"><strong>{{ booking.contactName }} &nbsp; </strong> -&nbsp;{{ booking.package }}</mat-expansion-panel-header>
+              <mat-expansion-panel-header (click)="onClickPanel(booking.id)">
+                  <mat-icon>perm_contact_calendar</mat-icon> &nbsp;&nbsp; <strong>{{ booking.contactName }} &nbsp;
+                  </strong> - &nbsp;{{ booking.package }}
+              </mat-expansion-panel-header>
               <p>{{ passengers.length }} passengers added.</p>
               <mat-list *ngFor="let passenger of passengers">
-                <mat-list-item (click)="onClickPassenger(passenger)">{{ passenger.passengerName }}</mat-list-item>
+                <mat-list-item (click)="onClickPassenger(passenger)"><mat-icon>perm_identity</mat-icon>&nbsp;{{ passenger.passengerName }}</mat-list-item>
               </mat-list>
 
 

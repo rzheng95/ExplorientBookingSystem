@@ -11,6 +11,8 @@ import { CreateBookingComponent } from '../bookings/create-booking/create-bookin
 import { SearchBookingComponent } from '../bookings/search-booking/search-booking.component';
 import { SearchPassengerComponent } from '../passengers/search-passenger/search-passenger.component';
 import { AddPassengerComponent } from '../passengers/add-passenger/add-passenger.component';
+import { EditItineraryComponent } from '../itinerary/edit-itinerary/edit-itinerary.component';
+
 
 
 
@@ -22,7 +24,8 @@ import { AddPassengerComponent } from '../passengers/add-passenger/add-passenger
     BookingsComponent,
     SearchBookingComponent,
     SearchPassengerComponent,
-    AddPassengerComponent
+    AddPassengerComponent,
+    EditItineraryComponent
   ],
   imports: [
     CommonModule,

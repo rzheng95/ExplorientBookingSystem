@@ -7,6 +7,7 @@ import { AuthGuard } from 'src/app/guards/auth/auth.guard';
 import { SearchBookingComponent } from '../bookings/search-booking/search-booking.component';
 import { SearchPassengerComponent } from '../passengers/search-passenger/search-passenger.component';
 import { AddPassengerComponent } from '../passengers/add-passenger/add-passenger.component';
+import { EditItineraryComponent } from '../itinerary/edit-itinerary/edit-itinerary.component';
 
 
 
@@ -18,7 +19,8 @@ const routes: Routes = [
   { path: 'create-booking', component: CreateBookingComponent, canActivate: [AuthGuard] },
   { path: 'edit-booking/:bookingId', component: CreateBookingComponent, canActivate: [AuthGuard] },
   { path: 'search-passenger', component: SearchPassengerComponent, canActivate: [AuthGuard] },
-  { path: 'add-passenger/:bookingId', component: AddPassengerComponent, canActivate: [AuthGuard] }
+  { path: 'add-passenger/:bookingId', component: AddPassengerComponent, canActivate: [AuthGuard] },
+  { path: 'edit-itinerary/:bookingId', component: EditItineraryComponent, canActivate: [AuthGuard] }
 
 
 

@@ -1,0 +1,30 @@
+.mat-card {
+  width: 80%;
+  box-shadow: 2px 1px 5px rgba(0,0,0,0.5);
+  padding: 2rem;
+  margin: 3rem auto 5rem auto;
+}
+
+.result-card {
+  margin: 3rem auto 15rem auto;
+}
+
+mat-card-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+mat-card-title {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-spinner {
+  margin: 0 auto;
+}

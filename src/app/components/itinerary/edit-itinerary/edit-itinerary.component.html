@@ -1,0 +1,20 @@
+<app-main-nav>
+  <mat-card>
+    <mat-card-title>Edit Itinerary</mat-card-title>
+    <mat-card-content>
+      <p><mat-icon>perm_contact_calendar</mat-icon><strong> Contact Person:</strong> Richard Zheng</p>
+      <p><mat-icon>assistant</mat-icon><strong> Package:</strong> 7 Days Beijing Shanghai Tour</p>
+      <form [formGroup]="form" (submit)="onSaveItinerary()">
+        <mat-form-field>
+          <input
+            matInput
+            type="text"
+            formControlName="contactName"
+            placeholder="Contact Name*"
+          />
+          <mat-error *ngIf="form.get('contactName').invalid">Please enter a valid contact name.</mat-error>
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</app-main-nav>

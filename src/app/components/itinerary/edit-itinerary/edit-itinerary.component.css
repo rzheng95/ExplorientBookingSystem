@@ -21,3 +21,7 @@ mat-form-field {
   width: 100%;
 }
 
+.addServiceButton {
+  margin-top: 3rem;
+  float: right;
+}

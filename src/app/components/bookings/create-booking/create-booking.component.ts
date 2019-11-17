@@ -65,9 +65,6 @@ export class CreateBookingComponent implements OnInit {
             notes: this.booking.notes,
           });
         });
-
-
-
       } else {
         this.mode = 'create';
         this.bookingId = null;

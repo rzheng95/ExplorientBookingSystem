@@ -17,7 +17,7 @@
         <form [formGroup]="form" (submit)="onSubmit()">
           <div
             formArrayName="services"
-            *ngFor="let service of services.controls; index as i"
+            *ngFor="let service of services; index as i"
           >
             <mat-expansion-panel [formGroupName]="i">
               <!-- Header -->
@@ -84,38 +84,25 @@
 
               <!-- Accommodations -->
               <mat-form-field>
-                <input matInput placeholder="Accommodations" />
+                <input
+                  matInput
+                  formControlName="accommodations"
+                  placeholder="Accommodations"
+                />
               </mat-form-field>
 
               <!-- Room Type -->
 
               <!-- Meal Plan -->
+
+              <button mat-raised-button type="button" color="primary" (click)="onSaveService(service.id)">Save</button>
             </mat-expansion-panel>
           </div>
-          <button mat-raised-button (click)="onClickAddService()">
+          <button mat-raised-button type="button" class="addServiceButton" (click)="onClickAddService()" color="primary">
             Add New Service
-          </button>
-          <button mat-raised-button type="submit" color="primary">
-            Submit
           </button>
         </form>
       </mat-accordion>
-
-      <!-- <form [formGroup]="form" (submit)="onSubmit()">
-
-          <div formArrayName="mobiles">
-            <h3>Enter Mobile number</h3>
-            <button (click)="addNewMobile()">Add New Mobile</button>
-            <div *ngFor="let mob of mobiles.controls; index as i">
-              <label>Mobile {{ i+1 }}</label>
-              <input type="text" [formControlName]="i">
-            </div>
-          </div>
-          <button class="submit" type="submit">Submit</button>
-
-      </form> -->
     </mat-card-content>
-
-    <button mat-raised-button color="accent">Add</button>
   </mat-card>
 </app-main-nav>

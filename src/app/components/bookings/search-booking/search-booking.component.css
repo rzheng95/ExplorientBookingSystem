@@ -34,6 +34,10 @@ mat-action-row {
   padding: 16px 8px;
 }
 
+mat-list-item {
+  cursor: pointer;
+}
+
 .buttonsContainer {
   margin-top: 2rem;
 }
@@ -50,6 +54,3 @@ mat-action-row {
   flex: 1 1 auto;
 }
 
-.passFormField {
-
-}

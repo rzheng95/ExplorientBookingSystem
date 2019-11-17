@@ -15,7 +15,6 @@ import { EditItineraryComponent } from '../itinerary/edit-itinerary/edit-itinera
 
 
 
-
 @NgModule({
   declarations: [
     CreateBookingComponent,

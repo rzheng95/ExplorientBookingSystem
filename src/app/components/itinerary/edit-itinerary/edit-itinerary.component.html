@@ -2,19 +2,85 @@
   <mat-card>
     <mat-card-title>Edit Itinerary</mat-card-title>
     <mat-card-content>
-      <p><mat-icon>perm_contact_calendar</mat-icon><strong> Contact Person:</strong> Richard Zheng</p>
-      <p><mat-icon>assistant</mat-icon><strong> Package:</strong> 7 Days Beijing Shanghai Tour</p>
-      <form [formGroup]="form" (submit)="onSaveItinerary()">
-        <mat-form-field>
-          <input
-            matInput
-            type="text"
-            formControlName="contactName"
-            placeholder="Contact Name*"
-          />
-          <mat-error *ngIf="form.get('contactName').invalid">Please enter a valid contact name.</mat-error>
-        </mat-form-field>
-      </form>
+      <div class="contactDiv">
+        <p>
+          <mat-icon>perm_contact_calendar</mat-icon
+          ><strong> Contact Person:</strong> Richard Zheng
+        </p>
+        <p>
+          <mat-icon>assistant</mat-icon><strong> Package:</strong> 7 Days
+          Beijing Shanghai Tour
+        </p>
+      </div>
+
+      <mat-accordion multi="true">
+        <mat-expansion-panel>
+          <!-- Header -->
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Date
+            </mat-panel-title>
+            <mat-panel-description>
+              Service caption
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <!-- Date Picker -->
+          <mat-form-field class="datePicker">
+            <input
+              matInput
+              #input
+              [matDatepicker]="picker"
+              placeholder="Choose a date"
+              (focus)="picker.open()"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+              class="datePickerIcon"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker (closed)="input.blur()"></mat-datepicker>
+          </mat-form-field>
+
+          <!-- Service Caption -->
+          <mat-form-field>
+            <input matInput placeholder="Service caption">
+          </mat-form-field>
+
+          <!-- Destination -->
+          <mat-form-field>
+            <input
+              matInput
+              placeholder="Destination"
+            />
+          </mat-form-field>
+
+          <!-- Activity -->
+          <mat-form-field>
+            <textarea
+              matInput
+              type="text"
+              placeholder="Activity">
+            </textarea>
+          </mat-form-field>
+
+          <!-- Accommodations -->
+          <mat-form-field>
+            <input
+              matInput
+              placeholder="Accommodations"
+            />
+          </mat-form-field>
+
+          <!-- Room Type -->
+
+          <!-- Meal Plan -->
+
+
+        </mat-expansion-panel>
+      </mat-accordion>
     </mat-card-content>
+
+    <button mat-raised-button color="accent">Add</button>
   </mat-card>
 </app-main-nav>

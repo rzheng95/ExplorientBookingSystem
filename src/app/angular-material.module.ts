@@ -12,7 +12,11 @@ import {
   MatIconModule,
   MatListModule,
   MatTreeModule,
-  MatFormFieldModule
+  MatFormFieldModule,
+  MatGridListModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatTabsModule
 } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
 
@@ -31,7 +35,11 @@ import { LayoutModule } from '@angular/cdk/layout';
     MatIconModule,
     MatListModule,
     MatTreeModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatGridListModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatTabsModule
   ]
 })
 export class AngularMaterialModule {}

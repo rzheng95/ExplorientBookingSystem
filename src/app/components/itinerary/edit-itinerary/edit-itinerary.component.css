@@ -5,10 +5,6 @@
   margin: 3rem auto 5rem auto;
 }
 
-.result-card {
-  margin: 3rem auto 15rem auto;
-}
-
 mat-card-content {
   width: 100%;
   display: flex;
@@ -25,6 +21,3 @@ mat-form-field {
   width: 100%;
 }
 
-mat-spinner {
-  margin: 0 auto;
-}

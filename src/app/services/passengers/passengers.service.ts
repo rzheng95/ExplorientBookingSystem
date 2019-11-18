@@ -20,7 +20,7 @@ export class PassengersService {
   }
 
   addPassenger(passenger: Passenger) {
-    this.passengersCollection.add({ ...passenger });
+    return this.passengersCollection.add({ ...passenger });
   }
 
   getPassengersByBid(bid: string) {
@@ -35,7 +35,7 @@ export class PassengersService {
     );
   }
 
-  updatePassenger(id: string, value: any): Promise<void> {
+  updatePassenger(id: string, value: any) {
     return this.passengersCollection.doc(id).update(value);
   }
 

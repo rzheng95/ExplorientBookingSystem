@@ -1,7 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  FormArray,
+  AbstractControl
+} from '@angular/forms';
+import { BookingsService } from '../../../services/bookings/bookings.service';
 import { ServicesService } from '../../../services/services/services.service';
+import { Booking } from '../../../models/booking.model';
 import { Service } from '../../../models/service.model';
 
 @Component({
@@ -10,18 +18,21 @@ import { Service } from '../../../models/service.model';
   styleUrls: ['./edit-itinerary.component.css']
 })
 export class EditItineraryComponent implements OnInit {
+  private bookingId: string;
   form: FormGroup;
   mode = 'edit';
-  private bookingId: string;
   services: Service[] = [];
+  booking: Booking;
 
-  constructor(private servicesService: ServicesService, private route: ActivatedRoute) { }
+  constructor(
+    private servicesService: ServicesService,
+    private bookingsService: BookingsService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     this.form = new FormGroup({
-      services: new FormArray([
-
-      ])
+      services: new FormArray([])
     });
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -34,42 +45,77 @@ export class EditItineraryComponent implements OnInit {
       }
     });
 
-    this.servicesService.getServiceByBid(this.bookingId).subscribe((sers: Service[]) => {
-      this.services = sers;
-      console.log(this.services);
-
-      let count = 0;
-      for (const service of this.services) {
-        this.serviceFormArray.push(this.serviceFormGroup());
-
-        this.serviceFormArray.controls[count].setValue({
-          datePicker: this.services[count].date,
-          serviceCaption: this.services[count].serviceCaption,
-          destination: this.services[count].destination,
-          activity: this.services[count].activity,
-          accommodations: this.services[count].accommodations
-        });
-        count++;
-        // this.serviceFormArray.controls[count].setValue({
-        //   serviceCaption: service.serviceCaption
-        // });
-      }
-
-      // console.log((services[0].date as any).toDate());
-      // this.services.sort((a, b) => a.passengerName.localeCompare(b.passengerName));
+    this.bookingsService.getBookingById(this.bookingId).subscribe(bkg => {
+      this.booking = bkg as Booking;
     });
 
+    this.servicesService
+      .getServiceByBid(this.bookingId)
+      .subscribe((sers: Service[]) => {
+        this.services = sers;
+        this.services.sort((a, b) => this.sortNullDate(a.date, b.date));
+
+        let count = 0;
+        for (const service of this.services) {
+          this.serviceFormArray.push(this.serviceFormGroup());
+
+          this.serviceFormArray.controls[count].setValue({
+            datePicker: this.services[count].date,
+            serviceCaption: this.services[count].serviceCaption,
+            destination: this.services[count].destination,
+            activity: this.services[count].activity,
+            accommodations: this.services[count].accommodations
+          });
+          count++;
+        }
+      });
   }
 
-  onSaveService(id: string) {
+  sortNullDate(a, b) {
+    a = a === null ? new Date('3000-12-12') : a;
+    b = b === null ? new Date('3000-12-12') : b;
+    return a - b;
+  }
 
+  getDate(date: Date) {
+    // console.log(date.getDate());
+    if (date) {
+      return (
+        date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear()
+      );
+    }
+    return null;
+  }
+
+  onSaveService(serviceId: string, formArrayIndex: number) {
+    const control: AbstractControl = this.serviceFormArray.controls[
+      formArrayIndex
+    ];
+    this.servicesService
+      .updateService(serviceId, {
+        date: control.value.datePicker,
+        serviceCaption: control.value.serviceCaption.trim(),
+        destination: control.value.destination.trim(),
+        activity: control.value.activity.trim(),
+        accommodations: control.value.accommodations.trim()
+      })
+      .then(() => console.log('Service saved.'))
+      .catch(() => window.alert('Service could not be saved!'));
+  }
+
+  onDeleteService(serviceId: string, formArrayIndex: number) {
+    this.servicesService
+      .deleteService(serviceId)
+      .then(() => console.log('Service deleted.'))
+      .catch(() => window.alert('Service could not be deleted!'));
+    this.serviceFormArray.removeAt(formArrayIndex);
   }
 
   get serviceFormArray() {
     return this.form.get('services') as FormArray;
   }
 
-  onClickAddService() {
+  onAddService() {
     this.serviceFormArray.push(this.serviceFormGroup());
     const newService: Service = {
       bid: this.bookingId,
@@ -80,34 +126,31 @@ export class EditItineraryComponent implements OnInit {
       accommodations: null
     };
     this.services.push(newService);
+
+    // Crete an empty service in firestore
+    this.servicesService
+      .addService(newService)
+      .then(() => console.log('Service added.'))
+      .catch(() => window.alert('Service could not be added!'));
   }
 
   serviceFormGroup() {
     return new FormGroup({
-      datePicker: new FormControl(null),
-      serviceCaption: new FormControl(null),
-      destination: new FormControl(null),
-      activity: new FormControl(null),
-      accommodations: new FormControl(null)
+      datePicker: new FormControl(null, {
+        validators: [Validators.required]
+      }),
+      serviceCaption: new FormControl(null, {
+        validators: [Validators.required]
+      }),
+      destination: new FormControl(null, {
+        validators: [Validators.required]
+      }),
+      activity: new FormControl(null, {
+        validators: [Validators.required]
+      }),
+      accommodations: new FormControl(null, {
+        validators: [Validators.required]
+      })
     });
   }
-
-
-  onSubmit() {
-    for (const service of this.serviceFormArray.controls) {
-      // console.log(this.form.get(['services', counter]).value);
-      const newService: Service = {
-        bid: this.bookingId,
-        date: service.value.datePicker,
-        serviceCaption: service.value.serviceCaption,
-        destination: service.value.destination,
-        activity: service.value.activity,
-        accommodations: service.value.accommodations
-      };
-      // console.log(newService);
-      // this.servicesService.addService(newService);
-    }
-  }
-
-
 }

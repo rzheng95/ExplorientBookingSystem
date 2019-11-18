@@ -4,7 +4,6 @@ import { SearchBookingComponent } from '../../bookings/search-booking/search-boo
 import { Passenger } from '../../../models/passenger.model';
 import { PassengersService } from '../../../services/passengers/passengers.service';
 
-
 @Component({
   selector: 'app-add-passenger',
   templateUrl: './add-passenger.component.html',
@@ -29,15 +28,21 @@ export class AddPassengerComponent {
   }
 
   onAddClick() {
-    this.passengersService.addPassenger(this.data);
+    this.passengersService
+      .addPassenger(this.data)
+      .then(() => console.log('Passenger added.'))
+      .catch(() => window.alert('Passenger could not be added!'));
     this.dialogRef.close();
   }
 
   onSaveClick() {
     // update passengerName only
-    this.passengersService.updatePassenger(this.data.id, {
-      passengerName: this.data.passengerName
-    });
+    this.passengersService
+      .updatePassenger(this.data.id, {
+        passengerName: this.data.passengerName
+      })
+      .then(() => console.log('Passenger saved.'))
+      .catch(() => window.alert('Passenger could not be saved!'));
     this.dialogRef.close();
   }
 
@@ -45,6 +50,4 @@ export class AddPassengerComponent {
     this.passengersService.deletePassenger(this.data.id);
     this.dialogRef.close();
   }
-
-
 }

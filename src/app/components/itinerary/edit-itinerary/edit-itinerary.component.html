@@ -1,32 +1,31 @@
 <app-main-nav>
   <mat-card>
-    <mat-card-title>Edit Itinerary</mat-card-title>
+    <mat-card-title>Itinerary</mat-card-title>
     <mat-card-content>
       <div class="contactDiv">
         <p>
           <mat-icon>perm_contact_calendar</mat-icon
-          ><strong> Contact Person:</strong> Richard Zheng
+          ><strong> Contact Person:</strong> {{ booking?.contactName }}
         </p>
         <p>
-          <mat-icon>assistant</mat-icon><strong> Package:</strong> 7 Days
-          Beijing Shanghai Tour
+          <mat-icon>assistant</mat-icon><strong> Package:</strong> {{ booking?.package }}
         </p>
       </div>
 
       <mat-accordion multi="true">
-        <form [formGroup]="form" (submit)="onSubmit()">
+        <form [formGroup]="form">
           <div
             formArrayName="services"
             *ngFor="let service of services; index as i"
           >
             <mat-expansion-panel [formGroupName]="i">
               <!-- Header -->
-              <mat-expansion-panel-header>
+              <mat-expansion-panel-header class="header">
                 <mat-panel-title>
-                  Date
+                  {{ getDate(service.date) }}
                 </mat-panel-title>
                 <mat-panel-description>
-                  Service caption
+                  {{ service.serviceCaption }}
                 </mat-panel-description>
               </mat-expansion-panel-header>
 
@@ -37,9 +36,10 @@
                   #input
                   [matDatepicker]="picker"
                   formControlName="datePicker"
-                  placeholder="Choose a date"
+                  placeholder="Choose a date*"
                   (focus)="picker.open()"
                 />
+                <mat-error *ngIf="serviceFormArray.controls[i].get('datePicker').invalid">Please enter a valid date.</mat-error>
                 <mat-datepicker-toggle
                   matSuffix
                   [for]="picker"
@@ -57,8 +57,9 @@
                   matInput
                   type="text"
                   formControlName="serviceCaption"
-                  placeholder="Service caption"
+                  placeholder="Service caption*"
                 />
+                <mat-error *ngIf="serviceFormArray.controls[i].get('serviceCaption').invalid">Please enter a valid service caption.</mat-error>
               </mat-form-field>
 
               <!-- Destination -->
@@ -67,8 +68,9 @@
                   matInput
                   type="text"
                   formControlName="destination"
-                  placeholder="Destination"
+                  placeholder="Destination*"
                 />
+                <mat-error *ngIf="serviceFormArray.controls[i].get('destination').invalid">Please enter a valid destination.</mat-error>
               </mat-form-field>
 
               <!-- Activity -->
@@ -77,9 +79,10 @@
                   matInput
                   type="text"
                   formControlName="activity"
-                  placeholder="Activity"
+                  placeholder="Activity*"
                 >
                 </textarea>
+                <mat-error *ngIf="serviceFormArray.controls[i].get('activity').invalid">Please enter a valid activity.</mat-error>
               </mat-form-field>
 
               <!-- Accommodations -->
@@ -87,7 +90,7 @@
                 <input
                   matInput
                   formControlName="accommodations"
-                  placeholder="Accommodations"
+                  placeholder="Accommodations*"
                 />
               </mat-form-field>
 
@@ -95,10 +98,14 @@
 
               <!-- Meal Plan -->
 
-              <button mat-raised-button type="button" color="primary" (click)="onSaveService(service.id)">Save</button>
+              <mat-action-row>
+                <button mat-raised-button type="button" class="deleteButton" color="warn" (click)="onDeleteService(service.id, i)">Delete</button>
+                <span class="spacer"></span>
+                <button mat-raised-button type="button" class="saveButton" color="primary" (click)="onSaveService(service.id, i)" [disabled]="serviceFormArray.controls[i].invalid">Save</button>
+              </mat-action-row>
             </mat-expansion-panel>
           </div>
-          <button mat-raised-button type="button" class="addServiceButton" (click)="onClickAddService()" color="primary">
+          <button mat-raised-button type="button" class="addServiceButton" color="accent" (click)="onAddService()" >
             Add New Service
           </button>
         </form>

@@ -17,7 +17,15 @@ export class ServicesService {
   }
 
   addService(service: Service) {
-    this.servicesCollection.add({ ...service });
+    return this.servicesCollection.add({ ...service });
+  }
+
+  updateService(id: string, value: any) {
+    return this.servicesCollection.doc(id).update(value);
+  }
+
+  deleteService(id: string) {
+    return this.servicesCollection.doc(id).delete();
   }
 
   getServiceByBid(bid: string) {
@@ -26,7 +34,9 @@ export class ServicesService {
     }).snapshotChanges().pipe(
       map(actions => actions.map(a => {
         const data = a.payload.doc.data() as Service;
-        data.date = (data.date as any).toDate();
+        if (data.date) {
+          data.date = (data.date as any).toDate();
+        }
         const id = a.payload.doc.id;
 
         return { id, ...data };

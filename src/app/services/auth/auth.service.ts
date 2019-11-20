@@ -20,6 +20,7 @@ export class AuthService {
   private userData: User; // Save logged in user data
   private authStatusListener = new Subject<boolean>();
   private errorDialog: ErrorComponent;
+  private signUpEmail: string;
 
   constructor(
     public afs: AngularFirestore, // Inject Firestore service
@@ -105,27 +106,33 @@ export class AuthService {
   // Sign up with email/password
   async SignUp(email, password) {
     const domain = email.substring(email.lastIndexOf('@') + 1);
-    if (domain !== 'uconn.edu' || domain !== 'explorient.com') {
+    if (domain === 'uconn.edu' || domain === 'explorient.com') {
+      try {
+        const result = await this.afAuth.auth.createUserWithEmailAndPassword(
+          email,
+          password
+        );
+        this.signUpEmail = email;
+        /* Call the SendVerificaitonMail() function when new user sign
+        up and returns promise */
+        this.SendVerificationMail();
+        const user: User = {
+          uid: result.user.uid,
+          email: result.user.email,
+          emailVerified: result.user.emailVerified
+        };
+        this.SetUserData(user);
+      } catch (error) {
+        this.showErrorMessage(null, error.message);
+      }
+    } else {
       console.log('access denied');
       return;
     }
-    try {
-      const result = await this.afAuth.auth.createUserWithEmailAndPassword(
-        email,
-        password
-      );
-      /* Call the SendVerificaitonMail() function when new user sign
-      up and returns promise */
-      this.SendVerificationMail();
-      const user: User = {
-        uid: result.user.uid,
-        email: result.user.email,
-        emailVerified: result.user.emailVerified
-      };
-      this.SetUserData(user);
-    } catch (error) {
-      this.showErrorMessage(null, error.message);
-    }
+  }
+
+  getSignUpEmail() {
+    return this.signUpEmail;
   }
 
   // Send email verfificaiton when new user sign up

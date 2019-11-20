@@ -12,7 +12,7 @@ export class VerifyEmailComponent implements OnInit {
   constructor(private authService: AuthService) { }
 
   ngOnInit() {
-    this.email = this.authService.getUserData().email;
+    this.email = this.authService.getSignUpEmail();
   }
 
   onResend() {

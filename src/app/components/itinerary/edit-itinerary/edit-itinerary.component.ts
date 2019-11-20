@@ -91,6 +91,7 @@ export class EditItineraryComponent implements OnInit {
     const control: AbstractControl = this.serviceFormArray.controls[
       formArrayIndex
     ];
+
     this.servicesService
       .updateService(serviceId, {
         date: control.value.datePicker,

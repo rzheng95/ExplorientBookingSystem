@@ -5,10 +5,10 @@
       <div class="contactDiv">
         <p>
           <mat-icon>perm_contact_calendar</mat-icon
-          ><strong> Contact Person:</strong> {{ booking?.contactName }}
+          ><strong> Contact Person:</strong> {{ (booking | async)?.contactName }}
         </p>
         <p>
-          <mat-icon>assistant</mat-icon><strong> Package:</strong> {{ booking?.package }}
+          <mat-icon>assistant</mat-icon><strong> Package:</strong> {{ (booking | async)?.package }}
         </p>
       </div>
 

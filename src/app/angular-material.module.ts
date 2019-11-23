@@ -21,7 +21,7 @@ import {
 import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
- exports: [
+  exports: [
     MatInputModule,
     MatCardModule,
     MatButtonModule,

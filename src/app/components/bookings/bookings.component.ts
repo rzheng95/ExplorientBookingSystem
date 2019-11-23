@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BookingsService } from '../../services/bookings/bookings.service';
 import { Booking } from '../../models/booking.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-bookings',
@@ -11,12 +12,11 @@ export class BookingsComponent implements OnInit {
 
   constructor(private bookingsService: BookingsService) { }
 
-  bookings: Booking[];
+  bookings: Observable<Booking[]>;
 
   ngOnInit() {
-    this.bookingsService.getBookingsOrderBy('contactName').subscribe(bkgs => {
-      this.bookings = bkgs;
-    });
+    this.bookings = this.bookingsService.getBookingsOrderBy('contactName');
   }
+
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BookingsService } from '../../../services/bookings/bookings.service';
@@ -6,18 +6,23 @@ import { Booking } from '../../../models/booking.model';
 import { AddPassengerComponent } from '../../passengers/add-passenger/add-passenger.component';
 import { PassengersService } from '../../../services/passengers/passengers.service';
 import { Passenger } from '../../../models/passenger.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-search-booking',
   templateUrl: './search-booking.component.html',
   styleUrls: ['./search-booking.component.css']
 })
-export class SearchBookingComponent implements OnInit {
+export class SearchBookingComponent implements OnInit, OnDestroy {
   form: FormGroup;
   isLoading = false;
+
   bookings: Booking[] = [];
+  bookingsSub: Subscription;
   storedBookings: Booking[] = [];
+
   passengers: Passenger[] = [];
+  passengersSub: Subscription;
 
   constructor(
     private bookingsService: BookingsService,
@@ -33,12 +38,17 @@ export class SearchBookingComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    this.bookingsSub.unsubscribe();
+    this.passengersSub.unsubscribe();
+  }
+
   filterBookings() {
     this.isLoading = true;
     if (this.storedBookings && this.storedBookings.length > 0) {
       this.bookings = this.performFilter(this.form.value.contactName);
     } else {
-      this.bookingsService
+      this.bookingsSub = this.bookingsService
         .getBookingsOrderBy('contactName')
         .subscribe((bkgs: Booking[]) => {
           this.storedBookings = bkgs;
@@ -56,15 +66,6 @@ export class SearchBookingComponent implements OnInit {
     });
   }
 
-  onRefreshBookings() {
-    this.bookingsService
-      .getBookingsOrderBy('contactName')
-      .subscribe((bkgs: Booking[]) => {
-        this.storedBookings = bkgs;
-        this.bookings = this.storedBookings;
-      });
-  }
-
   onClearForm() {
     this.form.reset();
   }
@@ -80,7 +81,7 @@ export class SearchBookingComponent implements OnInit {
   }
 
   onClickPanel(bookingId: string) {
-    this.passengersService.getPassengersByBid(bookingId).subscribe((passengers: Passenger[]) => {
+    this.passengersSub = this.passengersService.getPassengersByBid(bookingId).subscribe((passengers: Passenger[]) => {
       this.passengers = passengers;
       this.passengers.sort((a, b) => a.passengerName.localeCompare(b.passengerName));
     });

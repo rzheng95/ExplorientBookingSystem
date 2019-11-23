@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Booking } from '../../../models/booking.model';
 import { BookingsService } from '../../../services/bookings/bookings.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-create-booking',
   templateUrl: './create-booking.component.html',
   styleUrls: ['./create-booking.component.css']
 })
-export class CreateBookingComponent implements OnInit {
+export class CreateBookingComponent implements OnInit, OnDestroy {
   form: FormGroup;
   isLoading = false;
   booking: Booking;
+  bookingSub: Subscription;
   mode = 'create';
   private bookingId: string;
 
@@ -45,7 +47,7 @@ export class CreateBookingComponent implements OnInit {
         this.mode = 'edit';
         this.bookingId = paramMap.get('bookingId');
         // get booking
-        this.bookingsService.getBookingById(this.bookingId).subscribe(booking  => {
+        this.bookingSub = this.bookingsService.getBookingById(this.bookingId).subscribe(booking  => {
           this.booking = booking as Booking;
           // populate UI
           this.form.setValue({
@@ -70,7 +72,10 @@ export class CreateBookingComponent implements OnInit {
         this.bookingId = null;
       }
     });
+  }
 
+  ngOnDestroy() {
+    this.bookingSub.unsubscribe();
   }
 
   onSaveBooking() {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import {
   FormGroup,
@@ -11,18 +11,20 @@ import { BookingsService } from '../../../services/bookings/bookings.service';
 import { ServicesService } from '../../../services/services/services.service';
 import { Booking } from '../../../models/booking.model';
 import { Service } from '../../../models/service.model';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-itinerary',
   templateUrl: './edit-itinerary.component.html',
   styleUrls: ['./edit-itinerary.component.css']
 })
-export class EditItineraryComponent implements OnInit {
+export class EditItineraryComponent implements OnInit, OnDestroy {
   private bookingId: string;
   form: FormGroup;
   mode = 'edit';
   services: Service[] = [];
-  booking: Booking;
+  servicesSub: Subscription;
+  booking: Observable<Booking>;
 
   constructor(
     private servicesService: ServicesService,
@@ -45,11 +47,10 @@ export class EditItineraryComponent implements OnInit {
       }
     });
 
-    this.bookingsService.getBookingById(this.bookingId).subscribe(bkg => {
-      this.booking = bkg as Booking;
-    });
 
-    this.servicesService
+    this.booking = this.bookingsService.getBookingById(this.bookingId) as Observable<Booking>;
+
+    this.servicesSub = this.servicesService
       .getServiceByBid(this.bookingId)
       .subscribe((sers: Service[]) => {
         this.services = sers;
@@ -69,6 +70,10 @@ export class EditItineraryComponent implements OnInit {
           count++;
         }
       });
+  }
+
+  ngOnDestroy() {
+    this.servicesSub.unsubscribe();
   }
 
   sortNullDate(a, b) {

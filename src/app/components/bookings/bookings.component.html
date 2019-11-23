@@ -1,6 +1,6 @@
 <app-main-nav>
   <div>
-    <ul *ngFor='let booking of bookings' class='collection'>
+    <ul *ngFor='let booking of bookings | async' class='collection'>
       <li class='collection-item'><strong>ID: </strong>{{ booking.id }}</li>
       <li class='collection-item'><strong>Contact Name: </strong>{{ booking.contactName }}</li>
       <li class='collection-item'><strong>Package: </strong>{{ booking.package }}</li>

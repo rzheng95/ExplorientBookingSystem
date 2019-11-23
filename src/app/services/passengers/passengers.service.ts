@@ -5,7 +5,7 @@ import {
 } from 'angularfire2/firestore';
 import { Passenger } from '../../models/passenger.model';
 import { MatDialog } from '@angular/material';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'

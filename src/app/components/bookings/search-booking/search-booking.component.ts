@@ -39,8 +39,12 @@ export class SearchBookingComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.bookingsSub.unsubscribe();
-    this.passengersSub.unsubscribe();
+    if (this.bookingsSub) {
+      this.bookingsSub.unsubscribe();
+    }
+    if (this.passengersSub) {
+      this.passengersSub.unsubscribe();
+    }
   }
 
   filterBookings() {

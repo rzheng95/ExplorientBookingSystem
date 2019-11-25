@@ -38,6 +38,10 @@ mat-list-item {
   cursor: pointer;
 }
 
+.mat-expansion-panel.mat-expanded {
+  border-left: 1rem solid #3F51B5;
+}
+
 .buttonsContainer {
   margin-top: 2rem;
 }

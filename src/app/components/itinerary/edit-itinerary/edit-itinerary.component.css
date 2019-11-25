@@ -29,15 +29,16 @@ mat-expansion-panel {
 }
 
 .mat-expansion-panel.mat-expanded {
-  border: solid 2px #3F51B5;
+  border-left: 1rem solid #3F51B5;
 }
 
 /* .mat-expansion-panel.mat-expanded .mat-expansion-panel-header {
   background: lightpink !important;
 } */
 
-.mat-expansion-panel-header:hover {
-  background: lightskyblue !important;
+.mat-expansion-panel-header:not(.mat-expanded):hover {
+  background: rgba(63, 81, 181, 0.54) !important;
+  /* border-left: 1rem solid #3F51B5; */
 }
 
 .addServiceButton {

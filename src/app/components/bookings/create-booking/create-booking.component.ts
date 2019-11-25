@@ -75,7 +75,9 @@ export class CreateBookingComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.bookingSub.unsubscribe();
+    if (this.bookingSub) {
+      this.bookingSub.unsubscribe();
+    }
   }
 
   onSaveBooking() {

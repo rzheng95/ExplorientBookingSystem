@@ -1,6 +1,4 @@
 import { Injectable, NgZone, Optional } from '@angular/core';
-
-import { auth } from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 import {
   AngularFirestore,
@@ -8,7 +6,6 @@ import {
 } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { User } from '../../models/user.model';
-import { map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { ErrorComponent } from '../../error/error.component';
@@ -19,7 +16,6 @@ import { ErrorComponent } from '../../error/error.component';
 export class AuthService {
   private userData: User; // Save logged in user data
   private authStatusListener = new Subject<boolean>();
-  private errorDialog: ErrorComponent;
   private signUpEmail: string;
 
   constructor(
@@ -67,9 +63,7 @@ export class AuthService {
     return user;
   }
 
-  autoAuthUser() {
-
-  }
+  autoAuthUser() {}
 
   // showErrorMessage(title: string, message: string) {
   //   if (!title) {
@@ -99,7 +93,6 @@ export class AuthService {
       // window.alert(error.message);
       this.authStatusListener.next(false);
       this.showErrorMessage(null, error.message);
-
     }
   }
 
@@ -145,7 +138,10 @@ export class AuthService {
   async ForgotPassword(passwordResetEmail) {
     try {
       await this.afAuth.auth.sendPasswordResetEmail(passwordResetEmail);
-      this.showErrorMessage('Email Sent', 'Password reset email sent, check your inbox.');
+      this.showErrorMessage(
+        'Email Sent',
+        'Password reset email sent, check your inbox.'
+      );
     } catch (error) {
       this.showErrorMessage(null, error.message);
     }

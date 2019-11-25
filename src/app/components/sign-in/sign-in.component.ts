@@ -9,7 +9,6 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 })
 export class SignInComponent implements OnInit {
   form: FormGroup;
-  error: null;
 
   constructor(private authService: AuthService) { }
 

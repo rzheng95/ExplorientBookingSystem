@@ -16,11 +16,11 @@
       <a mat-list-item (click)="toggleBookings()">
         Bookings
         <span class="spacer"></span>
-        <mat-icon *ngIf="!isBookingsToggled">keyboard_arrow_right</mat-icon>
-        <mat-icon *ngIf="isBookingsToggled">keyboard_arrow_down</mat-icon>
+        <mat-icon *ngIf="!nav.isBookingsToggled">keyboard_arrow_right</mat-icon>
+        <mat-icon *ngIf="nav.isBookingsToggled">keyboard_arrow_down</mat-icon>
       </a>
 
-      <div *ngIf="isBookingsToggled">
+      <div *ngIf="nav.isBookingsToggled">
         <mat-list-item>
           <a mat-list-item routerLink="/dashboard/search-booking">Search</a>
         </mat-list-item>
@@ -35,11 +35,11 @@
       <a mat-list-item (click)="togglePassengers()">
         Passengers
         <span class="spacer"></span>
-        <mat-icon *ngIf="!isPassengersToggled">keyboard_arrow_right</mat-icon>
-        <mat-icon *ngIf="isPassengersToggled">keyboard_arrow_down</mat-icon>
+        <mat-icon *ngIf="!nav.isPassengersToggled">keyboard_arrow_right</mat-icon>
+        <mat-icon *ngIf="nav.isPassengersToggled">keyboard_arrow_down</mat-icon>
       </a>
 
-      <div *ngIf="isPassengersToggled">
+      <div *ngIf="nav.isPassengersToggled">
           <mat-list-item>
             <a mat-list-item routerLink="/dashboard/search-passenger">Search</a>
           </mat-list-item>
@@ -48,11 +48,11 @@
       <a mat-list-item (click)="toggleHotels()">
         Hotels
         <span class="spacer"></span>
-        <mat-icon *ngIf="!isHotelsToggled">keyboard_arrow_right</mat-icon>
-        <mat-icon *ngIf="isHotelsToggled">keyboard_arrow_down</mat-icon>
+        <mat-icon *ngIf="!nav.isHotelsToggled">keyboard_arrow_right</mat-icon>
+        <mat-icon *ngIf="nav.isHotelsToggled">keyboard_arrow_down</mat-icon>
       </a>
 
-      <div *ngIf="isHotelsToggled">
+      <div *ngIf="nav.isHotelsToggled">
           <mat-list-item>
             <a mat-list-item href="#">Search</a>
           </mat-list-item>
@@ -64,11 +64,11 @@
       <a mat-list-item (click)="toggleVendors()">
         Vendors
         <span class="spacer"></span>
-        <mat-icon *ngIf="!isVendorsToggled">keyboard_arrow_right</mat-icon>
-        <mat-icon *ngIf="isVendorsToggled">keyboard_arrow_down</mat-icon>
+        <mat-icon *ngIf="!nav.isVendorsToggled">keyboard_arrow_right</mat-icon>
+        <mat-icon *ngIf="nav.isVendorsToggled">keyboard_arrow_down</mat-icon>
       </a>
 
-      <div *ngIf="isVendorsToggled">
+      <div *ngIf="nav.isVendorsToggled">
           <mat-list-item>
             <a mat-list-item href="#">Search</a>
           </mat-list-item>

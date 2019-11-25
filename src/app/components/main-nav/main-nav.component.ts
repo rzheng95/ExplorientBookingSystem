@@ -4,6 +4,8 @@ import { Observable, Subscription } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { AuthService } from '../../services/auth/auth.service';
 import { User } from 'src/app/models/user.model';
+import { nav } from 'src/environments/nav';
+
 
 
 @Component({
@@ -16,10 +18,6 @@ export class MainNavComponent implements OnInit, OnDestroy {
   isAuthenticated = false;
   private authListenerSubs: Subscription;
   user: User;
-  isBookingsToggled = false;
-  isPassengersToggled = false;
-  isHotelsToggled = false;
-  isVendorsToggled = false;
   dropdownArrow = 'keyboard_arrow_right';
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
@@ -40,20 +38,36 @@ export class MainNavComponent implements OnInit, OnDestroy {
       });
   }
 
+  get nav() {
+    return nav;
+  }
+
   toggleBookings() {
-    this.isBookingsToggled = !this.isBookingsToggled;
+    nav.isBookingsToggled = !nav.isBookingsToggled;
+    nav.isPassengersToggled = false;
+    nav.isHotelsToggled = false;
+    nav.isVendorsToggled = false;
   }
 
   togglePassengers() {
-    this.isPassengersToggled = !this.isPassengersToggled;
+    nav.isPassengersToggled = !nav.isPassengersToggled;
+    nav.isBookingsToggled = false;
+    nav.isHotelsToggled = false;
+    nav.isVendorsToggled = false;
   }
 
   toggleHotels() {
-    this.isHotelsToggled = !this.isHotelsToggled;
+    nav.isHotelsToggled = !nav.isHotelsToggled;
+    nav.isBookingsToggled = false;
+    nav.isPassengersToggled = false;
+    nav.isVendorsToggled = false;
   }
 
   toggleVendors() {
-    this.isVendorsToggled = !this.isVendorsToggled;
+    nav.isVendorsToggled = !nav.isVendorsToggled;
+    nav.isBookingsToggled = false;
+    nav.isHotelsToggled = false;
+    nav.isPassengersToggled = false;
   }
 
   onLogout() {
@@ -62,6 +76,8 @@ export class MainNavComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
+    if (this.authListenerSubs) {
+      this.authListenerSubs.unsubscribe();
+    }
   }
 }

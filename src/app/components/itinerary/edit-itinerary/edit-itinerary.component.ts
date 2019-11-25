@@ -73,7 +73,9 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.servicesSub.unsubscribe();
+    if (this.servicesSub) {
+      this.servicesSub.unsubscribe();
+    }
   }
 
   sortNullDate(a, b) {

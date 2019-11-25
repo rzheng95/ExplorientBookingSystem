@@ -4,6 +4,7 @@
   box-shadow: 2px 1px 5px rgba(0,0,0,0.5);
   padding: 2rem;
   margin: 3rem auto 5rem auto;
+  border-left: 2rem solid #3F51B5;
 }
 
 .result-card {

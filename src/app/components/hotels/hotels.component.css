@@ -1,0 +1,39 @@
+
+
+.mat-card {
+  width: 80%;
+  box-shadow: 2px 1px 5px rgba(0,0,0,0.5);
+  padding: 2rem;
+  margin: 3rem auto 15rem auto;
+  border-left: 2rem solid #3F51B5;
+}
+
+mat-card-title,
+mat-card-content {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+mat-spinner {
+  margin: 0 auto;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.buttonsContainer {
+  margin-top: 5rem;
+}
+
+.clear {
+  float: left;
+}
+
+.submit {
+  float: right;
+}
+
+
+

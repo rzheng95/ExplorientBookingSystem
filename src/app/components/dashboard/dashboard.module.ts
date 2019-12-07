@@ -12,6 +12,7 @@ import { SearchPassengerComponent } from '../passengers/search-passenger/search-
 import { AddPassengerComponent } from '../passengers/add-passenger/add-passenger.component';
 import { EditItineraryComponent } from '../itinerary/edit-itinerary/edit-itinerary.component';
 import { MainNavComponent } from '../main-nav/main-nav.component';
+import { HotelsComponent } from '../hotels/hotels.component';
 
 
 
@@ -24,7 +25,8 @@ import { MainNavComponent } from '../main-nav/main-nav.component';
     SearchBookingComponent,
     SearchPassengerComponent,
     AddPassengerComponent,
-    EditItineraryComponent
+    EditItineraryComponent,
+    HotelsComponent
   ],
   imports: [
     CommonModule,

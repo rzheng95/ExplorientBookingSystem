@@ -1,18 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { HotelsService } from '../../services/hotels/hotels.service';
 import { Hotel } from '../../models/hotel.model';
+import { VendorsService } from 'src/app/services/vendors/vendors.service';
+import {
+  switchMap,
+  debounceTime,
+  distinct,
+  filter,
+  startWith,
+  map
+} from 'rxjs/operators';
 
 @Component({
   selector: 'app-hotels',
   templateUrl: './hotels.component.html',
   styleUrls: ['./hotels.component.css']
 })
-export class HotelsComponent implements OnInit {
+export class HotelsComponent implements OnInit, OnDestroy {
   isLoading = false;
   mode = 'create';
   form: FormGroup;
-  constructor(private hotelsService: HotelsService) { }
+  vendors: { id: string; vendorName: string }[];
+  vendorsSub: Subscription;
+  filteredVendors: Observable<{ id: string; vendorName: string }[]>;
+
+  constructor(
+    private hotelsService: HotelsService,
+    private vendorsService: VendorsService
+  ) {}
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -35,12 +52,38 @@ export class HotelsComponent implements OnInit {
       email2: new FormControl(null),
       notes: new FormControl(null)
     });
+
+    this.vendorsSub = this.vendorsService
+      .getVendorNames()
+      .subscribe(vendors => {
+        this.vendors = vendors;
+      });
+
+    this.filteredVendors = this.form.get('vendor').valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value))
+    );
+  }
+
+  private _filter(value: string) {
+    if (this.vendors) {
+      return this.vendors.filter(option =>
+        option.vendorName.toLowerCase().includes(value.toLowerCase())
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    this.vendorsSub.unsubscribe();
   }
 
   onSaveHotel() {
     this.isLoading = true;
     if (this.form.invalid) {
-      this.hotelsService.showDialogMessage('Invalid Form', 'All * fields are required.');
+      this.hotelsService.showDialogMessage(
+        'Invalid Form',
+        'All * fields are required.'
+      );
       this.isLoading = false;
       return;
     }
@@ -62,11 +105,16 @@ export class HotelsComponent implements OnInit {
       notes: this.form.value.notes
     };
 
-    if (this.mode === 'create') { // CREATE mode
+    if (this.mode === 'create') {
+      // CREATE mode
       this.hotelsService.createHotel(newHotel);
-      this.hotelsService.showDialogMessage('Success!', `Hotel created for ${this.form.value.hotelName}`);
+      this.hotelsService.showDialogMessage(
+        'Success!',
+        `Hotel created for ${this.form.value.hotelName}`
+      );
       this.form.reset();
-    } else { // EDIT mode
+    } else {
+      // EDIT mode
       // this.hotelsService.updateHotel(this.bookingId, newBooking)
       // .catch(error => console.log(error));
       // this.hotelsService.showDialogMessage('Success!', `Booking updated for ${this.form.value.contactName}`);

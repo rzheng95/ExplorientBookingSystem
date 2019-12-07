@@ -1,4 +1,4 @@
-import { Injectable, NgZone, HostListener } from '@angular/core';
+import { Injectable, NgZone, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import {
   AngularFirestore,
@@ -6,19 +6,22 @@ import {
 } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { User } from '../../models/user.model';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { ErrorComponent } from '../../error/error.component';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
   private userData: User; // Save logged in user data
   private authStatusListener = new Subject<boolean>();
+  private authSub: Subscription;
   private signUpEmail: string;
   private userActivity;
   private userInactive: Subject<any> = new Subject();
+  private userSub: Subscription;
+  private isAuth = false;
 
   constructor(
     public afs: AngularFirestore, // Inject Firestore service
@@ -33,13 +36,27 @@ export class AuthService {
       if (user) {
         this.userData = user;
         localStorage.setItem('user', JSON.stringify(this.userData));
-        this.userInactive.subscribe(() => {
-          console.log('Inactive');
-          this.SignOut();
+        this.userSub = this.userInactive.subscribe(() => {
+          if (this.isAuth) {
+            this.SignOut();
+            this.showErrorMessage(
+              'Inactivity',
+              'You have been logged out due to inactivity.'
+            );
+          }
         });
         // JSON.parse(localStorage.getItem('user'));
       }
     });
+
+    this.authSub = this.authStatusListener.subscribe(isAuth => {
+      this.isAuth = isAuth;
+    });
+  }
+
+  ngOnDestroy() {
+    this.authSub.unsubscribe();
+    this.userSub.unsubscribe();
   }
 
   clearTimeout() {
@@ -51,7 +68,6 @@ export class AuthService {
       this.userInactive.next(undefined);
     }, expireIn * 1000);
   }
-
 
   showErrorMessage(title: string, message: string) {
     if (!title) {
@@ -193,6 +209,7 @@ export class AuthService {
   // Sign out
   async SignOut() {
     await this.afAuth.auth.signOut();
+    this.isAuth = false;
     this.authStatusListener.next(false);
     localStorage.removeItem('user');
     this.router.navigate(['sign-in']);

@@ -19,7 +19,6 @@ export class AppComponent implements OnInit {
 
   @HostListener('window:mousemove') refreshUserState() {
     if (this.isAuthenticated) {
-      console.log('mouse moved');
       this.authService.clearTimeout();
       this.authService.setTimeout(environment.sessionExpiration); // seconds
     }

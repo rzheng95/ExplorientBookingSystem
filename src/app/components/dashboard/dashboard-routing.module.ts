@@ -9,6 +9,7 @@ import { SearchPassengerComponent } from '../passengers/search-passenger/search-
 import { AddPassengerComponent } from '../passengers/add-passenger/add-passenger.component';
 import { EditItineraryComponent } from '../itinerary/edit-itinerary/edit-itinerary.component';
 import { HotelsComponent } from '../hotels/hotels.component';
+import { VendorsComponent } from '../vendors/vendors.component';
 
 
 
@@ -22,7 +23,8 @@ const routes: Routes = [
   { path: 'search-passenger', component: SearchPassengerComponent, canActivate: [AuthGuard] },
   { path: 'add-passenger/:bookingId', component: AddPassengerComponent, canActivate: [AuthGuard] },
   { path: 'edit-itinerary/:bookingId', component: EditItineraryComponent, canActivate: [AuthGuard] },
-  { path: 'create-hotel', component: HotelsComponent, canActivate: [AuthGuard] }
+  { path: 'create-hotel', component: HotelsComponent, canActivate: [AuthGuard] },
+  { path: 'create-vendor', component: VendorsComponent, canActivate: [AuthGuard] }
 
 
 ];

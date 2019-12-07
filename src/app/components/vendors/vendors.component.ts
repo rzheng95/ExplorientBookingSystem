@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-hotels',
-  templateUrl: './hotels.component.html',
-  styleUrls: ['./hotels.component.css']
+  selector: 'app-vendors',
+  templateUrl: './vendors.component.html',
+  styleUrls: ['./vendors.component.css']
 })
-export class HotelsComponent implements OnInit {
+export class VendorsComponent implements OnInit {
   isLoading = false;
   mode = 'create';
   form: FormGroup;
@@ -35,7 +35,7 @@ export class HotelsComponent implements OnInit {
     });
   }
 
-  onSaveHotel() {
+  onSaveVendor() {
 
   }
 

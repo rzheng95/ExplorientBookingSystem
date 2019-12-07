@@ -1,4 +1,4 @@
-import { Injectable, NgZone, Optional } from '@angular/core';
+import { Injectable, NgZone, HostListener } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import {
   AngularFirestore,
@@ -17,6 +17,8 @@ export class AuthService {
   private userData: User; // Save logged in user data
   private authStatusListener = new Subject<boolean>();
   private signUpEmail: string;
+  private userActivity;
+  private userInactive: Subject<any> = new Subject();
 
   constructor(
     public afs: AngularFirestore, // Inject Firestore service
@@ -31,13 +33,27 @@ export class AuthService {
       if (user) {
         this.userData = user;
         localStorage.setItem('user', JSON.stringify(this.userData));
-        JSON.parse(localStorage.getItem('user'));
-      } else {
-        localStorage.setItem('user', null);
-        JSON.parse(localStorage.getItem('user'));
+        this.setTimeout();
+        this.userInactive.subscribe(() => {
+          console.log('3 seconds');
+        });
+        // JSON.parse(localStorage.getItem('user'));
       }
     });
   }
+
+  clearTimeout() {
+    clearTimeout(this.userActivity);
+  }
+
+  setTimeout() {
+    const expireIn = 3; // seconds
+    this.userActivity = setTimeout(() => {
+      this.userInactive.next(undefined);
+
+    }, expireIn * 1000);
+  }
+
 
   showErrorMessage(title: string, message: string) {
     if (!title) {
@@ -62,20 +78,6 @@ export class AuthService {
     const user = JSON.parse(localStorage.getItem('user'));
     return user;
   }
-
-  autoAuthUser() {}
-
-  // showErrorMessage(title: string, message: string) {
-  //   if (!title) {
-  //     title = 'An error occured!';
-  //   }
-  //   this.dialog.open(ErrorComponent, {
-  //     data: {
-  //       title: title,
-  //       message: message
-  //     }
-  //   });
-  // }
 
   // Sign in with email/password
   async SignIn(email, password) {

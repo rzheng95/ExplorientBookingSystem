@@ -8,20 +8,20 @@
         <input
           matInput
           type="text"
-          formControlName="hotelName"
-          placeholder="Hotel Name*"
+          formControlName="vendorName"
+          placeholder="Vendor Name*"
         />
-        <mat-error *ngIf="form.get('hotelName').invalid">Please enter a valid hotel name.</mat-error>
+        <mat-error *ngIf="form.get('vendorName').invalid">Please enter a valid vendor name.</mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <input
           matInput
           type="text"
-          formControlName="vendor"
-          placeholder="Vendor*"
+          formControlName="contactPerson"
+          placeholder="Contact Person"
         />
-        <mat-error *ngIf="form.get('vendor').invalid">Please enter a valid vendor.</mat-error>
+        <mat-error *ngIf="form.get('contactPerson').invalid">Please enter a contact person.</mat-error>
       </mat-form-field>
 
       <mat-form-field>

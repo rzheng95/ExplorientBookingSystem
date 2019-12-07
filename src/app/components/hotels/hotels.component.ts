@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { HotelsService } from '../../services/hotels/hotels.service';
+import { Hotel } from '../../models/hotel.model';
 
 @Component({
   selector: 'app-hotels',
@@ -10,7 +12,7 @@ export class HotelsComponent implements OnInit {
   isLoading = false;
   mode = 'create';
   form: FormGroup;
-  constructor() { }
+  constructor(private hotelsService: HotelsService) { }
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -36,7 +38,40 @@ export class HotelsComponent implements OnInit {
   }
 
   onSaveHotel() {
+    this.isLoading = true;
+    if (this.form.invalid) {
+      this.hotelsService.showDialogMessage('Invalid Form', 'All * fields are required.');
+      this.isLoading = false;
+      return;
+    }
 
+    const newHotel: Hotel = {
+      hotelName: this.form.value.hotelName.trim(),
+      vendor: this.form.value.vendor.trim(),
+      addressLine1: this.form.value.addressLine1,
+      addressLine2: this.form.value.addressLine2,
+      city: this.form.value.city,
+      state: this.form.value.state,
+      country: this.form.value.country,
+      zipcode: this.form.value.zipcode,
+      phone1: this.form.value.phone1,
+      phone2: this.form.value.phone2,
+      fax: this.form.value.fax,
+      email1: this.form.value.email1,
+      email2: this.form.value.email2,
+      notes: this.form.value.notes
+    };
+
+    if (this.mode === 'create') { // CREATE mode
+      this.hotelsService.createHotel(newHotel);
+      this.hotelsService.showDialogMessage('Success!', `Hotel created for ${this.form.value.hotelName}`);
+      this.form.reset();
+    } else { // EDIT mode
+      // this.hotelsService.updateHotel(this.bookingId, newBooking)
+      // .catch(error => console.log(error));
+      // this.hotelsService.showDialogMessage('Success!', `Booking updated for ${this.form.value.contactName}`);
+    }
+    this.isLoading = false;
   }
 
   onClearForm() {

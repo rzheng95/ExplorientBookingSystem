@@ -33,9 +33,9 @@ export class AuthService {
       if (user) {
         this.userData = user;
         localStorage.setItem('user', JSON.stringify(this.userData));
-        this.setTimeout();
         this.userInactive.subscribe(() => {
-          console.log('3 seconds');
+          console.log('Inactive');
+          this.SignOut();
         });
         // JSON.parse(localStorage.getItem('user'));
       }
@@ -46,11 +46,9 @@ export class AuthService {
     clearTimeout(this.userActivity);
   }
 
-  setTimeout() {
-    const expireIn = 3; // seconds
+  setTimeout(expireIn: number) {
     this.userActivity = setTimeout(() => {
       this.userInactive.next(undefined);
-
     }, expireIn * 1000);
   }
 

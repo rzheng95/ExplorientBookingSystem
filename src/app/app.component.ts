@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { AuthService } from './services/auth/auth.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -18,9 +19,9 @@ export class AppComponent implements OnInit {
 
   @HostListener('window:mousemove') refreshUserState() {
     if (this.isAuthenticated) {
-      console.log('here');
+      console.log('mouse moved');
       this.authService.clearTimeout();
-      this.authService.setTimeout();
+      this.authService.setTimeout(environment.sessionExpiration); // seconds
     }
   }
 }

@@ -123,6 +123,21 @@ export class HotelsComponent implements OnInit, OnDestroy {
   }
 
   onClearForm() {
-    this.form.reset();
+    this.form.setValue({
+      hotelName: null,
+      vendor: '',
+      addressLine1: null,
+      addressLine2: null,
+      city: null,
+      state: null,
+      country: null,
+      zipcode: null,
+      phone1: null,
+      phone2: null,
+      fax: null,
+      email1: null,
+      email2: null,
+      notes: null
+    });
   }
 }

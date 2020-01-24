@@ -112,7 +112,8 @@ export class HotelsComponent implements OnInit, OnDestroy {
         'Success!',
         `Hotel created for ${this.form.value.hotelName}`
       );
-      this.form.reset();
+      // this.form.reset();
+      this.onClearForm();
     } else {
       // EDIT mode
       // this.hotelsService.updateHotel(this.bookingId, newBooking)
@@ -124,7 +125,7 @@ export class HotelsComponent implements OnInit, OnDestroy {
 
   onClearForm() {
     this.form.setValue({
-      hotelName: null,
+      hotelName: '',
       vendor: '',
       addressLine1: null,
       addressLine2: null,

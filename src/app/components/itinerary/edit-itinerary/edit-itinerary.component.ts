@@ -11,8 +11,10 @@ import { BookingsService } from '../../../services/bookings/bookings.service';
 import { ServicesService } from '../../../services/services/services.service';
 import { Booking } from '../../../models/booking.model';
 import { Service } from '../../../models/service.model';
+import { Hotel } from '../../../models/hotel.model';
 import { Observable, Subscription } from 'rxjs';
 import { startWith, map, tap } from 'rxjs/operators';
+import { HotelsService } from 'src/app/services/hotels/hotels.service';
 
 @Component({
   selector: 'app-edit-itinerary',
@@ -27,13 +29,16 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   servicesSub: Subscription;
   booking: Observable<Booking>;
 
-  options: string[] = ['One', 'Two', 'Three'];
+  options: string[] = [];
+  hotels: Hotel[] = [];
+  hotelsSub: Subscription;
   filteredOptions: Observable<string[]>[] = [];
 
 
   constructor(
     private servicesService: ServicesService,
     private bookingsService: BookingsService,
+    private hotelsService: HotelsService,
     private route: ActivatedRoute
   ) {}
 
@@ -51,6 +56,12 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
         this.bookingId = null;
       }
     });
+
+    this.hotelsService.getHotels().subscribe(hotels => {
+      this.hotels = hotels;
+      console.log(this.hotels);
+    });
+
 
 
     this.booking = this.bookingsService.getBookingById(this.bookingId) as Observable<Booking>;
@@ -87,13 +98,16 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   private _filter(value: string): string[] {
     if (value) {
       const filterValue = value.toLowerCase();
-      return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+      return this.options.filter(option => option.toLowerCase().includes(filterValue));
     }
   }
 
   ngOnDestroy() {
     if (this.servicesSub) {
       this.servicesSub.unsubscribe();
+    }
+    if (this.hotelsSub) {
+      this.hotelsSub.unsubscribe();
     }
   }
 

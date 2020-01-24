@@ -12,6 +12,7 @@ import { ServicesService } from '../../../services/services/services.service';
 import { Booking } from '../../../models/booking.model';
 import { Service } from '../../../models/service.model';
 import { Observable, Subscription } from 'rxjs';
+import { startWith, map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-edit-itinerary',
@@ -25,6 +26,10 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   services: Service[] = [];
   servicesSub: Subscription;
   booking: Observable<Booking>;
+
+  options: string[] = ['One', 'Two', 'Three'];
+  filteredOptions: Observable<string[]>[] = [];
+
 
   constructor(
     private servicesService: ServicesService,
@@ -67,9 +72,23 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
             activity: this.services[count].activity,
             accommodations: this.services[count].accommodations
           });
+          // console.log(this.serviceFormArray.controls[count]);
+
+          this.filteredOptions[count] = this.serviceFormArray.controls[count].valueChanges.pipe(
+            startWith(''),
+            map(value => this._filter(value.accommodations))
+          );
+
           count++;
         }
       });
+  }
+
+  private _filter(value: string): string[] {
+    if (value) {
+      const filterValue = value.toLowerCase();
+      return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+    }
   }
 
   ngOnDestroy() {
@@ -123,7 +142,9 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     return this.form.get('services') as FormArray;
   }
 
+
   onAddService() {
+
     this.serviceFormArray.push(this.serviceFormGroup());
     const newService: Service = {
       bid: this.bookingId,

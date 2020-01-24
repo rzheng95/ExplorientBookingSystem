@@ -86,13 +86,15 @@
               </mat-form-field>
 
               <!-- Accommodations -->
-              <mat-form-field>
-                <input
-                  matInput
-                  formControlName="accommodations"
-                  placeholder="Accommodations*"
-                />
+              <mat-form-field class="example-full-width">
+                <input type="text" placeholder="Accommodations" aria-label="Number" matInput formControlName="accommodations" [matAutocomplete]="auto">
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                  <mat-option *ngFor="let option of filteredOptions[i] | async" [value]="option">
+                    {{option}}
+                  </mat-option>
+                </mat-autocomplete>
               </mat-form-field>
+
 
               <!-- Room Type -->
 

@@ -96,26 +96,30 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
           });
 
           // fetch hotel name by id
-          this.hotelsService
-            .getHotelNameById(service.hid.trim())
-            .then(doc => {
-              const hotel = doc.data() as Hotel;
-              this.serviceFormArray.controls[index].patchValue({
-                hid: hotel.hotelName
-              });
-            })
-            .catch(err => console.log(err));
+          if (service.hid) {
+            this.hotelsService
+              .getHotelNameById(service.hid.trim())
+              .then(doc => {
+                const hotel = doc.data() as Hotel;
+                this.serviceFormArray.controls[index].patchValue({
+                  hid: hotel.hotelName
+                });
+              })
+              .catch(err => console.log(err));
+          }
 
           // fetch vendor name by id
-          this.vendorService
-            .getVendorNameById(service.vid.trim())
-            .then(doc => {
-              const vendor = doc.data() as Vendor;
-              this.serviceFormArray.controls[index].patchValue({
-                vid: vendor.vendorName
-              });
-            })
-            .catch(err => console.log(err));
+          if (service.vid) {
+            this.vendorService
+              .getVendorNameById(service.vid.trim())
+              .then(doc => {
+                const vendor = doc.data() as Vendor;
+                this.serviceFormArray.controls[index].patchValue({
+                  vid: vendor.vendorName
+                });
+              })
+              .catch(err => console.log(err));
+          }
 
           // Each accommodation field will have a valueChanges listener
           this.hotelFilteredOptions[index] = this.serviceFormArray.controls[
@@ -176,6 +180,28 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     return null;
   }
 
+  private getHotelIdByName(hotelName: string) {
+    if (hotelName) {
+      for (const h of this.hotels) {
+        if (h.hotelName === hotelName) {
+          return h.id;
+        }
+      }
+    }
+    return hotelName;
+  }
+
+  private getVendorIdByName(vendorName: string) {
+    if (vendorName) {
+      for (const v of this.vendors) {
+        if (v.vendorName === vendorName) {
+          return v.id;
+        }
+      }
+    }
+    return vendorName;
+  }
+
   onSaveService(serviceId: string, formArrayIndex: number) {
     const control: AbstractControl = this.serviceFormArray.controls[
       formArrayIndex
@@ -187,12 +213,12 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
         serviceCaption: control.value.serviceCaption.trim(),
         destination: control.value.destination.trim(),
         activity: control.value.activity.trim(),
-        hid: control.value.hid.id.trim(),
+        hid: this.getHotelIdByName(control.value.hid.trim()),
         roomType: control.value.roomType.trim(),
         breakfast: control.value.breakfast,
         lunch: control.value.lunch,
         dinner: control.value.dinner,
-        vid: control.value.vid.id.trim()
+        vid: this.getVendorIdByName(control.value.vid.trim())
       })
       .then(() => console.log('Service saved.'))
       .catch(() => window.alert('Service could not be saved!'));

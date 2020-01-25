@@ -31,15 +31,12 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   servicesSub: Subscription;
   booking: Observable<Booking>;
 
-  hotelNames: string[] = [];
-  hotels: Hotel[] = [];
-  hotelsSub: Subscription;
-  filteredOptions: Observable<string[]>[] = [];
+
+  hotels: { id: string; hotelName: string }[] = [];
+  hotelFilteredOptions: Observable<{ id: string; hotelName: string }[]>[] = [];
 
   vendors: { id: string; vendorName: string }[];
-  vendorFilteredOptions: Observable<
-    { id: string; vendorName: string }[]
-  >[] = [];
+  vendorFilteredOptions: Observable<{ id: string; vendorName: string }[]>[] = [];
 
   constructor(
     private servicesService: ServicesService,
@@ -64,14 +61,9 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Get a list of hotels and store the hotel names in "options"
-    this.hotelsService.getHotels().subscribe(hotels => {
+    // Get a list of hotels {id, hotelName}
+    this.hotelsService.getHotelNames().subscribe(hotels => {
       this.hotels = hotels;
-      let count = 0;
-      for (const h of hotels) {
-        this.hotelNames[count] = h.hotelName;
-        count++;
-      }
     });
 
     // Get a list of vendors {id, vendorName}
@@ -126,7 +118,7 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
             .catch(err => console.log(err));
 
           // Each accommodation field will have a valueChanges listener
-          this.filteredOptions[index] = this.serviceFormArray.controls[
+          this.hotelFilteredOptions[index] = this.serviceFormArray.controls[
             index
           ].valueChanges.pipe(
             startWith(''),
@@ -144,30 +136,11 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       });
   }
 
-  private updateHotelsAndVendors() {
-    this.services.forEach((service, index) => {
-      this.hotelsService
-        .getHotelNameById(service.hid)
-        .then(doc => {
-          if (doc) {
-            const hotel = doc.data() as Hotel;
-            // console.log(hotel);
-            this.serviceFormArray.controls[index].patchValue({
-              hid: hotel.hotelName
-            });
-          }
-        })
-        .catch(err => {
-          console.log('Hotel id does not exist.', err);
-        });
-    });
-  }
-
-  private _filter(value: string): string[] {
-    if (value) {
-      const filterValue = value.toLowerCase();
-      return this.hotelNames.filter(option =>
-        option.toLowerCase().includes(filterValue)
+  private _filter(hotel: string): { id: string; hotelName: string }[] {
+    if (hotel) {
+      const filterValue = hotel.toLowerCase();
+      return this.hotels.filter(option =>
+        option.hotelName.toLowerCase().includes(filterValue)
       );
     }
   }
@@ -184,9 +157,6 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.servicesSub) {
       this.servicesSub.unsubscribe();
-    }
-    if (this.hotelsSub) {
-      this.hotelsSub.unsubscribe();
     }
   }
 

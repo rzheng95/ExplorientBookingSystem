@@ -89,8 +89,8 @@
               <mat-form-field>
                 <input type="text" placeholder="Accommodations*" aria-label="Accommodation" matInput formControlName="hid" [matAutocomplete]="auto1">
                 <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete">
-                  <mat-option *ngFor="let option of filteredOptions[i] | async" [value]="option">
-                    {{option}}
+                  <mat-option *ngFor="let h of hotelFilteredOptions[i] | async" [value]="h.hotelName">
+                    {{h.hotelName}}
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>

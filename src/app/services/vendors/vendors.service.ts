@@ -23,7 +23,6 @@ export class VendorsService {
   }
 
   getVendorNames() {
-    console.log('getting vendor names....');
     return this.afs.collection(this.collectionPath, ref => {
       return ref.orderBy('vendorName');
     }).snapshotChanges().pipe(

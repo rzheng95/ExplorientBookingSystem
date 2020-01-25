@@ -39,6 +39,18 @@ export class HotelsService {
       );
   }
 
+  getHotelNames() {
+    return this.afs.collection(this.collectionPath, ref => {
+      return ref.orderBy('hotelName');
+    }).snapshotChanges().pipe(
+          map(actions => actions.map(a => {
+            const id = a.payload.doc.id;
+            const hotelName = (a.payload.doc.data() as Hotel).hotelName;
+            return { id, hotelName };
+          }))
+        );
+  }
+
   getHotelNameById(hid: string) {
     return this.afs.collection(this.collectionPath).doc(hid).ref.get();
   }

@@ -57,11 +57,15 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       }
     });
 
+    // Get a list of hotels and store the hotel names in "options"
     this.hotelsService.getHotels().subscribe(hotels => {
       this.hotels = hotels;
-      console.log(this.hotels);
+      let count = 0;
+      for (const h of hotels) {
+        this.options[count] = h.hotelName;
+        count++;
+      }
     });
-
 
 
     this.booking = this.bookingsService.getBookingById(this.bookingId) as Observable<Booking>;
@@ -81,10 +85,11 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
             serviceCaption: this.services[count].serviceCaption,
             destination: this.services[count].destination,
             activity: this.services[count].activity,
-            accommodations: this.services[count].accommodations
+            accommodations: this.services[count].accommodations,
+            roomType: this.services[count].roomType
           });
-          // console.log(this.serviceFormArray.controls[count]);
 
+          // Each service's accommodation field will have a valueChanges listener
           this.filteredOptions[count] = this.serviceFormArray.controls[count].valueChanges.pipe(
             startWith(''),
             map(value => this._filter(value.accommodations))
@@ -166,7 +171,8 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       serviceCaption: null,
       destination: null,
       activity: null,
-      accommodations: null
+      accommodations: null,
+      roomType: null
     };
     this.services.push(newService);
 
@@ -194,6 +200,13 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       accommodations: new FormControl(null, {
         validators: [Validators.required]
       })
+      ,
+      roomType: new FormControl(null, {
+        validators: [Validators.required]
+      })
+      // mealPlan: new FormControl(null, {
+      //   validators: [Validators.required]
+      // })
     });
   }
 }

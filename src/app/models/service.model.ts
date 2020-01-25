@@ -6,4 +6,5 @@ export interface Service {
   destination: string;
   activity: string;
   accommodations: string;
+  roomType: string;
 }

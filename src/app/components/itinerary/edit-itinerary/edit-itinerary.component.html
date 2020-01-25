@@ -86,7 +86,7 @@
               </mat-form-field>
 
               <!-- Accommodations -->
-              <mat-form-field class="example-full-width">
+              <mat-form-field>
                 <input type="text" placeholder="Accommodations" aria-label="Number" matInput formControlName="accommodations" [matAutocomplete]="auto">
                 <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
                   <mat-option *ngFor="let option of filteredOptions[i] | async" [value]="option">
@@ -97,8 +97,16 @@
 
 
               <!-- Room Type -->
+              <mat-form-field>
+                <input type="text" matInput formControlName="roomType" placeholder="Room type*">
+              </mat-form-field>
 
               <!-- Meal Plan -->
+              <div class="meals">
+                <mat-slide-toggle>Breakfast</mat-slide-toggle>
+                <mat-slide-toggle>Lunch</mat-slide-toggle>
+                <mat-slide-toggle>Dinner</mat-slide-toggle>
+              </div>
 
               <mat-action-row>
                 <button mat-raised-button type="button" class="deleteButton" color="warn" (click)="onDeleteService(service.id, i)">Delete</button>

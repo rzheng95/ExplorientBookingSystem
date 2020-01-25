@@ -50,3 +50,14 @@ mat-expansion-panel {
 .spacer {
   flex: 1 1 auto;
 }
+
+.meals {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.meals mat-slide-toggle {
+  display: table-cell;
+  text-align: center;
+}

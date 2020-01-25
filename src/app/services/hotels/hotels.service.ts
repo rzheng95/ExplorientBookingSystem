@@ -39,6 +39,11 @@ export class HotelsService {
       );
   }
 
+  getHotelNameById(hid: string) {
+    return this.afs.collection(this.collectionPath).doc(hid).ref.get();
+  }
+
+
   showDialogMessage(title: string, message: string) {
     if (!title) {
       title = 'An error occured!';

@@ -5,7 +5,10 @@ export interface Service {
   serviceCaption: string;
   destination: string;
   activity: string;
-  accommodations: string;
+  hid: string;
   roomType: string;
-  vendor: string;
+  breakfast: boolean;
+  lunch: boolean;
+  dinner: boolean;
+  vid: string;
 }

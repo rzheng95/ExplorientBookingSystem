@@ -37,8 +37,9 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   filteredOptions: Observable<string[]>[] = [];
 
   vendors: { id: string; vendorName: string }[];
-  vendorFilteredOptions: Observable<{ id: string; vendorName: string }[]>[] = [];
-
+  vendorFilteredOptions: Observable<
+    { id: string; vendorName: string }[]
+  >[] = [];
 
   constructor(
     private servicesService: ServicesService,
@@ -78,8 +79,9 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       this.vendors = vendors;
     });
 
-
-    this.booking = this.bookingsService.getBookingById(this.bookingId) as Observable<Booking>;
+    this.booking = this.bookingsService.getBookingById(
+      this.bookingId
+    ) as Observable<Booking>;
 
     this.servicesSub = this.servicesService
       .getServiceByBid(this.bookingId)
@@ -87,52 +89,97 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
         this.services = sers;
         this.services.sort((a, b) => this.sortNullDate(a.date, b.date));
 
-        let count = 0;
-        for (const service of this.services) {
+        this.services.forEach((service, index) => {
           this.serviceFormArray.push(this.serviceFormGroup());
 
-          this.serviceFormArray.controls[count].setValue({
-            datePicker: this.services[count].date,
-            serviceCaption: this.services[count].serviceCaption,
-            destination: this.services[count].destination,
-            activity: this.services[count].activity,
-            accommodations: this.services[count].accommodations,
-            roomType: this.services[count].roomType,
-            vendor: this.services[count].vendor
+          this.serviceFormArray.controls[index].patchValue({
+            datePicker: service.date,
+            serviceCaption: service.serviceCaption,
+            destination: service.destination,
+            activity: service.activity,
+            roomType: service.roomType,
+            breakfast: service.breakfast,
+            lunch: service.lunch,
+            dinner: service.dinner
           });
 
+          // fetch hotel name by id
+          this.hotelsService
+            .getHotelNameById(service.hid.trim())
+            .then(doc => {
+              const hotel = doc.data() as Hotel;
+              this.serviceFormArray.controls[index].patchValue({
+                hid: hotel.hotelName
+              });
+            })
+            .catch(err => console.log(err));
+
+          // fetch vendor name by id
+          this.vendorService
+            .getVendorNameById(service.vid.trim())
+            .then(doc => {
+              const vendor = doc.data() as Vendor;
+              this.serviceFormArray.controls[index].patchValue({
+                vid: vendor.vendorName
+              });
+            })
+            .catch(err => console.log(err));
+
           // Each accommodation field will have a valueChanges listener
-          this.filteredOptions[count] = this.serviceFormArray.controls[count].valueChanges.pipe(
+          this.filteredOptions[index] = this.serviceFormArray.controls[
+            index
+          ].valueChanges.pipe(
             startWith(''),
-            map(value => this._filter(value.accommodations))
+            map(value => this._filter(value.hid))
           );
 
           // Each vendor field will have a valueChanges listener
-          this.vendorFilteredOptions[count] = this.serviceFormArray.controls[count].valueChanges.pipe(
+          this.vendorFilteredOptions[index] = this.serviceFormArray.controls[
+            index
+          ].valueChanges.pipe(
             startWith(''),
-            map(value => this._filter2(value.vendor))
+            map(value => this._filter2(value.vid))
           );
-
-
-          count++;
-        }
+        });
       });
+  }
+
+  private updateHotelsAndVendors() {
+    this.services.forEach((service, index) => {
+      this.hotelsService
+        .getHotelNameById(service.hid)
+        .then(doc => {
+          if (doc) {
+            const hotel = doc.data() as Hotel;
+            // console.log(hotel);
+            this.serviceFormArray.controls[index].patchValue({
+              hid: hotel.hotelName
+            });
+          }
+        })
+        .catch(err => {
+          console.log('Hotel id does not exist.', err);
+        });
+    });
   }
 
   private _filter(value: string): string[] {
     if (value) {
       const filterValue = value.toLowerCase();
-      return this.hotelNames.filter(option => option.toLowerCase().includes(filterValue));
+      return this.hotelNames.filter(option =>
+        option.toLowerCase().includes(filterValue)
+      );
     }
   }
 
   private _filter2(vendor: string): { id: string; vendorName: string }[] {
     if (vendor) {
       const filterValue = vendor.toLowerCase();
-      return this.vendors.filter(option => option.vendorName.toLowerCase().includes(filterValue));
+      return this.vendors.filter(option =>
+        option.vendorName.toLowerCase().includes(filterValue)
+      );
     }
   }
-
 
   ngOnDestroy() {
     if (this.servicesSub) {
@@ -170,9 +217,12 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
         serviceCaption: control.value.serviceCaption.trim(),
         destination: control.value.destination.trim(),
         activity: control.value.activity.trim(),
-        accommodations: control.value.accommodations.trim(),
+        hid: control.value.hid.id.trim(),
         roomType: control.value.roomType.trim(),
-        vendor: control.value.vendor.trim()
+        breakfast: control.value.breakfast,
+        lunch: control.value.lunch,
+        dinner: control.value.dinner,
+        vid: control.value.vid.id.trim()
       })
       .then(() => console.log('Service saved.'))
       .catch(() => window.alert('Service could not be saved!'));
@@ -190,9 +240,7 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     return this.form.get('services') as FormArray;
   }
 
-
   onAddService() {
-
     this.serviceFormArray.push(this.serviceFormGroup());
     const newService: Service = {
       bid: this.bookingId,
@@ -200,9 +248,12 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       serviceCaption: null,
       destination: null,
       activity: null,
-      accommodations: null,
+      hid: null,
       roomType: null,
-      vendor: null
+      breakfast: false,
+      lunch: false,
+      dinner: false,
+      vid: null
     };
     this.services.push(newService);
 
@@ -227,14 +278,16 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       activity: new FormControl(null, {
         validators: [Validators.required]
       }),
-      accommodations: new FormControl(null, {
+      hid: new FormControl(null, {
         validators: [Validators.required]
-      })
-      ,
+      }),
       roomType: new FormControl(null, {
         validators: [Validators.required]
       }),
-      vendor: new FormControl(null, {
+      breakfast: new FormControl(null),
+      lunch: new FormControl(null),
+      dinner: new FormControl(null),
+      vid: new FormControl(null, {
         validators: [Validators.required]
       })
     });

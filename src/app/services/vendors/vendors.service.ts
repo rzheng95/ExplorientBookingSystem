@@ -35,6 +35,10 @@ export class VendorsService {
         );
   }
 
+  getVendorNameById(vid: string) {
+    return this.afs.collection(this.collectionPath).doc(vid).ref.get();
+  }
+
 
   showDialogMessage(title: string, message: string) {
     if (!title) {

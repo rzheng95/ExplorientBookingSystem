@@ -87,7 +87,7 @@
 
               <!-- Accommodations -->
               <mat-form-field>
-                <input type="text" placeholder="Accommodations" aria-label="Accommodation" matInput formControlName="accommodations" [matAutocomplete]="auto1">
+                <input type="text" placeholder="Accommodations*" aria-label="Accommodation" matInput formControlName="hid" [matAutocomplete]="auto1">
                 <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete">
                   <mat-option *ngFor="let option of filteredOptions[i] | async" [value]="option">
                     {{option}}
@@ -103,14 +103,14 @@
 
               <!-- Meal Plan -->
               <div class="meals">
-                <mat-slide-toggle>Breakfast</mat-slide-toggle>
-                <mat-slide-toggle>Lunch</mat-slide-toggle>
-                <mat-slide-toggle>Dinner</mat-slide-toggle>
+                <mat-slide-toggle formControlName="breakfast">Breakfast</mat-slide-toggle>
+                <mat-slide-toggle formControlName="lunch">Lunch</mat-slide-toggle>
+                <mat-slide-toggle formControlName="dinner">Dinner</mat-slide-toggle>
               </div> <br><br>
 
               <!-- Vendor -->
               <mat-form-field>
-                <input type="text" placeholder="Vendor*" aria-label="Vendor" matInput formControlName="vendor" [matAutocomplete]="auto2">
+                <input type="text" placeholder="Vendor*" aria-label="Vendor" matInput formControlName="vid" [matAutocomplete]="auto2">
                 <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete" >
                   <mat-option *ngFor="let v of vendorFilteredOptions[i] | async" [value]="v.vendorName">
                     {{v.vendorName}}

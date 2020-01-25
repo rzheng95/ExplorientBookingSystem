@@ -87,8 +87,8 @@
 
               <!-- Accommodations -->
               <mat-form-field>
-                <input type="text" placeholder="Accommodations" aria-label="Number" matInput formControlName="accommodations" [matAutocomplete]="auto">
-                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                <input type="text" placeholder="Accommodations" aria-label="Accommodation" matInput formControlName="accommodations" [matAutocomplete]="auto1">
+                <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete">
                   <mat-option *ngFor="let option of filteredOptions[i] | async" [value]="option">
                     {{option}}
                   </mat-option>
@@ -106,7 +106,17 @@
                 <mat-slide-toggle>Breakfast</mat-slide-toggle>
                 <mat-slide-toggle>Lunch</mat-slide-toggle>
                 <mat-slide-toggle>Dinner</mat-slide-toggle>
-              </div>
+              </div> <br><br>
+
+              <!-- Vendor -->
+              <mat-form-field>
+                <input type="text" placeholder="Vendor*" aria-label="Vendor" matInput formControlName="vendor" [matAutocomplete]="auto2">
+                <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete" >
+                  <mat-option *ngFor="let v of vendorFilteredOptions[i] | async" [value]="v.vendorName">
+                    {{v.vendorName}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
 
               <mat-action-row>
                 <button mat-raised-button type="button" class="deleteButton" color="warn" (click)="onDeleteService(service.id, i)">Delete</button>

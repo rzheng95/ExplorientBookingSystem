@@ -7,4 +7,5 @@ export interface Service {
   activity: string;
   accommodations: string;
   roomType: string;
+  vendor: string;
 }

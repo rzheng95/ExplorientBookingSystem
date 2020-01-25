@@ -12,9 +12,11 @@ import { ServicesService } from '../../../services/services/services.service';
 import { Booking } from '../../../models/booking.model';
 import { Service } from '../../../models/service.model';
 import { Hotel } from '../../../models/hotel.model';
+import { Vendor } from '../../../models/vendor.model';
 import { Observable, Subscription } from 'rxjs';
 import { startWith, map, tap } from 'rxjs/operators';
-import { HotelsService } from 'src/app/services/hotels/hotels.service';
+import { HotelsService } from '../../../services/hotels/hotels.service';
+import { VendorsService } from '../../../services/vendors/vendors.service';
 
 @Component({
   selector: 'app-edit-itinerary',
@@ -29,16 +31,20 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   servicesSub: Subscription;
   booking: Observable<Booking>;
 
-  options: string[] = [];
+  hotelNames: string[] = [];
   hotels: Hotel[] = [];
   hotelsSub: Subscription;
   filteredOptions: Observable<string[]>[] = [];
+
+  vendors: { id: string; vendorName: string }[];
+  vendorFilteredOptions: Observable<{ id: string; vendorName: string }[]>[] = [];
 
 
   constructor(
     private servicesService: ServicesService,
     private bookingsService: BookingsService,
     private hotelsService: HotelsService,
+    private vendorService: VendorsService,
     private route: ActivatedRoute
   ) {}
 
@@ -62,9 +68,14 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       this.hotels = hotels;
       let count = 0;
       for (const h of hotels) {
-        this.options[count] = h.hotelName;
+        this.hotelNames[count] = h.hotelName;
         count++;
       }
+    });
+
+    // Get a list of vendors {id, vendorName}
+    this.vendorService.getVendorNames().subscribe(vendors => {
+      this.vendors = vendors;
     });
 
 
@@ -86,14 +97,22 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
             destination: this.services[count].destination,
             activity: this.services[count].activity,
             accommodations: this.services[count].accommodations,
-            roomType: this.services[count].roomType
+            roomType: this.services[count].roomType,
+            vendor: this.services[count].vendor
           });
 
-          // Each service's accommodation field will have a valueChanges listener
+          // Each accommodation field will have a valueChanges listener
           this.filteredOptions[count] = this.serviceFormArray.controls[count].valueChanges.pipe(
             startWith(''),
             map(value => this._filter(value.accommodations))
           );
+
+          // Each vendor field will have a valueChanges listener
+          this.vendorFilteredOptions[count] = this.serviceFormArray.controls[count].valueChanges.pipe(
+            startWith(''),
+            map(value => this._filter2(value.vendor))
+          );
+
 
           count++;
         }
@@ -103,9 +122,17 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   private _filter(value: string): string[] {
     if (value) {
       const filterValue = value.toLowerCase();
-      return this.options.filter(option => option.toLowerCase().includes(filterValue));
+      return this.hotelNames.filter(option => option.toLowerCase().includes(filterValue));
     }
   }
+
+  private _filter2(vendor: string): { id: string; vendorName: string }[] {
+    if (vendor) {
+      const filterValue = vendor.toLowerCase();
+      return this.vendors.filter(option => option.vendorName.toLowerCase().includes(filterValue));
+    }
+  }
+
 
   ngOnDestroy() {
     if (this.servicesSub) {
@@ -143,7 +170,9 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
         serviceCaption: control.value.serviceCaption.trim(),
         destination: control.value.destination.trim(),
         activity: control.value.activity.trim(),
-        accommodations: control.value.accommodations.trim()
+        accommodations: control.value.accommodations.trim(),
+        roomType: control.value.roomType.trim(),
+        vendor: control.value.vendor.trim()
       })
       .then(() => console.log('Service saved.'))
       .catch(() => window.alert('Service could not be saved!'));
@@ -172,7 +201,8 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       destination: null,
       activity: null,
       accommodations: null,
-      roomType: null
+      roomType: null,
+      vendor: null
     };
     this.services.push(newService);
 
@@ -203,10 +233,10 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       ,
       roomType: new FormControl(null, {
         validators: [Validators.required]
+      }),
+      vendor: new FormControl(null, {
+        validators: [Validators.required]
       })
-      // mealPlan: new FormControl(null, {
-      //   validators: [Validators.required]
-      // })
     });
   }
 }

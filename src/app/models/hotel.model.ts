@@ -3,7 +3,7 @@ import { Vendor } from './vendor.model';
 export interface Hotel {
   id?: string;
   hotelName: string;
-  vendor: Vendor;
+  vid: string;
   addressLine1: string;
   addressLine2: string;
   city: string;

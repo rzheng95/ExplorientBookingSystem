@@ -90,7 +90,7 @@ export class HotelsComponent implements OnInit, OnDestroy {
 
     const newHotel: Hotel = {
       hotelName: this.form.value.hotelName.trim(),
-      vendor: this.form.value.vendor.trim(),
+      vid: this.getVendorIdByName(this.form.value.vendor.trim()),
       addressLine1: this.form.value.addressLine1,
       addressLine2: this.form.value.addressLine2,
       city: this.form.value.city,
@@ -121,6 +121,17 @@ export class HotelsComponent implements OnInit, OnDestroy {
       // this.hotelsService.showDialogMessage('Success!', `Booking updated for ${this.form.value.contactName}`);
     }
     this.isLoading = false;
+  }
+
+  private getVendorIdByName(vendorName: string) {
+    if (vendorName) {
+      for (const v of this.vendors) {
+        if (v.vendorName === vendorName) {
+          return v.id;
+        }
+      }
+    }
+    return vendorName;
   }
 
   onClearForm() {

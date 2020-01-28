@@ -4,9 +4,12 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 /* "Times New Roman", Times, serif; */
 /* Roboto, "Helvetica Neue", sans-serif; */
-.mat-expansion-panel-header > .mat-content {
+
+
+/* .mat-expansion-panel-header > .mat-content {
   justify-content: space-between;
 }
+*/
 
 .mat-content > mat-panel-title, .mat-content > mat-panel-description {
   flex: 0 0 auto;

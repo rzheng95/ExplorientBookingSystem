@@ -10,6 +10,8 @@ import { AddPassengerComponent } from '../passengers/add-passenger/add-passenger
 import { EditItineraryComponent } from '../itinerary/edit-itinerary/edit-itinerary.component';
 import { HotelsComponent } from '../hotels/hotels.component';
 import { VendorsComponent } from '../vendors/vendors.component';
+import { EditHotelComponent } from '../hotels/edit-hotel/edit-hotel.component';
+import { SearchHotelComponent } from '../hotels/search-hotel/search-hotel.component';
 
 
 
@@ -24,6 +26,8 @@ const routes: Routes = [
   { path: 'add-passenger/:bookingId', component: AddPassengerComponent, canActivate: [AuthGuard] },
   { path: 'edit-itinerary/:bookingId', component: EditItineraryComponent, canActivate: [AuthGuard] },
   { path: 'create-hotel', component: HotelsComponent, canActivate: [AuthGuard] },
+  { path: 'edit-hotel', component: EditHotelComponent, canActivate: [AuthGuard] },
+  { path: 'search-hotel', component: SearchHotelComponent, canActivate: [AuthGuard] },
   { path: 'create-vendor', component: VendorsComponent, canActivate: [AuthGuard] }
 
 

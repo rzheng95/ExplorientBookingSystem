@@ -14,6 +14,8 @@ import { EditItineraryComponent } from '../itinerary/edit-itinerary/edit-itinera
 import { MainNavComponent } from '../main-nav/main-nav.component';
 import { HotelsComponent } from '../hotels/hotels.component';
 import { VendorsComponent } from '../vendors/vendors.component';
+import { EditHotelComponent } from '../hotels/edit-hotel/edit-hotel.component';
+import { SearchHotelComponent } from '../hotels/search-hotel/search-hotel.component';
 
 
 
@@ -28,6 +30,8 @@ import { VendorsComponent } from '../vendors/vendors.component';
     AddPassengerComponent,
     EditItineraryComponent,
     HotelsComponent,
+    EditHotelComponent,
+    SearchHotelComponent,
     VendorsComponent
   ],
   imports: [

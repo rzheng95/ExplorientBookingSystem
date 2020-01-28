@@ -1,0 +1,61 @@
+
+.mat-card {
+  width: 80%;
+  box-shadow: 2px 1px 5px rgba(0,0,0,0.5);
+  padding: 2rem;
+  margin: 3rem auto 5rem auto;
+  border-left: 2rem solid #3F51B5;
+}
+
+.result-card {
+  margin: 3rem auto 15rem auto;
+}
+
+mat-card-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+mat-card-title {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-spinner {
+  margin: 0 auto;
+}
+
+mat-action-row {
+  padding: 16px 8px;
+}
+
+mat-list-item {
+  cursor: pointer;
+}
+
+.mat-expansion-panel.mat-expanded {
+  border-left: 1rem solid #3F51B5;
+}
+
+.buttonsContainer {
+  margin-top: 2rem;
+}
+
+.clear {
+  float: left;
+}
+
+.submit {
+  float: right;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+

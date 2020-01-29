@@ -7,7 +7,7 @@
           <input
             matInput
             type="text"
-            (keyup)="filterHotels()"
+            (ngModelChange)="filterHotels()"
             formControlName="hotelName"
             placeholder="Hotel Name*"
           />
@@ -28,6 +28,9 @@
     <mat-card-title>Search Results</mat-card-title>
 
     <mat-card-content>
+      <div *ngFor="let h of filteredHotels">
+        {{ h.hotelName }}
+      </div>
 
       <!-- <mat-accordion *ngIf="hotels.length > 0">
         <mat-expansion-panel *ngFor="let hotel of hotels">

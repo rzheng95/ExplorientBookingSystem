@@ -144,7 +144,7 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     if (hotel) {
       const filterValue = hotel.toLowerCase();
       return this.hotels.filter(option =>
-        option.hotelName.toLowerCase().includes(filterValue)
+        option.hotelName.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
   }
@@ -153,7 +153,7 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     if (vendor) {
       const filterValue = vendor.toLowerCase();
       return this.vendors.filter(option =>
-        option.vendorName.toLowerCase().includes(filterValue)
+        option.vendorName.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
   }

@@ -2,8 +2,7 @@ import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { HotelsService } from '../../../services/hotels/hotels.service';
-import { debounceTime, distinct, filter, switchMap, tap } from 'rxjs/operators';
-import { Hotel } from 'src/app/models/hotel.model';
+import { Hotel } from '../../../models/hotel.model';
 
 @Component({
   selector: 'app-search-hotel',
@@ -14,8 +13,8 @@ export class SearchHotelComponent implements OnInit, OnDestroy {
   isLoading = false;
   form: FormGroup;
 
-  hotels: { id: string; hotelName: string }[];
-  filteredHotels: { id: string; hotelName: string }[];
+  hotels: Hotel[];
+  filteredHotels: Hotel[];
   hotelsSub: Subscription;
 
   constructor(private hotelsService: HotelsService) {}
@@ -27,7 +26,7 @@ export class SearchHotelComponent implements OnInit, OnDestroy {
       })
     });
 
-    this.hotelsSub = this.hotelsService.getHotelNames().subscribe(hotels => {
+    this.hotelsSub = this.hotelsService.getHotels().subscribe(hotels => {
       this.hotels = hotels;
     });
   }

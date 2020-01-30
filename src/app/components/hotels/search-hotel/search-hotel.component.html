@@ -28,9 +28,42 @@
     <mat-card-title>Search Results</mat-card-title>
 
     <mat-card-content>
-      <div *ngFor="let h of filteredHotels">
+      <!-- <div *ngFor="let h of filteredHotels">
         {{ h.hotelName }}
-      </div>
+      </div> -->
+
+      <mat-accordion *ngIf="filteredHotels?.length > 0">
+        <mat-expansion-panel *ngFor="let h of filteredHotels">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>hotel</mat-icon> &nbsp;&nbsp; &nbsp;&nbsp;
+              <p>{{ h.hotelName }}</p>
+            </mat-panel-title>
+
+          </mat-expansion-panel-header>
+          <div>
+            <p><strong>Hotel: </strong> {{ h.hotelName }}</p>
+            <p><strong>AddressLine1: </strong> {{ h.addressLine1 }}</p>
+            <p *ngIf="h.addressLine2"><strong>AddressLine2: </strong> {{ h.addressLine2 }}</p>
+            <p><strong>City: </strong> {{ h.city }}</p>
+            <p *ngIf="h.state"><strong>State/Province: </strong> {{ h.state }}</p>
+            <p><strong>Country: </strong> {{ h.country }}</p>
+            <p *ngIf="h.zipcode"><strong>Zipcode: </strong> {{ h.zipcode }}</p>
+            <p *ngIf="h.phone1"><strong>Phone1: </strong> {{ h.phone1 }}</p>
+            <p *ngIf="h.phone2"><strong>Phone2: </strong> {{ h.phone2 }}</p>
+            <p *ngIf="h.fax"><strong>Fax: </strong> {{ h.fax }}</p>
+            <p *ngIf="h.email1"><strong>Email1: </strong> {{ h.email1 }}</p>
+            <p *ngIf="h.email2"><strong>Email2: </strong> {{ h.email2 }}</p>
+            <p><strong>Vendor: </strong> {{ h.vid }}</p>
+            <p *ngIf="h.notes"><strong>Notes: </strong> {{ h.notes }}</p>
+          </div>
+
+          <mat-action-row>
+            <button mat-button color="primary" >Edit Hotel</button>
+
+          </mat-action-row>
+        </mat-expansion-panel>
+      </mat-accordion>
 
       <!-- <mat-accordion *ngIf="hotels.length > 0">
         <mat-expansion-panel *ngFor="let hotel of hotels">

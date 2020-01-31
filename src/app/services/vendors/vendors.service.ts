@@ -38,6 +38,10 @@ export class VendorsService {
     return this.afs.collection(this.collectionPath).doc(vid).ref.get();
   }
 
+  getVendorById(id: string) {
+    return this.vendorsCollection.doc(id).valueChanges();
+  }
+
 
   showDialogMessage(title: string, message: string) {
     if (!title) {

@@ -3,6 +3,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { HotelsService } from '../../../services/hotels/hotels.service';
 import { Hotel } from '../../../models/hotel.model';
+import { VendorsService } from '../../../services/vendors/vendors.service';
+import { Vendor } from '../../../models/vendor.model';
 
 @Component({
   selector: 'app-search-hotel',
@@ -17,7 +19,10 @@ export class SearchHotelComponent implements OnInit, OnDestroy {
   filteredHotels: Hotel[];
   hotelsSub: Subscription;
 
-  constructor(private hotelsService: HotelsService) {}
+  constructor(
+    private hotelsService: HotelsService,
+    private vendorsService: VendorsService
+  ) {}
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -28,6 +33,14 @@ export class SearchHotelComponent implements OnInit, OnDestroy {
 
     this.hotelsSub = this.hotelsService.getHotels().subscribe(hotels => {
       this.hotels = hotels;
+
+      this.hotels.forEach((hotel, index) => {
+        this.vendorsService.getVendorById(hotel.vid).subscribe(vendor => {
+          const v = vendor as Vendor;
+          hotel.vid = v.vendorName;
+        });
+
+      });
     });
   }
 

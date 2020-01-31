@@ -36,8 +36,10 @@ export class AuthService implements OnDestroy {
       if (user) {
         this.userData = user;
         localStorage.setItem('user', JSON.stringify(this.userData));
+
         this.userSub = this.userInactive.subscribe(() => {
           if (this.isAuth) {
+            this.isAuth = false;
             this.SignOut();
             this.showErrorMessage(
               'Inactivity',

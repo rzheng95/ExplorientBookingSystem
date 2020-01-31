@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { AuthService } from './services/auth/auth.service';
 import { environment } from 'src/environments/environment';
+import { TestBed } from '@angular/core/testing';
 
 @Component({
   selector: 'app-root',
@@ -22,5 +23,9 @@ export class AppComponent implements OnInit {
       this.authService.clearTimeout();
       this.authService.setTimeout(environment.sessionExpiration); // seconds
     }
+  }
+
+  @HostListener('window:beforeunload') Test() {
+    this.authService.SignOut();
   }
 }

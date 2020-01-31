@@ -24,6 +24,10 @@ export class HotelsService {
     this.hotelsCollection.add({ ...hotel });
   }
 
+  updateHotel(id: string, value: any): Promise<void> {
+    return this.hotelsCollection.doc(id).update(value);
+  }
+
   getHotels() {
     return this.afs
       .collection(this.collectionPath)

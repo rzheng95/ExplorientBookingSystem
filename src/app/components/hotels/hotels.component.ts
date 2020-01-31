@@ -167,13 +167,12 @@ export class HotelsComponent implements OnInit, OnDestroy {
         'Success!',
         `Hotel created for ${this.form.value.hotelName}`
       );
-      // this.form.reset();
       this.onClearForm();
     } else {
       // EDIT mode
-      // this.hotelsService.updateHotel(this.bookingId, newBooking)
-      // .catch(error => console.log(error));
-      // this.hotelsService.showDialogMessage('Success!', `Booking updated for ${this.form.value.contactName}`);
+      this.hotelsService.updateHotel(this.hotelId, newHotel)
+      .catch(error => console.log(error));
+      this.hotelsService.showDialogMessage('Success!', `Hotel updated for ${this.form.value.hotelName}`);
     }
     this.isLoading = false;
   }

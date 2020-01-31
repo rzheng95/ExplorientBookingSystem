@@ -28,9 +28,6 @@
     <mat-card-title>Search Results</mat-card-title>
 
     <mat-card-content>
-      <!-- <div *ngFor="let h of filteredHotels">
-        {{ h.hotelName }}
-      </div> -->
 
       <mat-accordion *ngIf="filteredHotels?.length > 0">
         <mat-expansion-panel *ngFor="let h of filteredHotels">
@@ -59,33 +56,11 @@
           </div>
 
           <mat-action-row>
-            <button mat-button color="primary" >Edit Hotel</button>
-
+            <a mat-button color="primary" [routerLink]="['/dashboard/edit-hotel', h.id]">Edit Hotel</a>
           </mat-action-row>
         </mat-expansion-panel>
       </mat-accordion>
 
-      <!-- <mat-accordion *ngIf="hotels.length > 0">
-        <mat-expansion-panel *ngFor="let hotel of hotels">
-          <mat-expansion-panel-header (click)="onClickPanel(booking.id)">
-              <mat-icon>perm_contact_calendar</mat-icon> &nbsp;&nbsp; <strong>{{ booking.contactName }} &nbsp;
-              </strong> - &nbsp;{{ booking.package }}
-          </mat-expansion-panel-header>
-          <p>{{ passengers.length }} passengers added.</p>
-          <mat-list *ngFor="let passenger of passengers">
-            <mat-list-item (click)="onClickPassenger(passenger)"><mat-icon>perm_identity</mat-icon>&nbsp;{{ passenger.passengerName }}</mat-list-item>
-          </mat-list>
-
-
-          <mat-action-row>
-            <button mat-button color="primary" (click)="onAddPassenger(booking.id)">Add Passenger</button>
-            <a mat-button color="primary" [routerLink]="['/dashboard/edit-itinerary', booking.id]">Edit Itinerary</a>
-            <span class="spacer"></span>
-            <a mat-button color="primary" [routerLink]="['/dashboard/edit-booking', booking.id]">EDIT</a>
-
-          </mat-action-row>
-        </mat-expansion-panel>
-      </mat-accordion> -->
     </mat-card-content>
   </mat-card>
 </app-main-nav>

@@ -12,6 +12,8 @@ import {
   startWith,
   map
 } from 'rxjs/operators';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Vendor } from 'src/app/models/vendor.model';
 
 @Component({
   selector: 'app-hotels',
@@ -26,9 +28,15 @@ export class HotelsComponent implements OnInit, OnDestroy {
   vendorsSub: Subscription;
   filteredVendors: Observable<{ id: string; vendorName: string }[]>;
 
+  hotelId: string;
+  hotelSub: Subscription;
+  hotel: Hotel;
+  hotelVendorName = '';
+
   constructor(
     private hotelsService: HotelsService,
-    private vendorsService: VendorsService
+    private vendorsService: VendorsService,
+    public route: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -63,6 +71,53 @@ export class HotelsComponent implements OnInit, OnDestroy {
       startWith(''),
       map(value => this._filter(value))
     );
+
+    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      if (paramMap.has('hotelId')) {
+        this.mode = 'edit';
+        this.hotelId = paramMap.get('hotelId');
+
+        // get hotel
+        this.hotelSub = this.hotelsService
+          .getHotelById(this.hotelId)
+          .subscribe(hotel => {
+            this.hotel = hotel as Hotel;
+
+            // populate UI
+            this.form.setValue({
+              hotelName: this.hotel.hotelName,
+              vendor: this.hotelVendorName,
+              addressLine1: this.hotel.addressLine1,
+              addressLine2: this.hotel.addressLine2,
+              city: this.hotel.city,
+              state: this.hotel.state,
+              country: this.hotel.country,
+              zipcode: this.hotel.zipcode,
+              phone1: this.hotel.phone1,
+              phone2: this.hotel.phone2,
+              fax: this.hotel.fax,
+              email1: this.hotel.email1,
+              email2: this.hotel.email2,
+              notes: this.hotel.notes
+            });
+
+            // get vendor name
+            this.vendorsService
+              .getVendorNameById(this.hotel.vid)
+              .then(doc => {
+                const vendor = doc.data() as Vendor;
+                this.hotelVendorName = vendor.vendorName;
+                this.form.patchValue({
+                  vendor: this.hotelVendorName
+                });
+              })
+              .catch(err => console.log(err));
+          });
+      } else {
+        this.mode = 'create';
+        this.hotelId = null;
+      }
+    });
   }
 
   private _filter(value: string) {

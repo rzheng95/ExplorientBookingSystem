@@ -55,6 +55,9 @@ export class HotelsService {
     return this.afs.collection(this.collectionPath).doc(hid).ref.get();
   }
 
+  getHotelById(id: string) {
+    return this.hotelsCollection.doc(id).valueChanges();
+  }
 
   showDialogMessage(title: string, message: string) {
     if (!title) {

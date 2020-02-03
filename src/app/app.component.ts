@@ -18,6 +18,7 @@ export class AppComponent implements OnInit {
     });
   }
 
+  // Logout user when mouse inactive (including going over to different browser tab)
   @HostListener('window:mousemove') refreshUserState() {
     if (this.isAuthenticated) {
       this.authService.clearTimeout();
@@ -25,6 +26,7 @@ export class AppComponent implements OnInit {
     }
   }
 
+  // Logout user when browser closed
   @HostListener('window:beforeunload') Test() {
     this.authService.SignOut();
   }

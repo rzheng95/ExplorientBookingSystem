@@ -6,6 +6,9 @@ This web application is designed and built for the Explorient Travel Services, I
 
 This program is written in Angular and is using Firebase as backend which includes storage, hosting, and authentication.
 
+This web application is still under development. It is not a completed application.
+
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.16.
 
 ## Development server

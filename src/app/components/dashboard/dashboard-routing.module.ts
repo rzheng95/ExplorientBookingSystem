@@ -11,6 +11,7 @@ import { EditItineraryComponent } from '../itinerary/edit-itinerary/edit-itinera
 import { HotelsComponent } from '../hotels/hotels.component';
 import { VendorsComponent } from '../vendors/vendors.component';
 import { SearchHotelComponent } from '../hotels/search-hotel/search-hotel.component';
+import { SearchVendorComponent } from '../vendors/search-vendor/search-vendor.component';
 
 
 
@@ -27,7 +28,8 @@ const routes: Routes = [
   { path: 'create-hotel', component: HotelsComponent, canActivate: [AuthGuard] },
   { path: 'edit-hotel/:hotelId', component: HotelsComponent, canActivate: [AuthGuard] },
   { path: 'search-hotel', component: SearchHotelComponent, canActivate: [AuthGuard] },
-  { path: 'create-vendor', component: VendorsComponent, canActivate: [AuthGuard] }
+  { path: 'create-vendor', component: VendorsComponent, canActivate: [AuthGuard] },
+  { path: 'search-vendor', component: SearchVendorComponent, canActivate: [AuthGuard] }
 
 
 ];

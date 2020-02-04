@@ -15,6 +15,7 @@ import { MainNavComponent } from '../main-nav/main-nav.component';
 import { HotelsComponent } from '../hotels/hotels.component';
 import { VendorsComponent } from '../vendors/vendors.component';
 import { SearchHotelComponent } from '../hotels/search-hotel/search-hotel.component';
+import { SearchVendorComponent } from '../vendors/search-vendor/search-vendor.component';
 
 
 
@@ -30,7 +31,8 @@ import { SearchHotelComponent } from '../hotels/search-hotel/search-hotel.compon
     EditItineraryComponent,
     HotelsComponent,
     SearchHotelComponent,
-    VendorsComponent
+    VendorsComponent,
+    SearchVendorComponent
   ],
   imports: [
     CommonModule,

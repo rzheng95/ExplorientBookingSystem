@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
   }
 
   // Logout user when browser closed
-  @HostListener('window:beforeunload') Test() {
-    this.authService.SignOut();
+  @HostListener('window:beforeunload') logoutOnBroswerClose() {
+    // this.authService.SignOut();
   }
 }

@@ -1,0 +1,66 @@
+<app-main-nav>
+  <mat-card>
+    <mat-card-title>Search Vendor</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="form">
+        <mat-form-field>
+          <input
+            matInput
+            type="text"
+            (ngModelChange)="filterVendors()"
+            formControlName="vendorName"
+            placeholder="Vendor Name*"
+          />
+          <mat-error *ngIf="form.get('vendorName').invalid">Please enter a valid vendor name.</mat-error>
+        </mat-form-field>
+
+        <mat-spinner *ngIf="isLoading"></mat-spinner>
+        <div class="buttonsContainer">
+          <button class="clear" mat-raised-button color="primary" type="button" (click)="onClearForm()">
+            Clear
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="result-card">
+    <mat-card-title>Search Results</mat-card-title>
+
+    <mat-card-content>
+
+      <mat-accordion *ngIf="filteredVendors?.length > 0">
+        <mat-expansion-panel *ngFor="let v of filteredVendors">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>hotel</mat-icon> &nbsp;&nbsp; &nbsp;&nbsp;
+              <p>{{ v.vendorName }}</p>
+            </mat-panel-title>
+
+          </mat-expansion-panel-header>
+          <div>
+            <p><strong>Vendor: </strong> {{ v.vendorName }}</p>
+            <p *ngIf="v.contactPerson"><strong>Contact: </strong> {{ v.contactPerson }}</p>
+            <p><strong>AddressLine1: </strong> {{ v.addressLine1 }}</p>
+            <p *ngIf="v.addressLine2"><strong>AddressLine2: </strong> {{ v.addressLine2 }}</p>
+            <p><strong>City: </strong> {{ v.city }}</p>
+            <p *ngIf="v.state"><strong>State/Province: </strong> {{ v.state }}</p>
+            <p><strong>Country: </strong> {{ v.country }}</p>
+            <p *ngIf="v.zipcode"><strong>Zipcode: </strong> {{ v.zipcode }}</p>
+            <p *ngIf="v.phone1"><strong>Phone1: </strong> {{ v.phone1 }}</p>
+            <p *ngIf="v.phone2"><strong>Phone2: </strong> {{ v.phone2 }}</p>
+            <p *ngIf="v.fax"><strong>Fax: </strong> {{ v.fax }}</p>
+            <p *ngIf="v.email1"><strong>Email1: </strong> {{ v.email1 }}</p>
+            <p *ngIf="v.email2"><strong>Email2: </strong> {{ v.email2 }}</p>
+            <p *ngIf="v.notes"><strong>Notes: </strong> {{ v.notes }}</p>
+          </div>
+
+          <mat-action-row>
+            <a mat-button color="primary" [routerLink]="['/dashboard/edit-hotel', v.id]">Edit Vendor</a>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+    </mat-card-content>
+  </mat-card>
+</app-main-nav>

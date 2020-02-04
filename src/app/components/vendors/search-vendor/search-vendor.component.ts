@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Vendor } from '../../../models/vendor.model';
 import { Subscription } from 'rxjs';
+import { VendorsService } from 'src/app/services/vendors/vendors.service';
 
 @Component({
   selector: 'app-search-vendor',
@@ -16,7 +17,7 @@ export class SearchVendorComponent implements OnInit {
   filteredVendors: Vendor[];
   vendorsSub: Subscription;
 
-  constructor() { }
+  constructor(private vendorsService: VendorsService) { }
 
   ngOnInit() {
     this.form = new FormGroup({

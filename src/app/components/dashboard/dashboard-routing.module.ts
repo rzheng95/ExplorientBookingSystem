@@ -29,7 +29,8 @@ const routes: Routes = [
   { path: 'edit-hotel/:hotelId', component: HotelsComponent, canActivate: [AuthGuard] },
   { path: 'search-hotel', component: SearchHotelComponent, canActivate: [AuthGuard] },
   { path: 'create-vendor', component: VendorsComponent, canActivate: [AuthGuard] },
-  { path: 'search-vendor', component: SearchVendorComponent, canActivate: [AuthGuard] }
+  { path: 'search-vendor', component: SearchVendorComponent, canActivate: [AuthGuard] },
+  { path: 'edit-vendor/:vendorId', component: VendorsComponent, canActivate: [AuthGuard] },
 
 
 ];

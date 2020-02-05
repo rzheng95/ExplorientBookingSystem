@@ -34,6 +34,21 @@ export class VendorsService {
         );
   }
 
+  getVendors() {
+    return this.afs
+      .collection(this.collectionPath)
+      .snapshotChanges()
+      .pipe(
+        map(actions =>
+          actions.map(a => {
+            const data = a.payload.doc.data() as Vendor;
+            const id = a.payload.doc.id;
+            return { id, ...data };
+          })
+        )
+      );
+  }
+
   getVendorNameById(vid: string) {
     return this.afs.collection(this.collectionPath).doc(vid).ref.get();
   }

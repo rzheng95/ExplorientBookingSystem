@@ -25,9 +25,23 @@ export class SearchVendorComponent implements OnInit {
         validators: [Validators.required]
       })
     });
+
+    this.vendorsSub = this.vendorsService.getVendors().subscribe(vendors => {
+      this.vendors = vendors;
+    });
   }
 
-  filterVendors() {}
+  filterVendors() {
+    this.isLoading = true;
+
+    this.filteredVendors = this.vendors.filter(option =>
+      option.vendorName
+        .toLowerCase()
+        .includes(this.form.value.vendorName.trim().toLowerCase())
+    );
+
+    this.isLoading = false;
+  }
 
   onClearForm() {
     this.form.reset();

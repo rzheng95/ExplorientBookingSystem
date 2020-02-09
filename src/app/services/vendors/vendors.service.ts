@@ -22,6 +22,10 @@ export class VendorsService {
     this.vendorsCollection.add({ ...vendor });
   }
 
+  updateVendor(id: string, value: any): Promise<void> {
+    return this.vendorsCollection.doc(id).update(value);
+  }
+
   getVendorNames() {
     return this.afs.collection(this.collectionPath, ref => {
       return ref.orderBy('vendorName');

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { VendorsService } from '../../services/vendors/vendors.service';
 import { Vendor } from '../../models/vendor.model';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-vendors',
@@ -12,7 +14,14 @@ export class VendorsComponent implements OnInit {
   isLoading = false;
   mode = 'create';
   form: FormGroup;
-  constructor(private vendorsService: VendorsService) { }
+
+  vendorId: string;
+  vendorSub: Subscription;
+  vendor: Vendor;
+
+
+
+  constructor(private vendorsService: VendorsService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -32,6 +41,41 @@ export class VendorsComponent implements OnInit {
       email1: new FormControl(null),
       email2: new FormControl(null),
       notes: new FormControl(null)
+    });
+
+    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      if (paramMap.has('vendorId')) {
+        this.mode = 'edit';
+        this.vendorId = paramMap.get('vendorId');
+
+        // get hotel
+        this.vendorSub = this.vendorsService
+          .getVendorById(this.vendorId)
+          .subscribe(hotel => {
+            this.vendor = hotel as Vendor;
+
+            // populate UI
+            this.form.setValue({
+              vendorName: this.vendor.vendorName,
+              contactPerson: this.vendor.contactPerson,
+              addressLine1: this.vendor.addressLine1,
+              addressLine2: this.vendor.addressLine2,
+              city: this.vendor.city,
+              state: this.vendor.state,
+              country: this.vendor.country,
+              zipcode: this.vendor.zipcode,
+              phone1: this.vendor.phone1,
+              phone2: this.vendor.phone2,
+              fax: this.vendor.fax,
+              email1: this.vendor.email1,
+              email2: this.vendor.email2,
+              notes: this.vendor.notes
+            });
+          });
+      } else {
+        this.mode = 'create';
+        this.vendor = null;
+      }
     });
   }
 
@@ -65,9 +109,9 @@ export class VendorsComponent implements OnInit {
       this.vendorsService.showDialogMessage('Success!', `Vendor created for ${this.form.value.vendorName}`);
       this.form.reset();
     } else { // EDIT mode
-      // this.vendorsService.updateHotel(this.bookingId, newBooking)
-      // .catch(error => console.log(error));
-      // this.vendorsService.showDialogMessage('Success!', `Booking updated for ${this.form.value.contactName}`);
+      this.vendorsService.updateVendor(this.vendorId, newVendor)
+      .catch(error => console.log(error));
+      this.vendorsService.showDialogMessage('Success!', `Vendor updated for ${this.form.value.vendorName}`);
     }
     this.isLoading = false;
   }

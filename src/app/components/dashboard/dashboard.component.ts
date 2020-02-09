@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
 import { User } from '../../models/user.model';
+import * as docx from 'docx';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,6 +14,10 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.authService.getUserData();
+  }
+
+  onDownload() {
+
   }
 
   onLogout() {

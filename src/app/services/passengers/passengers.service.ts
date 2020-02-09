@@ -23,6 +23,21 @@ export class PassengersService {
     return this.passengersCollection.add({ ...passenger });
   }
 
+  getPassengers() {
+    return this.afs
+      .collection(this.collectionPath)
+      .snapshotChanges()
+      .pipe(
+        map(actions =>
+          actions.map(a => {
+            const data = a.payload.doc.data() as Passenger;
+            const id = a.payload.doc.id;
+            return { id, ...data };
+          })
+        )
+      );
+  }
+
   getPassengersByBid(bid: string) {
     return this.afs.collection(this.collectionPath, ref => {
       return ref.where('bid', '==', bid);

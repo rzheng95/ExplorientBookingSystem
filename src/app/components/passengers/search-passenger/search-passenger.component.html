@@ -36,44 +36,28 @@
     <mat-card-title>Search Results</mat-card-title>
 
     <mat-card-content>
-      <mat-accordion *ngIf="filteredPassengers?.length > 0">
-        <mat-expansion-panel *ngFor="let p of filteredPassengers">
+      <mat-accordion *ngIf="filteredPassBook?.length > 0">
+        <mat-expansion-panel *ngFor="let p of filteredPassBook">
           <mat-expansion-panel-header>
             <mat-panel-title>
               <mat-icon>directions_walk</mat-icon> &nbsp;&nbsp; &nbsp;&nbsp;
-              <p>{{ p.passengerName }}</p>
+              <p>{{ p.passenger.passengerName }}</p>
             </mat-panel-title>
           </mat-expansion-panel-header>
 
           <div>
-
-            <!-- Show a list bookings that this passenger has traveled before. -->
-
-
-            <!-- <p><strong>Vendor: </strong> {{ p.vendorName }}</p>
-            <p *ngIf="p.contactPerson"><strong>Contact: </strong> {{ p.contactPerson }}</p>
-            <p><strong>AddressLine1: </strong> {{ p.addressLine1 }}</p>
-            <p *ngIf="p.addressLine2"><strong>AddressLine2: </strong> {{ p.addressLine2 }}</p>
-            <p><strong>City: </strong> {{ p.city }}</p>
-            <p *ngIf="p.state"><strong>State/Province: </strong> {{ p.state }}</p>
-            <p><strong>Country: </strong> {{ p.country }}</p>
-            <p *ngIf="p.zipcode"><strong>Zipcode: </strong> {{ p.zipcode }}</p>
-            <p *ngIf="p.phone1"><strong>Phone1: </strong> {{ p.phone1 }}</p>
-            <p *ngIf="p.phone2"><strong>Phone2: </strong> {{ p.phone2 }}</p>
-            <p *ngIf="p.fax"><strong>Fax: </strong> {{ p.fax }}</p>
-            <p *ngIf="p.email1"><strong>Email1: </strong> {{ p.email1 }}</p>
-            <p *ngIf="p.email2"><strong>Email2: </strong> {{ p.email2 }}</p>
-            <p *ngIf="p.notes"><strong>Notes: </strong> {{ p.notes }}</p> -->
+            <p><strong>Package: </strong>{{ p.booking.package }}</p>
+            <p><strong>Contact name: </strong>{{ p.booking.contactName }}</p>
           </div>
 
-          <mat-action-row>
+          <!-- <mat-action-row>
             <a
               mat-button
               color="primary"
               [routerLink]="['/dashboard/edit-vendor', p.id]"
               >Edit Passenger</a
             >
-          </mat-action-row>
+          </mat-action-row> -->
         </mat-expansion-panel>
       </mat-accordion>
     </mat-card-content>

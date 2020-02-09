@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Vendor } from '../../../models/vendor.model';
 import { Subscription } from 'rxjs';
@@ -9,7 +9,7 @@ import { VendorsService } from '../../../services/vendors/vendors.service';
   templateUrl: './search-vendor.component.html',
   styleUrls: ['./search-vendor.component.css']
 })
-export class SearchVendorComponent implements OnInit {
+export class SearchVendorComponent implements OnInit, OnDestroy {
   isLoading = false;
   form: FormGroup;
 
@@ -29,6 +29,10 @@ export class SearchVendorComponent implements OnInit {
     this.vendorsSub = this.vendorsService.getVendors().subscribe(vendors => {
       this.vendors = vendors;
     });
+  }
+
+  ngOnDestroy() {
+    this.vendorsSub.unsubscribe();
   }
 
   filterVendors() {

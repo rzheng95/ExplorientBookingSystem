@@ -25,6 +25,7 @@ import { BookingsService } from './services/bookings/bookings.service';
 import { AuthService } from './services/auth/auth.service';
 import { PassengersService } from './services/passengers/passengers.service';
 import { ServicesService } from './services/services/services.service';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { ServicesService } from './services/services/services.service';
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularMaterialModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+
   ],
   providers: [
     BookingsService,

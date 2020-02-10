@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
 import { User } from '../../models/user.model';
-import * as docx from 'docx';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -10,10 +10,15 @@ import * as docx from 'docx';
 })
 export class DashboardComponent implements OnInit {
   user: User;
-  constructor(private authService: AuthService) { }
+
+
+  constructor(private authService: AuthService) {}
 
   ngOnInit() {
     this.user = this.authService.getUserData();
+
+
+
   }
 
   onDownload() {
@@ -23,5 +28,4 @@ export class DashboardComponent implements OnInit {
   onLogout() {
     this.authService.SignOut();
   }
-
 }

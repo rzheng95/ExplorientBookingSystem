@@ -69,16 +69,6 @@ export class SearchPassengerComponent implements OnInit, OnDestroy {
     this.isLoading = false;
   }
 
-  getBookingName(bid: string) {
-    let bookingName = 'woring';
-    console.log(bookingName);
-    // this.bookingsService.getBookingById(bid).subscribe(booking => {
-    //   bookingName = (booking as Booking).package;
-    //   console.log(booking);
-    // });
-    return bookingName;
-  }
-
   onClearForm() {
     this.form.reset();
   }

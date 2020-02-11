@@ -46,8 +46,18 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute
   ) {}
 
+  test() {
+    console.log(this.form.value.tourSummary);
+  }
+
   ngOnInit() {
     this.form = new FormGroup({
+      tourSummary: new FormControl(null, {
+        validators: [Validators.required]
+      }),
+      additionalInfo: new FormControl(null, {
+        validators: [Validators.required]
+      }),
       services: new FormArray([])
     });
 

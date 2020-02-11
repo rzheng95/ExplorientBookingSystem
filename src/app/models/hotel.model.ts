@@ -1,4 +1,3 @@
-import { Vendor } from './vendor.model';
 
 export interface Hotel {
   id?: string;

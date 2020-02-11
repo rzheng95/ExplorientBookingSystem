@@ -14,6 +14,26 @@
 
       <mat-accordion multi="true">
         <form [formGroup]="form">
+
+          <!-- Tour Summary -->
+          <div>
+            <h3>Tour Summary:</h3>
+            <mat-form-field>
+              <mat-label></mat-label>
+              <textarea matInput formControlName="tourSummary" placeholder="*** Bullet points ***"></textarea>
+            </mat-form-field>
+          </div>
+
+          <!-- Addtional Information -->
+          <div>
+            <h3>Additional Information:</h3>
+            <mat-form-field>
+              <mat-label></mat-label>
+              <textarea matInput formControlName="additionalInfo" placeholder="*** Bullet points ***"></textarea>
+            </mat-form-field>
+          </div>
+
+          <h3>Services:</h3>
           <div
             formArrayName="services"
             *ngFor="let service of services; index as i"

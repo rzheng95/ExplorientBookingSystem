@@ -1,4 +1,4 @@
-.mat-card {
+.main-card {
   width: 80%;
   box-shadow: 2px 1px 5px rgba(0,0,0,0.5);
   padding: 2rem;
@@ -63,3 +63,4 @@ mat-expansion-panel {
   display: table-cell;
   text-align: center;
 }
+

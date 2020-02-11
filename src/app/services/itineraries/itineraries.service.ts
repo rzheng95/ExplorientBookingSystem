@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestoreCollection, AngularFirestore } from 'angularfire2/firestore';
 import { Itinerary } from '../../models/itinerary.model';
+import { map } from 'rxjs/operators';
 
 
 @Injectable({
@@ -25,5 +26,17 @@ export class ItinerariesService {
 
   deleteItinerary(id: string) {
     return this.itinerariesCollection.doc(id).delete();
+  }
+
+  getItineraryByBid(bid: string) {
+    return this.afs.collection(this.collectionPath, ref => {
+      return ref.where('bid', '==', bid);
+    }).snapshotChanges().pipe(
+      map(actions => actions.map(a => {
+        const data = a.payload.doc.data() as Itinerary;
+        const id = a.payload.doc.id;
+        return { id, ...data };
+      }))
+    );
   }
 }

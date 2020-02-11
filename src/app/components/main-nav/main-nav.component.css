@@ -30,6 +30,7 @@
 
 
 ul {
+
   list-style: none;
   padding: 0;
   margin: 0;
@@ -48,3 +49,6 @@ ul {
   display: flex;
 }
 
+.tabs {
+  border-left: 0.5rem solid #3F51B5;
+}

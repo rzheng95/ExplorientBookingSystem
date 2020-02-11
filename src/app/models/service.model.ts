@@ -11,4 +11,5 @@ export interface Service {
   lunch: boolean;
   dinner: boolean;
   vid: string;
+  notes: string;
 }

@@ -1,39 +1,57 @@
 <app-main-nav>
-  <mat-card>
+  <mat-card class="main-card">
     <mat-card-title>Itinerary</mat-card-title>
     <mat-card-content>
-      <div class="contactDiv">
-        <p>
-          <mat-icon>perm_contact_calendar</mat-icon
-          ><strong> Contact Person:</strong> {{ (booking | async)?.contactName }}
-        </p>
-        <p>
-          <mat-icon>assistant</mat-icon><strong> Package:</strong> {{ (booking | async)?.package }}
-        </p>
-      </div>
-
       <mat-accordion multi="true">
         <form [formGroup]="form">
+          <mat-card class="contactDiv">
+            <p>
+              <mat-icon>perm_contact_calendar</mat-icon
+              ><strong> Contact Person:</strong>
+              {{ (booking | async)?.contactName }}
+            </p>
+            <p>
+              <mat-icon>assistant</mat-icon><strong> Package:</strong>
+              {{ (booking | async)?.package }}
+            </p>
 
-          <!-- Tour Summary -->
-          <div>
-            <h3>Tour Summary:</h3>
-            <mat-form-field>
-              <mat-label></mat-label>
-              <textarea matInput formControlName="tourSummary" placeholder="*** Bullet points ***"></textarea>
-            </mat-form-field>
-          </div>
+            <!-- Tour Summary -->
+            <div>
+              <h3>Tour Summary</h3>
+              <mat-form-field>
+                <textarea
+                  matInput
+                  formControlName="tourSummary"
+                ></textarea>
+              </mat-form-field>
+            </div>
 
-          <!-- Addtional Information -->
-          <div>
-            <h3>Additional Information:</h3>
-            <mat-form-field>
-              <mat-label></mat-label>
-              <textarea matInput formControlName="additionalInfo" placeholder="*** Bullet points ***"></textarea>
-            </mat-form-field>
-          </div>
+            <!-- Addtional Information -->
+            <div>
+              <h3>Additional Information</h3>
+              <mat-form-field>
+                <textarea
+                  matInput
+                  formControlName="additionalInfo"
+                ></textarea>
+              </mat-form-field>
+            </div>
 
-          <h3>Services:</h3>
+            <mat-action-row>
+              <button
+                mat-raised-button
+                type="button"
+                color="primary"
+                class="saveButton"
+                (click)="onSaveItinerary()"
+              >
+                Save
+              </button>
+            </mat-action-row>
+          </mat-card>
+
+          <!-- Services -->
+          <h2>Services:</h2>
           <div
             formArrayName="services"
             *ngFor="let service of services; index as i"
@@ -59,7 +77,10 @@
                   placeholder="Choose a date*"
                   (focus)="picker.open()"
                 />
-                <mat-error *ngIf="serviceFormArray.controls[i].get('datePicker').invalid">Please enter a valid date.</mat-error>
+                <mat-error
+                  *ngIf="serviceFormArray.controls[i].get('datePicker').invalid"
+                  >Please enter a valid date.</mat-error
+                >
                 <mat-datepicker-toggle
                   matSuffix
                   [for]="picker"
@@ -79,7 +100,12 @@
                   formControlName="serviceCaption"
                   placeholder="Service caption*"
                 />
-                <mat-error *ngIf="serviceFormArray.controls[i].get('serviceCaption').invalid">Please enter a valid service caption.</mat-error>
+                <mat-error
+                  *ngIf="
+                    serviceFormArray.controls[i].get('serviceCaption').invalid
+                  "
+                  >Please enter a valid service caption.</mat-error
+                >
               </mat-form-field>
 
               <!-- Destination -->
@@ -90,7 +116,12 @@
                   formControlName="destination"
                   placeholder="Destination*"
                 />
-                <mat-error *ngIf="serviceFormArray.controls[i].get('destination').invalid">Please enter a valid destination.</mat-error>
+                <mat-error
+                  *ngIf="
+                    serviceFormArray.controls[i].get('destination').invalid
+                  "
+                  >Please enter a valid destination.</mat-error
+                >
               </mat-form-field>
 
               <!-- Activity -->
@@ -102,50 +133,123 @@
                   placeholder="Activity*"
                 >
                 </textarea>
-                <mat-error *ngIf="serviceFormArray.controls[i].get('activity').invalid">Please enter a valid activity.</mat-error>
+                <mat-error
+                  *ngIf="serviceFormArray.controls[i].get('activity').invalid"
+                  >Please enter a valid activity.</mat-error
+                >
               </mat-form-field>
 
               <!-- Accommodations -->
               <mat-form-field>
-                <input type="text" placeholder="Accommodations*" aria-label="Accommodation" matInput formControlName="hid" [matAutocomplete]="auto1">
-                <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete">
-                  <mat-option *ngFor="let h of hotelFilteredOptions[i] | async" [value]="h.hotelName">
-                    {{h.hotelName}}
+                <input
+                  type="text"
+                  placeholder="Accommodations*"
+                  aria-label="Accommodation"
+                  matInput
+                  formControlName="hid"
+                  [matAutocomplete]="auto1"
+                />
+                <mat-autocomplete
+                  autoActiveFirstOption
+                  #auto1="matAutocomplete"
+                >
+                  <mat-option
+                    *ngFor="let h of hotelFilteredOptions[i] | async"
+                    [value]="h.hotelName"
+                  >
+                    {{ h.hotelName }}
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>
 
-
               <!-- Room Type -->
               <mat-form-field>
-                <input type="text" matInput formControlName="roomType" placeholder="Room type*">
+                <input
+                  type="text"
+                  matInput
+                  formControlName="roomType"
+                  placeholder="Room type*"
+                />
               </mat-form-field>
 
               <!-- Meal Plan -->
               <div class="meals">
-                <mat-slide-toggle formControlName="breakfast">Breakfast</mat-slide-toggle>
-                <mat-slide-toggle formControlName="lunch">Lunch</mat-slide-toggle>
-                <mat-slide-toggle formControlName="dinner">Dinner</mat-slide-toggle>
-              </div> <br><br>
+                <mat-slide-toggle formControlName="breakfast"
+                  >Breakfast</mat-slide-toggle
+                >
+                <mat-slide-toggle formControlName="lunch"
+                  >Lunch</mat-slide-toggle
+                >
+                <mat-slide-toggle formControlName="dinner"
+                  >Dinner</mat-slide-toggle
+                >
+              </div>
+              <br /><br />
 
               <!-- Vendor -->
               <mat-form-field>
-                <input type="text" placeholder="Vendor*" aria-label="Vendor" matInput formControlName="vid" [matAutocomplete]="auto2">
-                <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete" >
-                  <mat-option *ngFor="let v of vendorFilteredOptions[i] | async" [value]="v.vendorName">
-                    {{v.vendorName}}
+                <input
+                  type="text"
+                  placeholder="Vendor*"
+                  aria-label="Vendor"
+                  matInput
+                  formControlName="vid"
+                  [matAutocomplete]="auto2"
+                />
+                <mat-autocomplete
+                  autoActiveFirstOption
+                  #auto2="matAutocomplete"
+                >
+                  <mat-option
+                    *ngFor="let v of vendorFilteredOptions[i] | async"
+                    [value]="v.vendorName"
+                  >
+                    {{ v.vendorName }}
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>
 
+              <!-- Notes -->
+              <mat-form-field>
+                <mat-label>Notes</mat-label>
+                <textarea
+                  matInput
+                  formControlName="notes"
+
+                ></textarea>
+              </mat-form-field>
+
               <mat-action-row>
-                <button mat-raised-button type="button" class="deleteButton" color="warn" (click)="onDeleteService(service.id, i)">Delete</button>
+                <button
+                  mat-raised-button
+                  type="button"
+                  class="deleteButton"
+                  color="warn"
+                  (click)="onDeleteService(service.id, i)"
+                >
+                  Delete
+                </button>
                 <span class="spacer"></span>
-                <button mat-raised-button type="button" class="saveButton" color="primary" (click)="onSaveService(service.id, i)" [disabled]="serviceFormArray.controls[i].invalid">Save</button>
+                <button
+                  mat-raised-button
+                  type="button"
+                  class="saveButton"
+                  color="primary"
+                  (click)="onSaveService(service.id, i)"
+                  [disabled]="serviceFormArray.controls[i].invalid"
+                >
+                  Save
+                </button>
               </mat-action-row>
             </mat-expansion-panel>
           </div>
-          <button mat-raised-button type="button" class="addServiceButton" color="accent" (click)="onAddService()" >
+          <button
+            mat-raised-button
+            type="button"
+            class="addServiceButton"
+            color="accent"
+            (click)="onAddService()"
+          >
             Add New Service
           </button>
         </form>

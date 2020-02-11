@@ -17,6 +17,8 @@ import { Observable, Subscription } from 'rxjs';
 import { startWith, map, tap } from 'rxjs/operators';
 import { HotelsService } from '../../../services/hotels/hotels.service';
 import { VendorsService } from '../../../services/vendors/vendors.service';
+import { Itinerary } from '../../../models/itinerary.model';
+import { ItinerariesService } from '../../../services/itineraries/itineraries.service';
 
 @Component({
   selector: 'app-edit-itinerary',
@@ -31,7 +33,6 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   servicesSub: Subscription;
   booking: Observable<Booking>;
 
-
   hotels: { id: string; hotelName: string }[] = [];
   hotelFilteredOptions: Observable<{ id: string; hotelName: string }[]>[] = [];
 
@@ -43,21 +44,16 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     private bookingsService: BookingsService,
     private hotelsService: HotelsService,
     private vendorService: VendorsService,
+    private itinerariesService: ItinerariesService,
     private route: ActivatedRoute
   ) {}
-
-  test() {
-    console.log(this.form.value.tourSummary);
-  }
 
   ngOnInit() {
     this.form = new FormGroup({
       tourSummary: new FormControl(null, {
         validators: [Validators.required]
       }),
-      additionalInfo: new FormControl(null, {
-        validators: [Validators.required]
-      }),
+      additionalInfo: new FormControl(null),
       services: new FormArray([])
     });
 
@@ -68,7 +64,17 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       } else {
         this.mode = 'create';
         this.bookingId = null;
+        return;
       }
+    });
+
+    // Get tour summary and additional info
+    this.itinerariesService.getItineraryByBid(this.bookingId).subscribe(itinerary => {
+      const itin = itinerary[0];
+      this.form.patchValue({
+        tourSummary: itin.tourSummary,
+        additionalInfo: itin.additionalInfo
+      });
     });
 
     // Get a list of hotels {id, hotelName}
@@ -102,7 +108,8 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
             roomType: service.roomType,
             breakfast: service.breakfast,
             lunch: service.lunch,
-            dinner: service.dinner
+            dinner: service.dinner,
+            notes: service.notes
           });
 
           // fetch hotel name by id
@@ -212,6 +219,17 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     return vendorName;
   }
 
+  onSaveItinerary() {
+    const itinerary: Itinerary = {
+      bid: this.bookingId,
+      tourSummary: this.form.value.tourSummary,
+      additionalInfo: this.form.value.additionalInfo
+    };
+
+    this.itinerariesService.addItinerary(itinerary);
+
+  }
+
   onSaveService(serviceId: string, formArrayIndex: number) {
     const control: AbstractControl = this.serviceFormArray.controls[
       formArrayIndex
@@ -228,7 +246,8 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
         breakfast: control.value.breakfast,
         lunch: control.value.lunch,
         dinner: control.value.dinner,
-        vid: this.getVendorIdByName(control.value.vid.trim())
+        vid: this.getVendorIdByName(control.value.vid.trim()),
+        notes: control.value.notes
       })
       .then(() => console.log('Service saved.'))
       .catch(() => window.alert('Service could not be saved!'));
@@ -259,7 +278,8 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       breakfast: false,
       lunch: false,
       dinner: false,
-      vid: null
+      vid: null,
+      notes: null
     };
     this.services.push(newService);
 
@@ -295,7 +315,8 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       dinner: new FormControl(null),
       vid: new FormControl(null, {
         validators: [Validators.required]
-      })
+      }),
+      notes: new FormControl(null)
     });
   }
 }

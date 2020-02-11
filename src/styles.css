@@ -14,3 +14,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-content > mat-panel-title, .mat-content > mat-panel-description {
   flex: 0 0 auto;
 }
+
+* {
+  font-family: "Times New Roman", Times, serif;
+  /* font-family: "Arial Narrow", Arial, sans-serif;; */
+}

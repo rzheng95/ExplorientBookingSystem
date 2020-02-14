@@ -226,7 +226,14 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       additionalInfo: this.form.value.additionalInfo
     };
 
-    this.itinerariesService.addItinerary(itinerary);
+    this.itinerariesService.getItineraryByBid(this.bookingId).subscribe(itinData => {
+      const itin = itinData[0];
+      if (itin) {
+        this.itinerariesService.updateItinerary(itin.id, itinerary).then(data => {
+          console.log('Itinerary updated');
+        });
+      }
+    });
 
   }
 

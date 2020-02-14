@@ -31,6 +31,8 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   mode = 'edit';
   services: Service[] = [];
   servicesSub: Subscription;
+  itinerarySub: Subscription;
+  itinDataSub: Subscription;
   booking: Observable<Booking>;
 
   hotels: { id: string; hotelName: string }[] = [];
@@ -38,6 +40,7 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
 
   vendors: { id: string; vendorName: string }[];
   vendorFilteredOptions: Observable<{ id: string; vendorName: string }[]>[] = [];
+
 
   constructor(
     private servicesService: ServicesService,
@@ -69,7 +72,7 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     });
 
     // Get tour summary and additional info
-    this.itinerariesService.getItineraryByBid(this.bookingId).subscribe(itinerary => {
+    this.itinerarySub = this.itinerariesService.getItineraryByBid(this.bookingId).subscribe(itinerary => {
       const itin = itinerary[0];
       this.form.patchValue({
         tourSummary: itin.tourSummary,
@@ -179,6 +182,12 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     if (this.servicesSub) {
       this.servicesSub.unsubscribe();
     }
+    if (this.itinerarySub) {
+      this.itinerarySub.unsubscribe();
+    }
+    if (this.itinDataSub) {
+      this.itinDataSub.unsubscribe();
+    }
   }
 
   sortNullDate(a, b) {
@@ -226,7 +235,7 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       additionalInfo: this.form.value.additionalInfo
     };
 
-    this.itinerariesService.getItineraryByBid(this.bookingId).subscribe(itinData => {
+    this.itinDataSub = this.itinerariesService.getItineraryByBid(this.bookingId).subscribe(itinData => {
       const itin = itinData[0];
       if (itin) {
         this.itinerariesService.updateItinerary(itin.id, itinerary).then(data => {

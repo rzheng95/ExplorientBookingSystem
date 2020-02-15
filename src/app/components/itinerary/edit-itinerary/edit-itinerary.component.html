@@ -1,6 +1,11 @@
 <app-main-nav>
   <mat-card class="main-card">
     <mat-card-title>Itinerary</mat-card-title>
+
+    <div>
+      <a class="printButton" mat-button (click)="onPrintItinerary()"><mat-icon >print</mat-icon></a>
+    </div>
+
     <mat-card-content>
       <mat-accordion multi="true">
         <form [formGroup]="form">
@@ -19,10 +24,7 @@
             <div>
               <h3>Tour Summary</h3>
               <mat-form-field>
-                <textarea
-                  matInput
-                  formControlName="tourSummary"
-                ></textarea>
+                <textarea matInput formControlName="tourSummary"></textarea>
               </mat-form-field>
             </div>
 
@@ -30,10 +32,7 @@
             <div>
               <h3>Additional Information</h3>
               <mat-form-field>
-                <textarea
-                  matInput
-                  formControlName="additionalInfo"
-                ></textarea>
+                <textarea matInput formControlName="additionalInfo"></textarea>
               </mat-form-field>
             </div>
 
@@ -212,11 +211,7 @@
               <!-- Notes -->
               <mat-form-field>
                 <mat-label>Notes</mat-label>
-                <textarea
-                  matInput
-                  formControlName="notes"
-
-                ></textarea>
+                <textarea matInput formControlName="notes"></textarea>
               </mat-form-field>
 
               <mat-action-row>

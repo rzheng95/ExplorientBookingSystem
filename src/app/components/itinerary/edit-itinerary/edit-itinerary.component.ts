@@ -14,11 +14,14 @@ import { Service } from '../../../models/service.model';
 import { Hotel } from '../../../models/hotel.model';
 import { Vendor } from '../../../models/vendor.model';
 import { Observable, Subscription } from 'rxjs';
-import { startWith, map, tap } from 'rxjs/operators';
+import { startWith, map } from 'rxjs/operators';
 import { HotelsService } from '../../../services/hotels/hotels.service';
 import { VendorsService } from '../../../services/vendors/vendors.service';
 import { Itinerary } from '../../../models/itinerary.model';
 import { ItinerariesService } from '../../../services/itineraries/itineraries.service';
+import { ItineraryDocumentCreator } from './itinerary-document-creator';
+import { Packer } from 'docx';
+import saveAs from 'file-saver';
 
 @Component({
   selector: 'app-edit-itinerary',
@@ -228,6 +231,40 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     return vendorName;
   }
 
+  /*
+
+  onDownload() {
+    const documentCreator = new DocumentCreator();
+    const doc = documentCreator.create([
+      experiences,
+      education,
+      skills,
+      achievements
+    ]);
+
+    Packer.toBlob(doc).then(blob => {
+      console.log(blob);
+      saveAs(blob, 'example.docx');
+      console.log('Document created successfully');
+    });
+  }
+
+  */
+
+  onPrintItinerary() {
+    const itinDocCreator = new ItineraryDocumentCreator();
+
+    const doc = itinDocCreator.create1(this.bookingId);
+
+    Packer.toBlob(doc).then(blob => {
+      console.log(blob);
+      saveAs(blob, 'example.docx');
+      console.log('Document created successfully');
+    });
+  }
+
+
+
   onSaveItinerary() {
     const itinerary: Itinerary = {
       bid: this.bookingId,
@@ -238,7 +275,7 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     this.itinDataSub = this.itinerariesService.getItineraryByBid(this.bookingId).subscribe(itinData => {
       const itin = itinData[0];
       if (itin) {
-        this.itinerariesService.updateItinerary(itin.id, itinerary).then(data => {
+        this.itinerariesService.updateItinerary(itin.id, itinerary).then(() => {
           console.log('Itinerary updated');
         });
       }

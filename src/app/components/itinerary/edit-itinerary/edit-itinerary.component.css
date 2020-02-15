@@ -64,3 +64,7 @@ mat-expansion-panel {
   text-align: center;
 }
 
+.printButton {
+  float: right;
+}
+

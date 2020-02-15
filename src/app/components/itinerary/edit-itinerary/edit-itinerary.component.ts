@@ -20,7 +20,7 @@ import { VendorsService } from '../../../services/vendors/vendors.service';
 import { Itinerary } from '../../../models/itinerary.model';
 import { ItinerariesService } from '../../../services/itineraries/itineraries.service';
 import { ItineraryDocumentCreator } from './itinerary-document-creator';
-import { Packer } from 'docx';
+import { Packer, Document } from 'docx';
 import saveAs from 'file-saver';
 
 @Component({
@@ -51,7 +51,8 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     private hotelsService: HotelsService,
     private vendorService: VendorsService,
     private itinerariesService: ItinerariesService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private itinDocCreator: ItineraryDocumentCreator
   ) {}
 
   ngOnInit() {
@@ -252,15 +253,16 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   */
 
   onPrintItinerary() {
-    const itinDocCreator = new ItineraryDocumentCreator();
 
-    const doc = itinDocCreator.create1(this.bookingId);
+    this.itinDocCreator.create(this.bookingId).then(doc => {
 
-    Packer.toBlob(doc).then(blob => {
-      console.log(blob);
-      saveAs(blob, 'example.docx');
-      console.log('Document created successfully');
+      Packer.toBlob(doc as Document).then(blob => {
+        console.log(blob);
+        saveAs(blob, 'example.docx');
+        console.log('Document created successfully');
+      });
     });
+
   }
 
 

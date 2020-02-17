@@ -1,47 +1,39 @@
 import { Document, Paragraph, Table, TableRow, TableCell } from 'docx';
 import { PassengersService } from '../../../services/passengers/passengers.service';
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
-import { resolve } from 'url';
+import { Injectable } from '@angular/core';
 import { BookingsService } from 'src/app/services/bookings/bookings.service';
-import { count, switchMap, take } from 'rxjs/operators';
-import { Subscription, interval } from 'rxjs';
-import { Passenger } from 'src/app/models/passenger.model';
+import { take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ItineraryDocumentCreator implements OnDestroy {
-  passengers: Passenger[];
-  passengerSub: Subscription;
+export class ItineraryDocumentCreator {
 
   constructor(
-    private passengersService: PassengersService,
-    private bookingsService: BookingsService
-  ) {}
+    private passengersService: PassengersService  ) {}
 
   public create(bid: string) {
-    return new Promise((resolve, reject) => {
-      this.passengersService.getPassengersByBid(bid).pipe(take(1)).subscribe(passData => {
+
+    return this.passengersService.getPassengersByBid(bid).pipe(
+      take(1),
+
+    ).toPromise();
+
+    return new Promise((resolve) => {
+      // take(1) is useful if you need the data once and don't want to manually cancel the subscription again
+      this.passengersService.getPassengersByBid(bid).pipe(take(1)).subscribe(() => {
         const document = new Document();
 
-        const table = this.createHeaderTable(bid);
+        const table = this.createHeaderTable();
         document.addSection({
           children: [table]
         });
         resolve(document);
       });
     });
-
-
   }
 
-  ngOnDestroy(): void {
-    if (this.passengerSub) {
-      this.passengerSub.unsubscribe();
-    }
-  }
-
-  createHeaderTable(bid: string) {
+  createHeaderTable() {
     return new Table({
       rows: [
         new TableRow({

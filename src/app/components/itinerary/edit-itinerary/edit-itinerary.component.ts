@@ -288,19 +288,19 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
             this.itinerariesService
               .updateItinerary(itin.id, itinerary)
               .then(() => {
-                window.alert('Updated itinerary.');
+                window.alert('Updated Tour Summary & Additional Information.');
               })
               .catch(err => {
-                window.alert('Could not update itinerary!');
+                window.alert('Could not update Tour Summary & Additional Information!');
               });
           } else {
             this.itinerariesService
               .addItinerary(itinerary)
               .then(() => {
-                window.alert('Added itinerary.');
+                window.alert('Added Tour Summary & Additional Information.');
               })
               .catch(err => {
-                window.alert('Could not add itinerary!');
+                window.alert('Could not add Tour Summary & Additional Information!');
               });
           }
         }
@@ -335,7 +335,7 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       .deleteService(serviceId)
       .then(() => console.log('Service deleted.'))
       .catch(() => window.alert('Service could not be deleted!'));
-    this.serviceFormArray.removeAt(formArrayIndex);
+    // this.serviceFormArray.removeAt(formArrayIndex);
   }
 
   get serviceFormArray() {
@@ -343,28 +343,40 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   }
 
   onAddService() {
-    this.serviceFormArray.push(this.serviceFormGroup());
-    const newService: Service = {
-      bid: this.bookingId,
-      date: null,
-      serviceCaption: null,
-      destination: null,
-      activity: null,
-      hid: null,
-      roomType: null,
-      breakfast: false,
-      lunch: false,
-      dinner: false,
-      vid: null,
-      notes: null
-    };
-    this.services.push(newService);
-
-    // Crete an empty service in firestore
     this.servicesService
-      .addService(newService)
-      .then(() => console.log('Service added.'))
-      .catch(() => window.alert('Service could not be added!'));
+      .getLastServiceDate(this.bookingId)
+      .then(dateData => {
+        const date = dateData;
+        if (date) {
+          date.setDate(dateData.getDate() + 1);
+        }
+
+        this.serviceFormArray.push(this.serviceFormGroup());
+        const newService: Service = {
+          bid: this.bookingId,
+          date,
+          serviceCaption: null,
+          destination: null,
+          activity: null,
+          hid: null,
+          roomType: null,
+          breakfast: false,
+          lunch: false,
+          dinner: false,
+          vid: null,
+          notes: null
+        };
+        this.services.push(newService);
+
+        console.log(this.services);
+
+        // Crete an empty service in firestore
+        this.servicesService
+          .addService(newService)
+          .then(() => console.log('Service added.'))
+          .catch(() => window.alert('Service could not be added!'));
+      })
+      .catch(err => console.log(err));
   }
 
   serviceFormGroup() {

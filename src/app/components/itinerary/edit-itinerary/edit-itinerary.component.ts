@@ -30,6 +30,7 @@ import saveAs from 'file-saver';
 })
 export class EditItineraryComponent implements OnInit, OnDestroy {
   private bookingId: string;
+  private isItinExist = false;
   form: FormGroup;
   mode = 'edit';
   services: Service[] = [];
@@ -77,11 +78,19 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
 
     // Get tour summary and additional info
     this.itinerarySub = this.itinerariesService.getItineraryByBid(this.bookingId).subscribe(itinerary => {
-      const itin = itinerary[0];
-      this.form.patchValue({
-        tourSummary: itin.tourSummary,
-        additionalInfo: itin.additionalInfo
-      });
+      if (itinerary) {
+        const itin = itinerary[0];
+        if (itin) {
+          this.isItinExist = true;
+          this.form.patchValue({
+            tourSummary: itin.tourSummary,
+            additionalInfo: itin.additionalInfo
+          });
+        } else {
+          console.log(itin);
+          this.isItinExist = false;
+        }
+      }
     });
 
     // Get a list of hotels {id, hotelName}
@@ -274,14 +283,28 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       additionalInfo: this.form.value.additionalInfo
     };
 
-    this.itinDataSub = this.itinerariesService.getItineraryByBid(this.bookingId).subscribe(itinData => {
-      const itin = itinData[0];
-      if (itin) {
-        this.itinerariesService.updateItinerary(itin.id, itinerary).then(() => {
-          console.log('Itinerary updated');
-        });
-      }
-    });
+    // update itinerary -> itinerary exists
+    if (this.isItinExist) {
+
+      this.itinDataSub = this.itinerariesService.getItineraryByBid(this.bookingId).subscribe(itinData => {
+        if (itinData) {
+          const itin = itinData[0];
+          if (itin) {
+            this.itinerariesService.updateItinerary(itin.id, itinerary).then(() => {
+              console.log('Updated itinerary.');
+            });
+          }
+        }
+      });
+
+    } else { // add itinerary
+      this.itinerariesService.addItinerary(itinerary).then(() => {
+        console.log('Added itinerary.');
+      }).catch(err => {
+        console.log('Could not add itinerary.');
+      });
+    }
+
 
   }
 

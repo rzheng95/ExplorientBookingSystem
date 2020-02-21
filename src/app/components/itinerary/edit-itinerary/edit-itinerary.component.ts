@@ -14,7 +14,7 @@ import { Service } from '../../../models/service.model';
 import { Hotel } from '../../../models/hotel.model';
 import { Vendor } from '../../../models/vendor.model';
 import { Observable, Subscription } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map, take } from 'rxjs/operators';
 import { HotelsService } from '../../../services/hotels/hotels.service';
 import { VendorsService } from '../../../services/vendors/vendors.service';
 import { Itinerary } from '../../../models/itinerary.model';
@@ -30,7 +30,6 @@ import saveAs from 'file-saver';
 })
 export class EditItineraryComponent implements OnInit, OnDestroy {
   private bookingId: string;
-  private isItinExist = false;
   form: FormGroup;
   mode = 'edit';
   services: Service[] = [];
@@ -43,8 +42,9 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   hotelFilteredOptions: Observable<{ id: string; hotelName: string }[]>[] = [];
 
   vendors: { id: string; vendorName: string }[];
-  vendorFilteredOptions: Observable<{ id: string; vendorName: string }[]>[] = [];
-
+  vendorFilteredOptions: Observable<
+    { id: string; vendorName: string }[]
+  >[] = [];
 
   constructor(
     private servicesService: ServicesService,
@@ -77,21 +77,19 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     });
 
     // Get tour summary and additional info
-    this.itinerarySub = this.itinerariesService.getItineraryByBid(this.bookingId).subscribe(itinerary => {
-      if (itinerary) {
-        const itin = itinerary[0];
-        if (itin) {
-          this.isItinExist = true;
-          this.form.patchValue({
-            tourSummary: itin.tourSummary,
-            additionalInfo: itin.additionalInfo
-          });
-        } else {
-          console.log(itin);
-          this.isItinExist = false;
+    this.itinerarySub = this.itinerariesService
+      .getItineraryByBid(this.bookingId)
+      .subscribe(itinerary => {
+        if (itinerary) {
+          const itin = itinerary[0];
+          if (itin) {
+            this.form.patchValue({
+              tourSummary: itin.tourSummary,
+              additionalInfo: itin.additionalInfo
+            });
+          }
         }
-      }
-    });
+      });
 
     // Get a list of hotels {id, hotelName}
     this.hotelsService.getHotelNames().subscribe(hotels => {
@@ -262,19 +260,14 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   */
 
   onPrintItinerary() {
-
     this.itinDocCreator.create(this.bookingId).then(doc => {
-
       Packer.toBlob(doc as Document).then(blob => {
         console.log(blob);
         saveAs(blob, 'example.docx');
         console.log('Document created successfully');
       });
     });
-
   }
-
-
 
   onSaveItinerary() {
     const itinerary: Itinerary = {
@@ -284,28 +277,34 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     };
 
     // update itinerary -> itinerary exists
-    if (this.isItinExist) {
 
-      this.itinDataSub = this.itinerariesService.getItineraryByBid(this.bookingId).subscribe(itinData => {
+    this.itinerariesService
+      .getItineraryByBid(this.bookingId)
+      .pipe(take(1))
+      .subscribe(itinData => {
         if (itinData) {
-          const itin = itinData[0];
+          const itin = itinData[0] as Itinerary;
           if (itin) {
-            this.itinerariesService.updateItinerary(itin.id, itinerary).then(() => {
-              console.log('Updated itinerary.');
-            });
+            this.itinerariesService
+              .updateItinerary(itin.id, itinerary)
+              .then(() => {
+                window.alert('Updated itinerary.');
+              })
+              .catch(err => {
+                window.alert('Could not update itinerary!');
+              });
+          } else {
+            this.itinerariesService
+              .addItinerary(itinerary)
+              .then(() => {
+                window.alert('Added itinerary.');
+              })
+              .catch(err => {
+                window.alert('Could not add itinerary!');
+              });
           }
         }
       });
-
-    } else { // add itinerary
-      this.itinerariesService.addItinerary(itinerary).then(() => {
-        console.log('Added itinerary.');
-      }).catch(err => {
-        console.log('Could not add itinerary.');
-      });
-    }
-
-
   }
 
   onSaveService(serviceId: string, formArrayIndex: number) {
@@ -320,7 +319,7 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
         destination: control.value.destination.trim(),
         activity: control.value.activity.trim(),
         hid: this.getHotelIdByName(control.value.hid.trim()),
-        roomType: control.value.roomType.trim(),
+        roomType: control.value.roomType,
         breakfast: control.value.breakfast,
         lunch: control.value.lunch,
         dinner: control.value.dinner,
@@ -385,9 +384,7 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       hid: new FormControl(null, {
         validators: [Validators.required]
       }),
-      roomType: new FormControl(null, {
-        validators: [Validators.required]
-      }),
+      roomType: new FormControl(null),
       breakfast: new FormControl(null),
       lunch: new FormControl(null),
       dinner: new FormControl(null),

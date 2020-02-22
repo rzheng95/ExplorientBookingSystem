@@ -52,11 +52,26 @@ export class ServicesService {
       );
   }
 
-  getLastServiceDate(bid: string) {
+  getLastServiceDate(bid: string): Promise<Date> {
     return this.getServiceByBid(bid)
       .pipe(
         take(1),
         map(services => services.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())),
+        switchMap(services => {
+          if (services && services.length > 0) {
+            return of(services[0].date);
+          } else {
+            return of(null);
+          }
+        })
+      ).toPromise();
+  }
+
+  getFirstServiceDate(bid: string): Promise<Date> {
+    return this.getServiceByBid(bid)
+      .pipe(
+        take(1),
+        map(services => services.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())),
         switchMap(services => {
           if (services && services.length > 0) {
             return of(services[0].date);

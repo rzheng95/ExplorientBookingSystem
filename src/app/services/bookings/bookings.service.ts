@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material';
 import { map } from 'rxjs/operators';
 import { Booking } from '../../models/booking.model';
 import { ErrorComponent } from '../../error/error.component';
+import { Observable } from 'rxjs';
 
 
 @Injectable({

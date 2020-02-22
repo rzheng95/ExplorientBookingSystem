@@ -368,8 +368,6 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
         };
         this.services.push(newService);
 
-        console.log(this.services);
-
         // Crete an empty service in firestore
         this.servicesService
           .addService(newService)

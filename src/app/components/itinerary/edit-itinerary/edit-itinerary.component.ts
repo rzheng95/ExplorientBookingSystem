@@ -81,13 +81,10 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       .getItineraryByBid(this.bookingId)
       .subscribe(itinerary => {
         if (itinerary) {
-          const itin = itinerary[0];
-          if (itin) {
-            this.form.patchValue({
-              tourSummary: itin.tourSummary,
-              additionalInfo: itin.additionalInfo
-            });
-          }
+          this.form.patchValue({
+            tourSummary: itinerary.tourSummary,
+            additionalInfo: itinerary.additionalInfo
+          });
         }
       });
 
@@ -262,7 +259,6 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   onPrintItinerary() {
     this.itinDocCreator.create(this.bookingId).then(doc => {
       Packer.toBlob(doc as Document).then(blob => {
-        console.log(blob);
         saveAs(blob, 'example.docx');
         console.log('Document created successfully');
       });
@@ -281,28 +277,29 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     this.itinerariesService
       .getItineraryByBid(this.bookingId)
       .pipe(take(1))
-      .subscribe(itinData => {
-        if (itinData) {
-          const itin = itinData[0] as Itinerary;
-          if (itin) {
-            this.itinerariesService
-              .updateItinerary(itin.id, itinerary)
-              .then(() => {
-                window.alert('Updated Tour Summary & Additional Information.');
-              })
-              .catch(err => {
-                window.alert('Could not update Tour Summary & Additional Information!');
-              });
-          } else {
-            this.itinerariesService
-              .addItinerary(itinerary)
-              .then(() => {
-                window.alert('Added Tour Summary & Additional Information.');
-              })
-              .catch(err => {
-                window.alert('Could not add Tour Summary & Additional Information!');
-              });
-          }
+      .subscribe(itin => {
+        if (itin) {
+          this.itinerariesService
+            .updateItinerary(itin.id, itinerary)
+            .then(() => {
+              window.alert('Updated Tour Summary & Additional Information.');
+            })
+            .catch(err => {
+              window.alert(
+                'Could not update Tour Summary & Additional Information!'
+              );
+            });
+        } else {
+          this.itinerariesService
+            .addItinerary(itinerary)
+            .then(() => {
+              window.alert('Added Tour Summary & Additional Information.');
+            })
+            .catch(err => {
+              window.alert(
+                'Could not add Tour Summary & Additional Information!'
+              );
+            });
         }
       });
   }

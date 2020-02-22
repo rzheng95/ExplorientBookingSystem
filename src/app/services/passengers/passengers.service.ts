@@ -6,6 +6,7 @@ import {
 import { Passenger } from '../../models/passenger.model';
 import { MatDialog } from '@angular/material';
 import { map, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -38,14 +39,14 @@ export class PassengersService {
       );
   }
 
-  getPassengersByBid(bid: string) {
+  getPassengersByBid(bid: string): Observable<Passenger[]> {
     return this.afs.collection(this.collectionPath, ref => {
       return ref.where('bid', '==', bid);
     }).snapshotChanges().pipe(
       map(actions => actions.map(a => {
         const data = a.payload.doc.data() as Passenger;
         const id = a.payload.doc.id;
-        return { id, ...data };
+        return { id, ...data } ;
       }))
     );
   }

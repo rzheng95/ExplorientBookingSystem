@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestoreCollection, AngularFirestore } from 'angularfire2/firestore';
 import { Itinerary } from '../../models/itinerary.model';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 
 @Injectable({
@@ -28,7 +29,7 @@ export class ItinerariesService {
     return this.itinerariesCollection.doc(id).delete();
   }
 
-  getItineraryByBid(bid: string) {
+  getItineraryByBid(bid: string): Observable<Itinerary> {
     return this.afs.collection(this.collectionPath, ref => {
       return ref.where('bid', '==', bid);
     }).snapshotChanges().pipe(
@@ -36,7 +37,15 @@ export class ItinerariesService {
         const data = a.payload.doc.data() as Itinerary;
         const id = a.payload.doc.id;
         return { id, ...data };
-      }))
+      })),
+      switchMap(itineraries => {
+        if (itineraries && itineraries.length > 0) {
+          // return this first one
+          return of(itineraries[0] as Itinerary) as Observable<Itinerary>;
+        } else {
+          return of(null) as Observable<Itinerary>;
+        }
+      })
     );
   }
 }

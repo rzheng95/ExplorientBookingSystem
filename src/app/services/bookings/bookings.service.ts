@@ -47,9 +47,9 @@ export class BookingsService {
         );
   }
 
-  getBookingById(id: string) {
+  getBookingById(id: string): Observable<Booking> {
     // return this.afs.collection(this.collectionPath, ref => ref.where(field, '==', data)).valueChanges();
-    return this.bookingsCollection.doc(id).valueChanges();
+    return this.bookingsCollection.doc(id).valueChanges() as Observable<Booking>;
   }
 
   showDialogMessage(title: string, message: string) {

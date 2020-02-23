@@ -8,7 +8,8 @@ import {
   HeadingLevel,
   VerticalMergeType,
   TextRun,
-  Run
+  Run,
+  UnderlineType
 } from 'docx';
 import { Injectable } from '@angular/core';
 import { take, map, switchMap, tap } from 'rxjs/operators';
@@ -79,16 +80,28 @@ export class ItineraryDocumentCreator {
 
         const tourSummary = this.createTourSummary(itinerary.tourSummary);
 
+        const additionalInfo = this.createAdditionalInfo(itinerary.additionalInfo);
+
         document.addSection({
           children: [
             headerTable,
+            // Tour Summary:
             new Paragraph({
               text: 'TOUR SUMMARY:',
               heading: HeadingLevel.HEADING_4
             }).addRunToFront(new Run({
               text: ''
             }).break()),
-            ...tourSummary
+            ...tourSummary,
+            // Additional Information
+            new Paragraph({
+              text: '',
+              heading: HeadingLevel.HEADING_4
+            }).addRunToFront(new Run({
+              text: 'Additional Information:',
+              underline: {}
+            }).break()),
+            ...additionalInfo
           ]
         });
         return of(document);
@@ -159,7 +172,18 @@ export class ItineraryDocumentCreator {
     });
   }
 
-  public createTourSummary(tourSummary: string) {
+  public createAdditionalInfo(additionalInfo: string): Paragraph[] {
+    const bulletPoints: Paragraph[] = [];
+    const paragraphs = additionalInfo.split('\n');
+
+    paragraphs.forEach(para => {
+      bulletPoints.push(this.createBullet(para));
+    });
+
+    return bulletPoints;
+  }
+
+  public createTourSummary(tourSummary: string): Paragraph[] {
     const bulletPoints: Paragraph[] = [];
     const paragraphs = tourSummary.split('\n');
 

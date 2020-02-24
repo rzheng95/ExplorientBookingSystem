@@ -12,28 +12,29 @@ import {
   UnderlineType
 } from 'docx';
 import { Injectable } from '@angular/core';
+import { forkJoin, of } from 'rxjs';
 import { take, map, switchMap, tap } from 'rxjs/operators';
-import { BookingsService } from '../../../services/bookings/bookings.service';
-import { PassengersService } from '../../../services/passengers/passengers.service';
 import { Passenger } from '../../../models/passenger.model';
 import { Booking } from '../../../models/booking.model';
+import { Service } from '../../../models/service.model';
+import { BookingsService } from '../../../services/bookings/bookings.service';
+import { PassengersService } from '../../../services/passengers/passengers.service';
 import { ServicesService } from '../../../services/services/services.service';
-import { ItinerariesService } from 'src/app/services/itineraries/itineraries.service';
-import { forkJoin, of } from 'rxjs';
+import { ItinerariesService } from '../../../services/itineraries/itineraries.service';
 
 const monthNames = [
-  'January',
-  'February',
+  'Jan.',
+  'Feb.',
   'March',
   'April',
   'May',
   'June',
   'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
+  'Aug.',
+  'Sep.',
+  'Oct.',
+  'Nov.',
+  'Dec.'
 ];
 
 @Injectable({
@@ -62,12 +63,15 @@ export class ItineraryDocumentCreator {
     const itineraryObs = this.itinerariesService.getItineraryByBid(bid).pipe(take(1));
     // prettier-ignore
     const passengersObs = this.passengersService.getPassengersByBid(bid).pipe(take(1));
+    // prettier-ignore
+    const servicesObs = this.servicesService.getServiceByBid(bid).pipe(take(1));
 
-    return forkJoin([bookingObs, itineraryObs, passengersObs]).pipe(
+    return forkJoin([bookingObs, itineraryObs, passengersObs, servicesObs]).pipe(
       switchMap(data => {
         const booking = data[0];
         const itinerary = data[1];
         const passengers = data[2];
+        const services = data[3];
 
         const document = this.newDocument();
 
@@ -109,7 +113,7 @@ export class ItineraryDocumentCreator {
             }).addRunToFront(new Run({
               text: ''
             }).break()),
-            this.createItineraryTable()
+            this.createItineraryTable(services)
           ]
         });
         return of(document);
@@ -126,7 +130,7 @@ export class ItineraryDocumentCreator {
             name: 'Ariail-Narrow-Font10',
             run: {
               size: 20,
-              bold: true,
+              bold: false,
               font: 'Arial Narrow'
             }
           },
@@ -218,15 +222,21 @@ export class ItineraryDocumentCreator {
 
   public createBullet(text: string): Paragraph {
     return new Paragraph({
-      text,
+      children: [
+        new TextRun({
+          text,
+          font: {
+            name: 'Arial Narrow'
+          }
+        })
+      ],
       bullet: {
         level: 0
-      },
-      heading: HeadingLevel.HEADING_1
+      }
     });
   }
 
-  public createItineraryTable(): Table {
+  public createItineraryTable(services: Service[]): Table {
     return new Table({
       rows: [
         new TableRow({
@@ -237,7 +247,18 @@ export class ItineraryDocumentCreator {
                   text: 'Day',
                   heading: HeadingLevel.HEADING_4
                 })
-              ]
+              ],
+              width: {
+                size: 10,
+                type: WidthType.PERCENTAGE
+              },
+              margins: {
+                left: 100,
+                right: 100
+              },
+              shading: {
+                fill: 'bfbfbf'
+              }
             }),
             new TableCell({
               children: [
@@ -245,12 +266,64 @@ export class ItineraryDocumentCreator {
                   text: 'Activity Summary',
                   heading: HeadingLevel.HEADING_4
                 })
-              ]
+              ],
+              width: {
+                size: 90,
+                type: WidthType.PERCENTAGE
+              },
+              margins: {
+                left: 100,
+                right: 100
+              },
+              shading: {
+                fill: 'bfbfbf'
+              }
             })
           ]
         }),
-
-      ]
+        ...services.map(service => {
+          return new TableRow({
+            children: [
+              new TableCell({
+                children: [
+                  new Paragraph({
+                    heading: HeadingLevel.HEADING_1,
+                    text: monthNames[service.date.getMonth()] + ' ' + service.date.getDate()
+                  })
+                ],
+                margins: {
+                  left: 100,
+                  right: 100
+                }
+              }),
+              new TableCell({
+                children: [
+                  new Paragraph({
+                    heading: HeadingLevel.HEADING_1,
+                    children: [
+                      new TextRun({
+                        text: service.destination + ': ',
+                        bold: true
+                      }),
+                      new TextRun({
+                        text: service.activity
+                      })
+                    ]
+                  })
+                ],
+                margins: {
+                  left: 100,
+                  right: 100
+                }
+              })
+            ]
+          });
+        })
+      ],
+      width: {
+        size: 9050, // maximum 9638
+        type: WidthType.DXA
+      }
     });
   }
 
@@ -299,7 +372,10 @@ export class ItineraryDocumentCreator {
                   heading: HeadingLevel.HEADING_2
                 })
               ],
-              verticalMerge: VerticalMergeType.RESTART,
+              width: {
+                size: 20,
+                type: WidthType.PERCENTAGE
+              },
               margins: {
                 left: 100,
                 right: 100
@@ -312,7 +388,10 @@ export class ItineraryDocumentCreator {
                   heading: HeadingLevel.HEADING_2
                 })
               ],
-              verticalMerge: VerticalMergeType.CONTINUE,
+              width: {
+                size: 80,
+                type: WidthType.PERCENTAGE
+              },
               margins: {
                 left: 100
               }

@@ -101,7 +101,15 @@ export class ItineraryDocumentCreator {
               text: 'Additional Information:',
               underline: {}
             }).break()),
-            ...additionalInfo
+            ...additionalInfo,
+            // Tour Itinerary
+            new Paragraph({
+              text: 'TOUR ITINERARY:',
+              heading: HeadingLevel.HEADING_5
+            }).addRunToFront(new Run({
+              text: ''
+            }).break()),
+            this.createItineraryTable()
           ]
         });
         return of(document);
@@ -115,7 +123,7 @@ export class ItineraryDocumentCreator {
         paragraphStyles: [
           {
             id: 'Heading1',
-            name: 'Ariail-Narrow',
+            name: 'Ariail-Narrow-Font10',
             run: {
               size: 20,
               bold: true,
@@ -153,7 +161,7 @@ export class ItineraryDocumentCreator {
           },
           {
             id: 'Heading4',
-            name: 'Ariail-Narrow-Bold-Spacing',
+            name: 'Ariail-Narrow-Bold-Spacing-Font10',
             run: {
               size: 20,
               bold: true,
@@ -164,6 +172,20 @@ export class ItineraryDocumentCreator {
               spacing: {
                 before: 100,
                 after: 300
+              }
+            }
+          },
+          {
+            id: 'Heading5',
+            name: 'Ariail-Narrow-Bold-Spacing-Font24',
+            run: {
+              size: 24,
+              bold: true,
+              font: 'Arial Narrow'
+            },
+            paragraph: {
+              spacing: {
+                before: 200
               }
             }
           }
@@ -201,6 +223,34 @@ export class ItineraryDocumentCreator {
         level: 0
       },
       heading: HeadingLevel.HEADING_1
+    });
+  }
+
+  public createItineraryTable(): Table {
+    return new Table({
+      rows: [
+        new TableRow({
+          children: [
+            new TableCell({
+              children: [
+                new Paragraph({
+                  text: 'Day',
+                  heading: HeadingLevel.HEADING_4
+                })
+              ]
+            }),
+            new TableCell({
+              children: [
+                new Paragraph({
+                  text: 'Activity Summary',
+                  heading: HeadingLevel.HEADING_4
+                })
+              ]
+            })
+          ]
+        }),
+
+      ]
     });
   }
 

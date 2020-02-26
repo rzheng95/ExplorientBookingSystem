@@ -13,7 +13,7 @@ import {
 } from 'docx';
 import { Injectable } from '@angular/core';
 import { forkJoin, of } from 'rxjs';
-import { take, map, switchMap, tap } from 'rxjs/operators';
+import { take, map, switchMap, tap, publish, delay } from 'rxjs/operators';
 import { Passenger } from '../../../models/passenger.model';
 import { Booking } from '../../../models/booking.model';
 import { Service } from '../../../models/service.model';
@@ -85,19 +85,18 @@ export class ItineraryDocumentCreator {
             }
           }
         });
-        return of(services);
+        return of(services).pipe(take(1));
       })
     );
 
     return forkJoin([bookingObs, itineraryObs, passengersObs, servicesObs])
       .pipe(
+        delay(1000),
         switchMap(data => {
           const booking = data[0];
           const itinerary = data[1];
           const passengers = data[2];
           const services = data[3];
-
-          console.log(services[0].hid);
 
           const document = this.newDocument();
 

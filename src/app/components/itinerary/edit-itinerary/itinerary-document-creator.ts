@@ -200,7 +200,8 @@ export class ItineraryDocumentCreator {
 
   public createAdditionalInfo(additionalInfo: string): Paragraph[] {
     const bulletPoints: Paragraph[] = [];
-    const paragraphs = additionalInfo.split('\n');
+    // remove the last \n and then split by \n
+    const paragraphs = additionalInfo.replace(/\n$/, '').split('\n');
 
     paragraphs.forEach(para => {
       bulletPoints.push(this.createBullet(para));
@@ -211,7 +212,8 @@ export class ItineraryDocumentCreator {
 
   public createTourSummary(tourSummary: string): Paragraph[] {
     const bulletPoints: Paragraph[] = [];
-    const paragraphs = tourSummary.split('\n');
+    // remove the last \n and then split by \n
+    const paragraphs = tourSummary.replace(/\n$/, '').split('\n');
 
     paragraphs.forEach(para => {
       bulletPoints.push(this.createBullet(para));
@@ -239,6 +241,7 @@ export class ItineraryDocumentCreator {
   public createItineraryTable(services: Service[]): Table {
     return new Table({
       rows: [
+        // Top row
         new TableRow({
           children: [
             new TableCell({
@@ -284,6 +287,7 @@ export class ItineraryDocumentCreator {
         ...services.map(service => {
           return new TableRow({
             children: [
+              // Day
               new TableCell({
                 children: [
                   new Paragraph({
@@ -296,17 +300,28 @@ export class ItineraryDocumentCreator {
                   right: 100
                 }
               }),
+              // Activity Summary
               new TableCell({
                 children: [
                   new Paragraph({
                     heading: HeadingLevel.HEADING_1,
                     children: [
+                      // Destination
                       new TextRun({
                         text: service.destination + ': ',
                         bold: true
                       }),
+                      // Activity
                       new TextRun({
                         text: service.activity
+                      }).break(),
+                      // Meal
+                      new TextRun({
+                        text: 'Meals: ',
+                        bold: true
+                      }),
+                      new TextRun({
+                        text: this.mealsToText(service.breakfast, service.lunch, service.dinner)
                       })
                     ]
                   })
@@ -325,6 +340,26 @@ export class ItineraryDocumentCreator {
         type: WidthType.DXA
       }
     });
+  }
+
+  private mealsToText(breakfast: boolean, lunch: boolean, dinner: boolean) {
+    let text = '';
+    if (breakfast) {
+      text += 'Breakfast';
+    }
+    if (lunch) {
+      if (breakfast) {
+        text += ', ';
+      }
+      text += 'Lunch';
+    }
+    if (dinner) {
+      if (breakfast || lunch) {
+        text += ', ';
+      }
+      text += 'Dinner';
+    }
+    return text;
   }
 
   public createHeaderTable(

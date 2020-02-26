@@ -7,6 +7,7 @@ import { Hotel } from '../../models/hotel.model';
 import { MatDialog } from '@angular/material';
 import { ErrorComponent } from '../../error/error.component';
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -55,12 +56,12 @@ export class HotelsService {
         );
   }
 
-  getHotelNameById(hid: string) {
+  getHotelNameById(hid: string){
     return this.afs.collection(this.collectionPath).doc(hid).ref.get();
   }
 
-  getHotelById(id: string) {
-    return this.hotelsCollection.doc(id).valueChanges();
+  getHotelById(id: string): Observable<Hotel> {
+    return this.hotelsCollection.doc(id).valueChanges() as Observable<Hotel>;
   }
 
   showDialogMessage(title: string, message: string) {

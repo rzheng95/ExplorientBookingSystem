@@ -21,6 +21,9 @@ import { BookingsService } from '../../../services/bookings/bookings.service';
 import { PassengersService } from '../../../services/passengers/passengers.service';
 import { ServicesService } from '../../../services/services/services.service';
 import { ItinerariesService } from '../../../services/itineraries/itineraries.service';
+import { HotelsService } from 'src/app/services/hotels/hotels.service';
+import { Hotel } from 'src/app/models/hotel.model';
+import { async } from '@angular/core/testing';
 
 const monthNames = [
   'Jan.',
@@ -45,7 +48,8 @@ export class ItineraryDocumentCreator {
     private passengersService: PassengersService,
     private bookingsService: BookingsService,
     private servicesService: ServicesService,
-    private itinerariesService: ItinerariesService
+    private itinerariesService: ItinerariesService,
+    private hotelsService: HotelsService
   ) {}
   public async create(bid: string) {
     const first = await this.servicesService.getFirstServiceDate(bid);
@@ -63,62 +67,93 @@ export class ItineraryDocumentCreator {
     const itineraryObs = this.itinerariesService.getItineraryByBid(bid).pipe(take(1));
     // prettier-ignore
     const passengersObs = this.passengersService.getPassengersByBid(bid).pipe(take(1));
-    // prettier-ignore
-    const servicesObs = this.servicesService.getServiceByBid(bid).pipe(take(1));
 
-    return forkJoin([bookingObs, itineraryObs, passengersObs, servicesObs]).pipe(
-      switchMap(data => {
-        const booking = data[0];
-        const itinerary = data[1];
-        const passengers = data[2];
-        const services = data[3];
-
-        const document = this.newDocument();
-
-        const headerTable = this.createHeaderTable(
-          passengers,
-          booking,
-          departureDate,
-          returnDate
-        );
-
-        const tourSummary = this.createTourSummary(itinerary.tourSummary);
-
-        const additionalInfo = this.createAdditionalInfo(itinerary.additionalInfo);
-
-        document.addSection({
-          children: [
-            headerTable,
-            // Tour Summary:
-            new Paragraph({
-              text: 'TOUR SUMMARY:',
-              heading: HeadingLevel.HEADING_4
-            }).addRunToFront(new Run({
-              text: ''
-            }).break()),
-            ...tourSummary,
-            // Additional Information
-            new Paragraph({
-              text: '',
-              heading: HeadingLevel.HEADING_4
-            }).addRunToFront(new Run({
-              text: 'Additional Information:',
-              underline: {}
-            }).break()),
-            ...additionalInfo,
-            // Tour Itinerary
-            new Paragraph({
-              text: 'TOUR ITINERARY:',
-              heading: HeadingLevel.HEADING_5
-            }).addRunToFront(new Run({
-              text: ''
-            }).break()),
-            this.createItineraryTable(services)
-          ]
+    const servicesObs = this.servicesService.getServiceByBid(bid).pipe(
+      take(1),
+      switchMap(services => {
+        services.forEach(async service => {
+          const hotelname = ((
+            await this.hotelsService.getHotelNameById(service.hid)
+          ).data() as Hotel).hotelName;
+          if (!hotelname) {
+            service.hid = '';
+          } else {
+            if (hotelname === 'No Hotel') {
+              service.hid = '';
+            } else {
+              service.hid = hotelname;
+            }
+          }
         });
-        return of(document);
+        return of(services);
       })
-    ).toPromise();
+    );
+
+    return forkJoin([bookingObs, itineraryObs, passengersObs, servicesObs])
+      .pipe(
+        switchMap(data => {
+          const booking = data[0];
+          const itinerary = data[1];
+          const passengers = data[2];
+          const services = data[3];
+
+          console.log(services[0].hid);
+
+          const document = this.newDocument();
+
+          const headerTable = this.createHeaderTable(
+            passengers,
+            booking,
+            departureDate,
+            returnDate
+          );
+
+          const tourSummary = this.createTourSummary(itinerary.tourSummary);
+
+          const additionalInfo = this.createAdditionalInfo(
+            itinerary.additionalInfo
+          );
+
+          document.addSection({
+            children: [
+              headerTable,
+              // Tour Summary:
+              new Paragraph({
+                text: 'TOUR SUMMARY:',
+                heading: HeadingLevel.HEADING_4
+              }).addRunToFront(
+                new Run({
+                  text: ''
+                }).break()
+              ),
+              ...tourSummary,
+              // Additional Information
+              new Paragraph({
+                text: '',
+                heading: HeadingLevel.HEADING_4
+              }).addRunToFront(
+                new Run({
+                  text: 'Additional Information:',
+                  underline: {}
+                }).break()
+              ),
+              ...additionalInfo,
+              // Tour Itinerary
+              new Paragraph({
+                text: 'TOUR ITINERARY:',
+                heading: HeadingLevel.HEADING_5
+              }).addRunToFront(
+                new Run({
+                  text: ''
+                }).break()
+              ),
+              this.createItineraryTable(services)
+            ]
+          });
+          return of(document);
+        })
+      )
+      .toPromise();
   }
 
   public newDocument(): Document {
@@ -292,7 +327,10 @@ export class ItineraryDocumentCreator {
                 children: [
                   new Paragraph({
                     heading: HeadingLevel.HEADING_1,
-                    text: monthNames[service.date.getMonth()] + ' ' + service.date.getDate()
+                    text:
+                      monthNames[service.date.getMonth()] +
+                      ' ' +
+                      service.date.getDate()
                   })
                 ],
                 margins: {
@@ -314,15 +352,38 @@ export class ItineraryDocumentCreator {
                       // Activity
                       new TextRun({
                         text: service.activity
-                      }).break(),
+                      }),
                       // Meal
                       new TextRun({
                         text: 'Meals: ',
                         bold: true
+                      })
+                        .break()
+                        .break(),
+                      new TextRun({
+                        text: this.mealsToText(
+                          service.breakfast,
+                          service.lunch,
+                          service.dinner
+                        )
+                      }),
+                      // Accommodations
+                      new TextRun({
+                        text: service.hid !== '' ? 'Accommodations: ' : '',
+                        bold: true
+                      }).break(),
+                      new TextRun({
+                        text: service.hid
+                      }),
+                      // Room type
+                      new TextRun({
+                        text: service.roomType
+                          ? ' (' + service.roomType + ')'
+                          : ''
                       }),
                       new TextRun({
-                        text: this.mealsToText(service.breakfast, service.lunch, service.dinner)
-                      })
+                        text: ''
+                      }).break()
                     ]
                   })
                 ],

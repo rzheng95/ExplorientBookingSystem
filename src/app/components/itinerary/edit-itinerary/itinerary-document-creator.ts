@@ -9,10 +9,15 @@ import {
   VerticalMergeType,
   TextRun,
   Run,
-  UnderlineType
+  UnderlineType,
+  Header,
+  Footer,
+  Media,
+  AlignmentType,
+  PictureRun
 } from 'docx';
 import { Injectable } from '@angular/core';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, Observable, Observer } from 'rxjs';
 import { take, map, switchMap, tap, publish, delay } from 'rxjs/operators';
 import { Passenger } from '../../../models/passenger.model';
 import { Booking } from '../../../models/booking.model';
@@ -23,7 +28,8 @@ import { ServicesService } from '../../../services/services/services.service';
 import { ItinerariesService } from '../../../services/itineraries/itineraries.service';
 import { HotelsService } from 'src/app/services/hotels/hotels.service';
 import { Hotel } from 'src/app/models/hotel.model';
-import { async } from '@angular/core/testing';
+import { Buffer } from 'buffer';
+import { environment } from '../../../../environments/environment';
 
 const monthNames = [
   'Jan.',
@@ -90,7 +96,11 @@ export class ItineraryDocumentCreator {
       })
     );
 
-    return forkJoin([bookingObs, itineraryObs, passengersObs, servicesObs])
+    const headerImageObs = this.getBase64ImageFromURL(environment.itineraryHeaderImageUrl).pipe(take(1));
+
+    const footerImageObs = this.getBase64ImageFromURL(environment.itineraryFooterImageUrl).pipe(take(1));
+
+    return forkJoin([bookingObs, itineraryObs, passengersObs, servicesObs, headerImageObs, footerImageObs])
       .pipe(
         delay(200),
         switchMap(data => {
@@ -98,8 +108,10 @@ export class ItineraryDocumentCreator {
           const itinerary = data[1];
           const passengers = data[2];
           const services = data[3];
+          const headerImageBase64 = data[4];
+          const footerImageBase64 = data[5];
 
-          console.log(services[0].hid);
+          // console.log(services[0].hid);
 
           const document = this.newDocument();
 
@@ -112,9 +124,45 @@ export class ItineraryDocumentCreator {
 
           const tourSummary = this.createBulletPoints(itinerary.tourSummary);
 
-          const additionalInfo = this.createBulletPoints(itinerary.additionalInfo);
+          const additionalInfo = this.createBulletPoints(
+            itinerary.additionalInfo
+          );
+
+          const headerImage = Media.addImage(document, Buffer.from(headerImageBase64, 'base64'), 220, 55);
+          const footerImage = Media.addImage(document, Buffer.from(footerImageBase64, 'base64'), 120, 25);
 
           document.addSection({
+            headers: {
+              default: new Header({
+                children: [
+                  new Paragraph({
+                    children: [headerImage]
+                  }),
+                  new Paragraph({}),
+                  new Paragraph({})
+                ]
+              })
+            },
+            footers: {
+              default: new Footer({
+                children: [
+                  new Paragraph({
+                    children: [
+                      new TextRun({
+                        text: 'Explorient Travel Services® is a proud member of ',
+                        font: {
+                          name: 'Times New Roman'
+                        },
+                        bold: true,
+                        italics: true
+                      }),
+                      footerImage
+                    ],
+                    alignment: AlignmentType.RIGHT
+                  })
+                ]
+              })
+            },
             children: [
               headerTable,
               // Tour Summary:
@@ -154,6 +202,36 @@ export class ItineraryDocumentCreator {
         })
       )
       .toPromise();
+  }
+
+  getBase64ImageFromURL(url: string) {
+    return new Observable((observer: Observer<string>) => {
+      let img = new Image();
+      img.crossOrigin = 'Anonymous';
+      img.src = url;
+      if (!img.complete) {
+        img.onload = () => {
+          observer.next(this.getBase64Image(img));
+          observer.complete();
+        };
+        img.onerror = err => {
+          observer.error(err);
+        };
+      } else {
+        observer.next(this.getBase64Image(img));
+        observer.complete();
+      }
+    });
+  }
+
+  getBase64Image(img: HTMLImageElement) {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    const dataURL = canvas.toDataURL('image/png');
+    return dataURL.replace(/^data:image\/(png|jpg);base64,/, '');
   }
 
   public newDocument(): Document {
@@ -354,61 +432,66 @@ export class ItineraryDocumentCreator {
                         service.breakfast,
                         service.lunch,
                         service.dinner
-                      ) ?
-                      new TextRun({
-                        text: 'Meals: ',
-                        bold: true
-                      }) : new TextRun({}),
+                      )
+                        ? new TextRun({
+                            text: 'Meals: ',
+                            bold: true
+                          })
+                        : new TextRun({}),
                       // Meal body
                       this.mealsToText(
                         service.breakfast,
                         service.lunch,
                         service.dinner
-                      ) ?
-                      new TextRun({
-                        text: this.mealsToText(
-                          service.breakfast,
-                          service.lunch,
-                          service.dinner
-                        )
-                      }) : new TextRun({}),
+                      )
+                        ? new TextRun({
+                            text: this.mealsToText(
+                              service.breakfast,
+                              service.lunch,
+                              service.dinner
+                            )
+                          })
+                        : new TextRun({}),
                       // Accommodations text
-                      service.hid ?
-                      new TextRun({
-                        text: 'Accommodations: ',
-                        bold: true
-                      }).break() :
-                      new TextRun({}),
+                      service.hid
+                        ? new TextRun({
+                            text: 'Accommodations: ',
+                            bold: true
+                          }).break()
+                        : new TextRun({}),
                       // Accommodations body
-                      service.hid ?
-                      new TextRun({
-                        text: service.hid
-                      }) :
-                      new TextRun({}),
+                      service.hid
+                        ? new TextRun({
+                            text: service.hid
+                          })
+                        : new TextRun({}),
                       // Room type
                       new TextRun({
-                        text: service.hid && service.roomType
-                          ? ' (' + service.roomType + ')'
-                          : ''
+                        text:
+                          service.hid && service.roomType
+                            ? ' (' + service.roomType + ')'
+                            : ''
                       }),
                       // Notes
-                      service.notes ?
-                      new TextRun({
-                        text: '**Notes: ',
-                        bold: true
-                      }).break().break() :
-                      new TextRun({}),
+                      service.notes
+                        ? new TextRun({
+                            text: '**Notes: ',
+                            bold: true
+                          })
+                            .break()
+                            .break()
+                        : new TextRun({})
                     ]
                   }),
                   // Notes bullet poitns
                   ...this.createBulletPoints(service.notes),
                   // End line break
-                  index === services.length - 1 ?
-                  new Paragraph({
-                    heading: HeadingLevel.HEADING_1,
-                    text: '****END OF PROGRAM***'
-                  }) :
-                  new Paragraph({}),
+                  index === services.length - 1
+                    ? new Paragraph({
+                        heading: HeadingLevel.HEADING_1,
+                        text: '****END OF PROGRAM***'
+                      })
+                    : new Paragraph({})
                 ],
                 margins: {
                   left: 100,

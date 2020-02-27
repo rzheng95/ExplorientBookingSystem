@@ -48,7 +48,8 @@ export class ServicesService {
 
             return { id, ...data };
           })
-        )
+        ),
+        map(services => services.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()))
       );
   }
 

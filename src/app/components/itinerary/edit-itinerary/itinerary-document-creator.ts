@@ -84,6 +84,7 @@ export class ItineraryDocumentCreator {
               service.hid = hotelname;
             }
           }
+          // console.log('here');
         });
         return of(services).pipe(take(1));
       })
@@ -91,12 +92,14 @@ export class ItineraryDocumentCreator {
 
     return forkJoin([bookingObs, itineraryObs, passengersObs, servicesObs])
       .pipe(
-        delay(1000),
+        delay(200),
         switchMap(data => {
           const booking = data[0];
           const itinerary = data[1];
           const passengers = data[2];
           const services = data[3];
+
+          console.log(services[0].hid);
 
           const document = this.newDocument();
 
@@ -107,11 +110,9 @@ export class ItineraryDocumentCreator {
             returnDate
           );
 
-          const tourSummary = this.createTourSummary(itinerary.tourSummary);
+          const tourSummary = this.createBulletPoints(itinerary.tourSummary);
 
-          const additionalInfo = this.createAdditionalInfo(
-            itinerary.additionalInfo
-          );
+          const additionalInfo = this.createBulletPoints(itinerary.additionalInfo);
 
           document.addSection({
             children: [
@@ -232,27 +233,16 @@ export class ItineraryDocumentCreator {
     });
   }
 
-  public createAdditionalInfo(additionalInfo: string): Paragraph[] {
+  public createBulletPoints(str: string): Paragraph[] {
     const bulletPoints: Paragraph[] = [];
-    // remove the last \n and then split by \n
-    const paragraphs = additionalInfo.replace(/\n$/, '').split('\n');
+    if (!str) {
+      return bulletPoints;
+    }
+    const paragraphs = str.replace(/\n$/, '').split('\n');
 
     paragraphs.forEach(para => {
       bulletPoints.push(this.createBullet(para));
     });
-
-    return bulletPoints;
-  }
-
-  public createTourSummary(tourSummary: string): Paragraph[] {
-    const bulletPoints: Paragraph[] = [];
-    // remove the last \n and then split by \n
-    const paragraphs = tourSummary.replace(/\n$/, '').split('\n');
-
-    paragraphs.forEach(para => {
-      bulletPoints.push(this.createBullet(para));
-    });
-
     return bulletPoints;
   }
 
@@ -318,7 +308,7 @@ export class ItineraryDocumentCreator {
             })
           ]
         }),
-        ...services.map(service => {
+        ...services.map((service, index) => {
           return new TableRow({
             children: [
               // Day
@@ -351,40 +341,74 @@ export class ItineraryDocumentCreator {
                       // Activity
                       new TextRun({
                         text: service.activity
-                      }),
-                      // Meal
+                      })
+                    ]
+                  }),
+                  // Line break
+                  new Paragraph({}),
+                  new Paragraph({
+                    heading: HeadingLevel.HEADING_1,
+                    children: [
+                      // Meal text
+                      this.mealsToText(
+                        service.breakfast,
+                        service.lunch,
+                        service.dinner
+                      ) ?
                       new TextRun({
                         text: 'Meals: ',
                         bold: true
-                      })
-                        .break()
-                        .break(),
+                      }) : new TextRun({}),
+                      // Meal body
+                      this.mealsToText(
+                        service.breakfast,
+                        service.lunch,
+                        service.dinner
+                      ) ?
                       new TextRun({
                         text: this.mealsToText(
                           service.breakfast,
                           service.lunch,
                           service.dinner
                         )
-                      }),
-                      // Accommodations
+                      }) : new TextRun({}),
+                      // Accommodations text
+                      service.hid ?
                       new TextRun({
-                        text: service.hid !== '' ? 'Accommodations: ' : '',
+                        text: 'Accommodations: ',
                         bold: true
-                      }).break(),
+                      }).break() :
+                      new TextRun({}),
+                      // Accommodations body
+                      service.hid ?
                       new TextRun({
                         text: service.hid
-                      }),
+                      }) :
+                      new TextRun({}),
                       // Room type
                       new TextRun({
-                        text: service.roomType
+                        text: service.hid && service.roomType
                           ? ' (' + service.roomType + ')'
                           : ''
                       }),
+                      // Notes
+                      service.notes ?
                       new TextRun({
-                        text: ''
-                      }).break()
+                        text: '**Notes: ',
+                        bold: true
+                      }).break().break() :
+                      new TextRun({}),
                     ]
-                  })
+                  }),
+                  // Notes bullet poitns
+                  ...this.createBulletPoints(service.notes),
+                  // End line break
+                  index === services.length - 1 ?
+                  new Paragraph({
+                    heading: HeadingLevel.HEADING_1,
+                    text: '****END OF PROGRAM***'
+                  }) :
+                  new Paragraph({}),
                 ],
                 margins: {
                   left: 100,

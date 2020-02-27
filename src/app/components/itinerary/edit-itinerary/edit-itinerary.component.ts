@@ -259,8 +259,8 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   onPrintItinerary() {
     this.itinDocCreator.create(this.bookingId).then(doc => {
       Packer.toBlob(doc as Document).then(blob => {
-        // saveAs(blob, 'example.docx');
-        // console.log('Document created successfully');
+        saveAs(blob, 'example.docx');
+        console.log('Document created successfully');
       });
     });
   }

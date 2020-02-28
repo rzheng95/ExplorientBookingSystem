@@ -36,8 +36,10 @@ export class SearchHotelComponent implements OnInit, OnDestroy {
 
       this.hotels.forEach((hotel, index) => {
         this.vendorsService.getVendorById(hotel.vid).subscribe(vendor => {
-          const v = vendor as Vendor;
-          hotel.vid = v.vendorName;
+          if (vendor) {
+            const v = vendor as Vendor;
+            hotel.vid = v.vendorName;
+          }
         });
 
       });

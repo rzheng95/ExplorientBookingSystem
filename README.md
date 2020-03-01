@@ -2,11 +2,11 @@
 
 # ExplorientBookingSystem
 
+A single-page web application with the usage of Angular and Firebase. This application provides user authentication, booking management, itinerary creation, and database keeping.
+
 This web application is designed and built for the Explorient Travel Services, Inc.
 
-This program is written in Angular and is using (BaaS) Firebase as backend which includes storage, hosting, and authentication.
-
-This web application is still under development. It is not yet a completed application.
+This project is still under development. It is not yet a completed project.
 
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.16.

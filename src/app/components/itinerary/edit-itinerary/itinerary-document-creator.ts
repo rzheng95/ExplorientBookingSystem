@@ -206,7 +206,7 @@ export class ItineraryDocumentCreator {
 
   getBase64ImageFromURL(url: string) {
     return new Observable((observer: Observer<string>) => {
-      let img = new Image();
+      const img = new Image();
       img.crossOrigin = 'Anonymous';
       img.src = url;
       if (!img.complete) {

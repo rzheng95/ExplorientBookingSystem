@@ -236,26 +236,6 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     return vendorName;
   }
 
-  /*
-
-  onDownload() {
-    const documentCreator = new DocumentCreator();
-    const doc = documentCreator.create([
-      experiences,
-      education,
-      skills,
-      achievements
-    ]);
-
-    Packer.toBlob(doc).then(blob => {
-      console.log(blob);
-      saveAs(blob, 'example.docx');
-      console.log('Document created successfully');
-    });
-  }
-
-  */
-
   onPrintItinerary() {
     this.booking.pipe(take(1)).subscribe(bkg => {
       const lastname = bkg.contactName.split(' ')[1].toUpperCase();
@@ -266,7 +246,6 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
           } else {
             saveAs(blob, 'Itinerary.docx');
           }
-          // console.log('Document created successfully');
         });
       });
     });

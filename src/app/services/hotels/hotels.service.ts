@@ -44,6 +44,23 @@ export class HotelsService {
       );
   }
 
+  getHotelsByBid(bid: string): Observable<Hotel[]> {
+    return this.afs
+    .collection(this.collectionPath, ref => {
+      return ref.where('bid', '==', bid);
+    })
+    .snapshotChanges()
+    .pipe(
+      map(actions =>
+        actions.map(a => {
+          const data = a.payload.doc.data() as Hotel;
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        })
+      )
+    );
+  }
+
   getHotelNames() {
     return this.afs
       .collection(this.collectionPath, ref => {

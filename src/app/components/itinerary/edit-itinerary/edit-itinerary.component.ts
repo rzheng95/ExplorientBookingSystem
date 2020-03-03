@@ -19,7 +19,7 @@ import { HotelsService } from '../../../services/hotels/hotels.service';
 import { VendorsService } from '../../../services/vendors/vendors.service';
 import { Itinerary } from '../../../models/itinerary.model';
 import { ItinerariesService } from '../../../services/itineraries/itineraries.service';
-import { ItineraryDocumentCreator } from './itinerary-document-creator';
+import { EXPI } from './EXPI';
 import { Packer, Document } from 'docx';
 import saveAs from 'file-saver';
 
@@ -53,7 +53,7 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     private vendorService: VendorsService,
     private itinerariesService: ItinerariesService,
     private route: ActivatedRoute,
-    private itinDocCreator: ItineraryDocumentCreator
+    private expi: EXPI
   ) {}
 
   ngOnInit() {
@@ -239,7 +239,7 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   onPrintItinerary() {
     this.booking.pipe(take(1)).subscribe(bkg => {
       const lastname = bkg.contactName.split(' ')[1].toUpperCase();
-      this.itinDocCreator.create(this.bookingId).then(doc => {
+      this.expi.create(this.bookingId).then(doc => {
         Packer.toBlob(doc as Document).then(blob => {
           if (lastname) {
             saveAs(blob, `EXPI_${lastname}.docx`);

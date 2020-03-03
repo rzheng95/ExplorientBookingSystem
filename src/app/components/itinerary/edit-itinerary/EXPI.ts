@@ -6,19 +6,15 @@ import {
   TableCell,
   WidthType,
   HeadingLevel,
-  VerticalMergeType,
   TextRun,
   Run,
-  UnderlineType,
   Header,
   Footer,
   Media,
-  AlignmentType,
-  PictureRun
-} from 'docx';
+  AlignmentType} from 'docx';
 import { Injectable } from '@angular/core';
-import { forkJoin, of, Observable, Observer } from 'rxjs';
-import { take, map, switchMap, tap, publish, delay } from 'rxjs/operators';
+import { forkJoin, of } from 'rxjs';
+import { take, switchMap, delay } from 'rxjs/operators';
 import { Passenger } from '../../../models/passenger.model';
 import { Booking } from '../../../models/booking.model';
 import { Service } from '../../../models/service.model';
@@ -30,6 +26,7 @@ import { HotelsService } from 'src/app/services/hotels/hotels.service';
 import { Hotel } from 'src/app/models/hotel.model';
 import { Buffer } from 'buffer';
 import { environment } from '../../../../environments/environment';
+import { Base64Image } from './Base64Image';
 
 const monthNames = [
   'Jan.',
@@ -49,13 +46,14 @@ const monthNames = [
 @Injectable({
   providedIn: 'root'
 })
-export class ItineraryDocumentCreator {
+export class EXPI {
   constructor(
     private passengersService: PassengersService,
     private bookingsService: BookingsService,
     private servicesService: ServicesService,
     private itinerariesService: ItinerariesService,
-    private hotelsService: HotelsService
+    private hotelsService: HotelsService,
+    private base64Image: Base64Image
   ) {}
   public async create(bid: string) {
     const first = await this.servicesService.getFirstServiceDate(bid);
@@ -96,9 +94,9 @@ export class ItineraryDocumentCreator {
       })
     );
 
-    const headerImageObs = this.getBase64ImageFromURL(environment.itineraryHeaderImageUrl).pipe(take(1));
+    const headerImageObs = this.base64Image.getBase64ImageFromURL(environment.itineraryHeaderImageUrl).pipe(take(1));
 
-    const footerImageObs = this.getBase64ImageFromURL(environment.itineraryFooterImageUrl).pipe(take(1));
+    const footerImageObs = this.base64Image.getBase64ImageFromURL(environment.itineraryFooterImageUrl).pipe(take(1));
 
     return forkJoin([bookingObs, itineraryObs, passengersObs, servicesObs, headerImageObs, footerImageObs])
       .pipe(
@@ -202,36 +200,6 @@ export class ItineraryDocumentCreator {
         })
       )
       .toPromise();
-  }
-
-  getBase64ImageFromURL(url: string) {
-    return new Observable((observer: Observer<string>) => {
-      const img = new Image();
-      img.crossOrigin = 'Anonymous';
-      img.src = url;
-      if (!img.complete) {
-        img.onload = () => {
-          observer.next(this.getBase64Image(img));
-          observer.complete();
-        };
-        img.onerror = err => {
-          observer.error(err);
-        };
-      } else {
-        observer.next(this.getBase64Image(img));
-        observer.complete();
-      }
-    });
-  }
-
-  getBase64Image(img: HTMLImageElement) {
-    const canvas = document.createElement('canvas');
-    canvas.width = img.width;
-    canvas.height = img.height;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0);
-    const dataURL = canvas.toDataURL('image/png');
-    return dataURL.replace(/^data:image\/(png|jpg);base64,/, '');
   }
 
   public newDocument(): Document {

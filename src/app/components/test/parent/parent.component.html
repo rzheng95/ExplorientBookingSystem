@@ -1,0 +1,8 @@
+<app-main-nav>
+  <div>
+    <h1>parent works!</h1>
+    <!-- <app-child [message]="parentMessage"></app-child> -->
+    <app-child (greetEvent)="greet($event)"></app-child>
+  </div>
+
+</app-main-nav>

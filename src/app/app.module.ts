@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -25,7 +25,8 @@ import { BookingsService } from './services/bookings/bookings.service';
 import { AuthService } from './services/auth/auth.service';
 import { PassengersService } from './services/passengers/passengers.service';
 import { ServicesService } from './services/services/services.service';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { MultiSelectDropdownComponent } from './components/test/multi-select-dropdown/multi-select-dropdown.component';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
     SignUpComponent,
     ForgotPasswordComponent,
     VerifyEmailComponent,
-    ErrorComponent
+    ErrorComponent,
+    MultiSelectDropdownComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +51,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
     AngularFireAuthModule,
     AngularMaterialModule,
     ReactiveFormsModule,
-
+    MultiSelectDropdownComponent,
+    NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [
     BookingsService,

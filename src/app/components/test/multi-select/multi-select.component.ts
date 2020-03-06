@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-multi-select-dropdown',
-  templateUrl: './multi-select-dropdown.component.html',
-  styleUrls: ['./multi-select-dropdown.component.css']
+  selector: 'app-multi-select',
+  templateUrl: './multi-select.component.html',
+  styleUrls: ['./multi-select.component.css']
 })
-export class MultiSelectDropdownComponent implements OnInit {
-
-  constructor() { }
+export class MultiSelectComponent implements OnInit {
   dropdownList = [];
   selectedItems = [];
   dropdownSettings = {};
+
   ngOnInit() {
+
     this.dropdownList = [
       { item_id: 1, item_text: 'Mumbai' },
       { item_id: 2, item_text: 'Bangaluru' },
@@ -40,5 +41,4 @@ export class MultiSelectDropdownComponent implements OnInit {
   onSelectAll(items: any) {
     console.log(items);
   }
-
 }

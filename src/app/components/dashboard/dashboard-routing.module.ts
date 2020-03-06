@@ -14,7 +14,8 @@ import { SearchHotelComponent } from '../hotels/search-hotel/search-hotel.compon
 import { SearchVendorComponent } from '../vendors/search-vendor/search-vendor.component';
 import { ParentComponent } from '../test/parent/parent.component';
 import { ChildComponent } from '../test/child/child.component';
-import { MultiSelectDropdownComponent } from '../test/multi-select-dropdown/multi-select-dropdown.component';
+import { MultiSelectComponent } from '../test/multi-select/multi-select.component';
+
 
 
 
@@ -36,7 +37,7 @@ const routes: Routes = [
   { path: 'edit-vendor/:vendorId', component: VendorsComponent, canActivate: [AuthGuard] },
   { path: 'parent', component: ParentComponent, canActivate: [AuthGuard] },
   { path: 'child', component: ChildComponent, canActivate: [AuthGuard] },
-  { path: 'dropdown', component: MultiSelectDropdownComponent, canActivate: [AuthGuard] }
+  { path: 'dropdown', component: MultiSelectComponent, canActivate: [AuthGuard] }
 
 
 ];

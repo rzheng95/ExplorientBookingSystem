@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from '../environments/environment';
 import { AngularMaterialModule } from './angular-material.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 // Angular Fire
 import { AngularFireModule } from 'angularfire2';
@@ -25,7 +25,7 @@ import { BookingsService } from './services/bookings/bookings.service';
 import { AuthService } from './services/auth/auth.service';
 import { PassengersService } from './services/passengers/passengers.service';
 import { ServicesService } from './services/services/services.service';
-import { MultiSelectDropdownComponent } from './components/test/multi-select-dropdown/multi-select-dropdown.component';
+import { MultiSelectComponent } from './components/test/multi-select/multi-select.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 @NgModule({
@@ -36,7 +36,7 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
     ForgotPasswordComponent,
     VerifyEmailComponent,
     ErrorComponent,
-    MultiSelectDropdownComponent
+    MultiSelectComponent,
   ],
   imports: [
     BrowserModule,
@@ -51,7 +51,8 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
     AngularFireAuthModule,
     AngularMaterialModule,
     ReactiveFormsModule,
-    MultiSelectDropdownComponent,
+    FormsModule,
+
     NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [

@@ -1,0 +1,11 @@
+<p>multi-select works!</p>
+
+<ng-multiselect-dropdown
+  [placeholder]="'custom placeholder'"
+  [settings]="dropdownSettings"
+  [data]="dropdownList"
+  [(ngModel)]="selectedItems"
+  (onSelect)="onItemSelect($event)"
+  (onSelectAll)="onSelectAll($event)"
+>
+</ng-multiselect-dropdown>

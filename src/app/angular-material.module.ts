@@ -18,7 +18,8 @@ import {
   MatNativeDateModule,
   MatTabsModule,
   MatAutocompleteModule,
-  MatSlideToggleModule
+  MatSlideToggleModule,
+  MatCheckboxModule
 } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
 
@@ -43,7 +44,8 @@ import { LayoutModule } from '@angular/cdk/layout';
     MatNativeDateModule,
     MatTabsModule,
     MatAutocompleteModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatCheckboxModule
   ]
 })
 export class AngularMaterialModule {}

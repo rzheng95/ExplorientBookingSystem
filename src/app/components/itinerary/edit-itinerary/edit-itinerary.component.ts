@@ -37,6 +37,10 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   itinerarySub: Subscription;
   itinDataSub: Subscription;
   booking: Observable<Booking>;
+  EXPICheckbox = false;
+  EXPVCheckbox = false;
+  EXPHCheckbox = false;
+  EXPLCheckbox = false;
 
   hotels: { id: string; hotelName: string }[] = [];
   hotelFilteredOptions: Observable<{ id: string; hotelName: string }[]>[] = [];
@@ -237,19 +241,20 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   }
 
   onPrintItinerary() {
-    this.booking.pipe(take(1)).subscribe(bkg => {
-      const lastname = bkg.contactName.split(' ')[1].toUpperCase();
-      this.expi.create(this.bookingId).then(doc => {
-        Packer.toBlob(doc as Document).then(blob => {
-          if (lastname) {
-            saveAs(blob, `EXPI_${lastname}.docx`);
-          } else {
-            saveAs(blob, 'Itinerary.docx');
-          }
+    if (this.EXPICheckbox) {
+      this.booking.pipe(take(1)).subscribe(bkg => {
+        const lastname = bkg.contactName.split(' ')[1].toUpperCase();
+        this.expi.create(this.bookingId).then(doc => {
+          Packer.toBlob(doc as Document).then(blob => {
+            if (lastname) {
+              saveAs(blob, `EXPI_${lastname}.docx`);
+            } else {
+              saveAs(blob, 'Itinerary.docx');
+            }
+          });
         });
       });
-    });
-
+    }
   }
 
   onSaveItinerary() {

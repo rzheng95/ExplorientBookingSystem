@@ -2,8 +2,12 @@
   <mat-card class="main-card">
     <mat-card-title>Itinerary</mat-card-title>
 
-    <div>
-      <a class="printButton" mat-button (click)="onPrintItinerary()"><mat-icon >print</mat-icon></a>
+    <div class="printButtons">
+      <a mat-button (click)="onPrintItinerary()"><mat-icon >print</mat-icon></a>
+      <mat-checkbox [(ngModel)]="EXPICheckbox">I</mat-checkbox>
+      <mat-checkbox [(ngModel)]="EXPVCheckbox">V</mat-checkbox>
+      <mat-checkbox [(ngModel)]="EXPHCheckbox">H</mat-checkbox>
+      <mat-checkbox [(ngModel)]="EXPLCheckbox">L</mat-checkbox>
     </div>
 
     <mat-card-content>

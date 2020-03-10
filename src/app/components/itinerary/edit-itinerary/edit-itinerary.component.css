@@ -64,7 +64,11 @@ mat-expansion-panel {
   text-align: center;
 }
 
-.printButton {
+.printButtons {
   float: right;
 }
 
+
+mat-checkbox {
+  margin: 0 10px;
+}

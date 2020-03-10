@@ -10,7 +10,8 @@ import {
   Table,
   TableRow,
   TableCell,
-  HeadingLevel
+  HeadingLevel,
+  WidthType
 } from 'docx';
 import { forkJoin, of, Observable } from 'rxjs';
 import { take, switchMap } from 'rxjs/operators';
@@ -61,8 +62,7 @@ export class EXPH {
           // forkjoin the array of hotel observables
           return forkJoin(hotelsObs).pipe(
             switchMap(hotelsData => {
-              const hotels: Hotel[] = hotelsData;
-
+              const hotels: Hotel[] = this.removeNoHotel(hotelsData);
 
               const document = new Document({
                 styles: {
@@ -147,8 +147,10 @@ export class EXPH {
                 children: [
                   new Paragraph({
                     text: `Hotel Listing for ${contactPerson}`,
-                    heading: HeadingLevel.HEADING_3
+                    heading: HeadingLevel.HEADING_3,
+                    alignment: AlignmentType.CENTER
                   }),
+                  new Paragraph({}),
                   this.hotelTable(hotels)
                 ]
               });
@@ -171,7 +173,18 @@ export class EXPH {
                   text: 'City',
                   heading: HeadingLevel.HEADING_2
                 })
-              ]
+              ],
+              width: {
+                size: 35,
+                type: WidthType.PERCENTAGE
+              },
+              margins: {
+                left: 100,
+                right: 100
+              },
+              shading: {
+                fill: 'bfbfbf'
+              }
             }),
             new TableCell({
               children: [
@@ -179,7 +192,18 @@ export class EXPH {
                   text: 'Hotel',
                   heading: HeadingLevel.HEADING_2
                 })
-              ]
+              ],
+              width: {
+                size: 65,
+                type: WidthType.PERCENTAGE
+              },
+              margins: {
+                left: 100,
+                right: 100
+              },
+              shading: {
+                fill: 'bfbfbf'
+              }
             })
           ]
         }),
@@ -192,44 +216,66 @@ export class EXPH {
                     text: hotel.city,
                     heading: HeadingLevel.HEADING_1
                   })
-                ]
+                ],
+                margins: {
+                  left: 100,
+                  right: 100
+                }
               }),
               new TableCell({
                 children: [
                   new Paragraph({
                     children: [
+                      // hotel name
                       new TextRun({
-
-                      })
-                    ]
-                  }),
-                  new Paragraph({
-                    text: hotel.hotelName,
+                        text: hotel.hotelName,
+                        bold: true
+                      }),
+                      // addressLine1
+                      hotel.addressLine1
+                        ? new TextRun({
+                            text: hotel.addressLine1
+                          }).break()
+                        : new TextRun({}),
+                      // addressLine2
+                      hotel.addressLine2
+                        ? new TextRun({
+                            text: hotel.addressLine2
+                          }).break()
+                        : new TextRun({}),
+                      // city
+                      hotel.city
+                        ? new TextRun({
+                            text: hotel.city
+                          }).break()
+                        : new TextRun({}),
+                      // country
+                      hotel.country
+                        ? new TextRun({
+                            text: hotel.country
+                          }).break()
+                        : new TextRun({}),
+                      // Phone 1
+                      hotel.phone1
+                        ? new TextRun({
+                            text: `Tel: ${hotel.phone1}`
+                          }).break()
+                        : new TextRun({}),
+                      // Phone 2
+                      hotel.phone2
+                      ? new TextRun({
+                          text: `Tel: ${hotel.phone2}`
+                        }).break()
+                      : new TextRun({})
+                    ],
                     heading: HeadingLevel.HEADING_1
                   }),
-                  new Paragraph({
-                    text: hotel.addressLine1,
-                    heading: HeadingLevel.HEADING_1
-                  }),
-                  hotel.addressLine2
-                    ? new Paragraph({
-                        text: hotel.addressLine2,
-                        heading: HeadingLevel.HEADING_1
-                      })
-                    : new Paragraph({}),
-                  new Paragraph({
-                    text: hotel.city,
-                    heading: HeadingLevel.HEADING_1
-                  }),
-                  new Paragraph({
-                    text: hotel.country,
-                    heading: HeadingLevel.HEADING_1
-                  }),
-                  new Paragraph({
-                    text: `Tel: ${hotel.phone1}`,
-                    heading: HeadingLevel.HEADING_1
-                  })
-                ]
+                  new Paragraph({})
+                ],
+                margins: {
+                  left: 100,
+                  right: 100
+                }
               })
             ]
           });
@@ -250,4 +296,12 @@ export class EXPH {
     return hids.filter(distinct);
   }
 
+  private removeNoHotel(hotels: Hotel[]): Hotel[] {
+    hotels.forEach((element, index) => {
+      if (element.hotelName.toLowerCase() === 'No Hotel'.toLowerCase()) {
+        hotels.splice(index, 1);
+      }
+    });
+    return hotels;
+  }
 }

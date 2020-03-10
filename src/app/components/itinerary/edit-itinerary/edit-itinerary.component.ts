@@ -22,6 +22,7 @@ import { ItinerariesService } from '../../../services/itineraries/itineraries.se
 import { EXPI } from './EXPI';
 import { Packer, Document } from 'docx';
 import saveAs from 'file-saver';
+import { EXPH } from './EXPH';
 
 @Component({
   selector: 'app-edit-itinerary',
@@ -57,7 +58,8 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     private vendorService: VendorsService,
     private itinerariesService: ItinerariesService,
     private route: ActivatedRoute,
-    private expi: EXPI
+    private expi: EXPI,
+    private exph: EXPH
   ) {}
 
   ngOnInit() {
@@ -253,6 +255,23 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
             }
           });
         });
+      });
+    }
+
+    if (this.EXPHCheckbox) {
+      this.booking.pipe(take(1)).subscribe(bkg => {
+        const lastname = bkg.contactName.split(' ')[1].toUpperCase();
+
+        this.exph.create(this.bookingId, bkg.contactName).then(doc => {
+          Packer.toBlob(doc as Document).then(blob => {
+            if (lastname) {
+              saveAs(blob, `EXPH_${lastname}.docx`);
+            } else {
+              saveAs(blob, 'Hotel Listing.docx');
+            }
+          });
+        });
+
       });
     }
   }

@@ -4,6 +4,7 @@ import { AngularFirestoreCollection, AngularFirestore } from 'angularfire2/fires
 import { Vendor } from '../../models/vendor.model';
 import { ErrorComponent } from '../../error/error.component';
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -57,8 +58,8 @@ export class VendorsService {
     return this.afs.collection(this.collectionPath).doc(vid).ref.get();
   }
 
-  getVendorById(id: string) {
-    return this.vendorsCollection.doc(id).valueChanges();
+  getVendorById(id: string): Observable<Vendor> {
+    return this.vendorsCollection.doc(id).valueChanges() as Observable<Vendor>;
   }
 
 

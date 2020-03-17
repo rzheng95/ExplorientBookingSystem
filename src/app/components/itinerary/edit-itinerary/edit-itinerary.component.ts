@@ -23,6 +23,7 @@ import { EXPI } from './EXPI';
 import { Packer, Document } from 'docx';
 import saveAs from 'file-saver';
 import { EXPH } from './EXPH';
+import { EXPL } from './EXPL';
 
 @Component({
   selector: 'app-edit-itinerary',
@@ -59,7 +60,8 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
     private itinerariesService: ItinerariesService,
     private route: ActivatedRoute,
     private expi: EXPI,
-    private exph: EXPH
+    private exph: EXPH,
+    private expl: EXPL
   ) {}
 
   ngOnInit() {
@@ -270,6 +272,15 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
       }
 
       if (this.EXPLCheckbox) {
+        this.expl.create(this.bookingId, bkg.contactName).then(doc => {
+          Packer.toBlob(doc as Document).then(blob => {
+            if (lastname) {
+              saveAs(blob, `EXPL_${lastname}.docx`);
+            } else {
+              saveAs(blob, 'Land Operator Contact List.docx');
+            }
+          });
+        });
       }
     });
   }

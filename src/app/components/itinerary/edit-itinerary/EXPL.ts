@@ -22,19 +22,20 @@ import { Hotel } from '../../../models/hotel.model';
 import { Buffer } from 'buffer';
 import { ServicesService } from '../../../services/services/services.service';
 import { Service } from '../../../models/service.model';
+import { Vendor } from '../../../models/vendor.model';
+import { VendorsService } from '../../../services/vendors/vendors.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EXPL {
   constructor(
-    private hotelsService: HotelsService,
+    private vendorsService: VendorsService,
     private servicesService: ServicesService,
     private base64Image: Base64Image
   ) {}
 
   public async create(bid: string, contactPerson: string) {
-    const hotelObs = this.hotelsService.getHotelsByBid(bid).pipe(take(1));
     const servicesObs = this.servicesService.getServiceByBid(bid).pipe(take(1));
     // prettier-ignore
     const headerImageObs = this.base64Image.getBase64ImageFromURL(environment.itineraryHeaderImageUrl).pipe(take(1));
@@ -48,21 +49,21 @@ export class EXPL {
           const headerImageBase64 = data[1];
           const footerImageBase64 = data[2];
 
-          // extract a list of distinct hid
-          const hids: string[] = this.extractUniqueHids(services);
+          // extract a list of distinct vid
+          const hids: string[] = this.extractUniqueVids(services);
 
-          // create an array of hotel observables
-          const hotelsObs: Observable<Hotel>[] = [];
+          // create an array of vendor observables
+          const vendorObs: Observable<Vendor>[] = [];
           hids.forEach(element => {
-            hotelsObs.push(
-              this.hotelsService.getHotelById(element).pipe(take(1))
+            vendorObs.push(
+              this.vendorsService.getVendorById(element).pipe(take(1))
             );
           });
 
-          // forkjoin the array of hotel observables
-          return forkJoin(hotelsObs).pipe(
-            switchMap(hotelsData => {
-              const hotels: Hotel[] = this.removeNoHotel(hotelsData);
+          // forkjoin the array of vendor observables
+          return forkJoin(vendorObs).pipe(
+            switchMap(vendorsData => {
+              const vendors: Vendor[] = this.removeNoVendor(vendorsData);
 
               const document = new Document({
                 styles: {
@@ -146,12 +147,12 @@ export class EXPL {
                 },
                 children: [
                   new Paragraph({
-                    text: `Hotel Listing for ${contactPerson}`,
+                    text: `Land Service Operator List for ${contactPerson}`,
                     heading: HeadingLevel.HEADING_3,
                     alignment: AlignmentType.CENTER
                   }),
                   new Paragraph({}),
-                  this.hotelTable(hotels)
+                  this.vendorTable(vendors)
                 ]
               });
               return of(document);
@@ -162,7 +163,7 @@ export class EXPL {
       .toPromise();
   }
 
-  hotelTable(hotels: Hotel[]): Table {
+  vendorTable(vendors: Vendor[]): Table {
     return new Table({
       rows: [
         new TableRow({
@@ -175,12 +176,13 @@ export class EXPL {
                 })
               ],
               width: {
-                size: 35,
+                size: 30,
                 type: WidthType.PERCENTAGE
               },
               margins: {
                 left: 100,
-                right: 100
+                right: 100,
+                bottom: 50
               },
               shading: {
                 fill: 'bfbfbf'
@@ -189,17 +191,18 @@ export class EXPL {
             new TableCell({
               children: [
                 new Paragraph({
-                  text: 'Hotel',
+                  text: 'Land Operator Contact List',
                   heading: HeadingLevel.HEADING_2
                 })
               ],
               width: {
-                size: 65,
+                size: 70,
                 type: WidthType.PERCENTAGE
               },
               margins: {
                 left: 100,
-                right: 100
+                right: 100,
+                bottom: 50
               },
               shading: {
                 fill: 'bfbfbf'
@@ -207,13 +210,13 @@ export class EXPL {
             })
           ]
         }),
-        ...hotels.map(hotel => {
+        ...vendors.map(vendor => {
           return new TableRow({
             children: [
               new TableCell({
                 children: [
                   new Paragraph({
-                    text: hotel.city,
+                    text: vendor.city,
                     heading: HeadingLevel.HEADING_1
                   })
                 ],
@@ -228,43 +231,43 @@ export class EXPL {
                     children: [
                       // hotel name
                       new TextRun({
-                        text: hotel.hotelName,
+                        text: vendor.vendorName,
                         bold: true
                       }),
                       // addressLine1
-                      hotel.addressLine1
+                      vendor.addressLine1
                         ? new TextRun({
-                            text: hotel.addressLine1
+                            text: vendor.addressLine1
                           }).break()
                         : new TextRun({}),
                       // addressLine2
-                      hotel.addressLine2
+                      vendor.addressLine2
                         ? new TextRun({
-                            text: hotel.addressLine2
+                            text: vendor.addressLine2
                           }).break()
                         : new TextRun({}),
                       // city
-                      hotel.city
+                      vendor.city
                         ? new TextRun({
-                            text: hotel.city
+                            text: vendor.city
                           }).break()
                         : new TextRun({}),
                       // country
-                      hotel.country
+                      vendor.country
                         ? new TextRun({
-                            text: hotel.country
+                            text: vendor.country
                           }).break()
                         : new TextRun({}),
                       // Phone 1
-                      hotel.phone1
+                      vendor.phone1
                         ? new TextRun({
-                            text: `Tel: ${hotel.phone1}`
+                            text: `Tel: ${vendor.phone1}`
                           }).break()
                         : new TextRun({}),
                       // Phone 2
-                      hotel.phone2
+                      vendor.phone2
                       ? new TextRun({
-                          text: `Tel: ${hotel.phone2}`
+                          text: `Tel: ${vendor.phone2}`
                         }).break()
                       : new TextRun({})
                     ],
@@ -284,24 +287,24 @@ export class EXPL {
     });
   }
 
-  private extractUniqueHids(services: Service[]): string[] {
-    const hids: string[] = [];
+  private extractUniqueVids(services: Service[]): string[] {
+    const vids: string[] = [];
     services.forEach(element => {
-      hids.push(element.hid);
+      vids.push(element.vid);
     });
 
     const distinct = (value, index, self) => {
       return self.indexOf(value) === index;
     };
-    return hids.filter(distinct);
+    return vids.filter(distinct);
   }
 
-  private removeNoHotel(hotels: Hotel[]): Hotel[] {
-    hotels.forEach((element, index) => {
-      if (element.hotelName.toLowerCase() === 'No Hotel'.toLowerCase()) {
-        hotels.splice(index, 1);
+  private removeNoVendor(vendors: Vendor[]): Vendor[] {
+    vendors.forEach((element, index) => {
+      if (element.vendorName.toLowerCase() === 'No Vendor'.toLowerCase()) {
+        vendors.splice(index, 1);
       }
     });
-    return hotels;
+    return vendors;
   }
 }

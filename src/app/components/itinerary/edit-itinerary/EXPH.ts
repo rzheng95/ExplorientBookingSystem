@@ -34,7 +34,6 @@ export class EXPH {
   ) {}
 
   public async create(bid: string, contactPerson: string) {
-    const hotelObs = this.hotelsService.getHotelsByBid(bid).pipe(take(1));
     const servicesObs = this.servicesService.getServiceByBid(bid).pipe(take(1));
     // prettier-ignore
     const headerImageObs = this.base64Image.getBase64ImageFromURL(environment.itineraryHeaderImageUrl).pipe(take(1));
@@ -175,12 +174,13 @@ export class EXPH {
                 })
               ],
               width: {
-                size: 35,
+                size: 30,
                 type: WidthType.PERCENTAGE
               },
               margins: {
                 left: 100,
-                right: 100
+                right: 100,
+                bottom: 50
               },
               shading: {
                 fill: 'bfbfbf'
@@ -194,12 +194,13 @@ export class EXPH {
                 })
               ],
               width: {
-                size: 65,
+                size: 70,
                 type: WidthType.PERCENTAGE
               },
               margins: {
                 left: 100,
-                right: 100
+                right: 100,
+                bottom: 50
               },
               shading: {
                 fill: 'bfbfbf'

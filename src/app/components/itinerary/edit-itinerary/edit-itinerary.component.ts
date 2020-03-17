@@ -243,9 +243,9 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
   }
 
   onPrintItinerary() {
-    if (this.EXPICheckbox) {
-      this.booking.pipe(take(1)).subscribe(bkg => {
-        const lastname = bkg.contactName.split(' ')[1].toUpperCase();
+    this.booking.pipe(take(1)).subscribe(bkg => {
+      const lastname = bkg.contactName.split(' ')[1].toUpperCase();
+      if (this.EXPICheckbox) {
         this.expi.create(this.bookingId).then(doc => {
           Packer.toBlob(doc as Document).then(blob => {
             if (lastname) {
@@ -255,13 +255,9 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
             }
           });
         });
-      });
-    }
+      }
 
-    if (this.EXPHCheckbox) {
-      this.booking.pipe(take(1)).subscribe(bkg => {
-        const lastname = bkg.contactName.split(' ')[1].toUpperCase();
-
+      if (this.EXPHCheckbox) {
         this.exph.create(this.bookingId, bkg.contactName).then(doc => {
           Packer.toBlob(doc as Document).then(blob => {
             if (lastname) {
@@ -271,9 +267,11 @@ export class EditItineraryComponent implements OnInit, OnDestroy {
             }
           });
         });
+      }
 
-      });
-    }
+      if (this.EXPLCheckbox) {
+      }
+    });
   }
 
   onSaveItinerary() {

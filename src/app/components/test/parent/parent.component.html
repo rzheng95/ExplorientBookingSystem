@@ -5,4 +5,25 @@
     <app-child (greetEvent)="greet($event)"></app-child>
   </div>
 
+  <form [formGroup]="form">
+    <!-- Date Picker -->
+    <mat-form-field class="datePicker">
+      <input
+        matInput
+        #input
+        formControlName="form1"
+        placeholder="Form1"
+      />
+    </mat-form-field>
+
+    <!-- Service Caption -->
+    <mat-form-field>
+      <input
+        matInput
+        type="text"
+        formControlName="form2"
+        placeholder="Form2"
+      />
+    </mat-form-field>
+  </form>
 </app-main-nav>

@@ -77,8 +77,8 @@ export class AuthService implements OnDestroy {
     }
     this.dialog.open(ErrorComponent, {
       data: {
-        title: title,
-        message: message
+        title,
+        message
       }
     });
   }
@@ -216,4 +216,7 @@ export class AuthService implements OnDestroy {
     localStorage.removeItem('user');
     this.router.navigate(['sign-in']);
   }
+
+
+
 }
